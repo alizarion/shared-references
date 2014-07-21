@@ -1,15 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>reference</artifactId>
         <groupId>com.alizarion.reference</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.newworks.reference.mail-services</groupId>
     <artifactId>mail-services</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 
+    <name>Mail services</name>
+    <description>
+        Mail templating, rendering counting and sending services  etc...
+    </description>
 
+    <developers>
+        <developer>
+            <id>selim.bensenouci</id>
+            <email>selim.bensenouci@gmail.com</email>
+            <name>Selim Bensenouci</name>
+            <organization>Alizarion</organization>
+        </developer>
+        
+    </developers>
+
+    <dependencies>
+       
+    </dependencies>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/mail-services/</developerConnection>
+        <url>https://github.com/alizarion/shared-references.git/mail-services/</url>
+    </scm>
 </project>
