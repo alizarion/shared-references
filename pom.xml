@@ -20,13 +20,14 @@
             <name>Selim Bensenouci</name>
             <organization>Alizarion</organization>
         </developer>
-        
+      </developers>
     <modules>
         <module>security</module>
         <module>address</module>
-        <module>params</module>
+        <module>static-params</module>
         <module>resource</module>
         <module>social</module>
+        <module>mail-services</module>
     </modules>
 
 
