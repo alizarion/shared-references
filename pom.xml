@@ -21,6 +21,7 @@
             <organization>Alizarion</organization>
         </developer>
     </developers>
+
     <modules>
         <module>security</module>
         <module>address</module>
