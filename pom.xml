@@ -1,0 +1,30 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+        http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.alizarion.reference</groupId>
+    <artifactId>reference</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>projects references </name>
+    <description>reusable libraries for many projects</description>
+
+    <modules>
+        <module>security</module>
+        <module>address</module>
+        <module>params</module>
+        <module>resource</module>
+        <module>social</module>
+    </modules>
+
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/alizarion/shared-references.git</developerConnection>
+        <url>https://github.com/alizarion/shared-references.git</url>
+    </scm>
+
+</project>
