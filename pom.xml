@@ -13,6 +13,14 @@
     <name>projects references </name>
     <description>reusable libraries for many projects</description>
 
+    <developers>
+        <developer>
+            <id>selim.bensenouci</id>
+            <email>selim.bensenouci@gmail.com</email>
+            <name>Selim Bensenouci</name>
+            <organization>Alizarion</organization>
+        </developer>
+        
     <modules>
         <module>security</module>
         <module>address</module>
