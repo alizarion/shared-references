@@ -82,15 +82,20 @@ public class Credential implements Serializable {
     }
 
     public void setPassword(final String password)
-            throws NoSuchAlgorithmException {
+    {
         String result = password;
         if(password != null) {
-            MessageDigest md = MessageDigest.getInstance("SHA-1"); //or "MD5"
-            md.update(password.getBytes());
-            BigInteger hash = new BigInteger(1, md.digest());
-            result = hash.toString(16);
-            while(result.length() < 32) {
-                result = "0" + result;
+            MessageDigest md = null; //or "MD5"
+            try {
+                md = MessageDigest.getInstance("SHA-1");
+                md.update(password.getBytes());
+                BigInteger hash = new BigInteger(1, md.digest());
+                result = hash.toString(16);
+                while(result.length() < 32) {
+                    result = "0" + result;
+                }
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
             }
         }
         this.password =  result;
