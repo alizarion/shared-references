@@ -5,8 +5,8 @@
                     http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
 
-    <!-- productionParam -->
-    <persistence-unit name="ingressPU"  transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="AddressTestPU"  transaction-type="RESOURCE_LOCAL">
+
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.alizarion.reference.address.entities.Country</class>
         <class>com.alizarion.reference.address.entities.Address</class>
@@ -15,14 +15,23 @@
         <class>com.alizarion.reference.address.entities.EmailAddress</class>
         <class>com.alizarion.reference.address.entities.Language</class>
 
-
         <properties>
+            <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:unit-testing-jpa"/>
+            <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.connection.username" value="sa"/>
+            <property name="hibernate.connection.password" value=""/>
+        </properties>
+
+        <!-- mysql DB generating test properties -->
+        <!--properties>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/ingress_defence" />
             <property name="hibernate.connection.username" value="root" />
             <property name="hibernate.connection.password" value="" />
             <property name="hibernate.hbm2ddl.auto" value="update" />
-        </properties>
+        </properties-->
     </persistence-unit>
 </persistence>

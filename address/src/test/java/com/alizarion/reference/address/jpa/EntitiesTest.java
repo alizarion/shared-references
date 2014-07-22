@@ -1,5 +1,7 @@
 package com.alizarion.reference.address.jpa;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
@@ -12,31 +14,41 @@ import javax.persistence.Persistence;
  */
 public class EntitiesTest {
 
-      @Test
+    private EntityManagerFactory emf;
+    private EntityManager em;
+
+
+    @Before
+    public void init(){
+        emf = Persistence.createEntityManagerFactory("AddressTestPU");
+        em = emf.createEntityManager();
+    }
+
+    @After
+    public void destroy(){
+        em.close();
+        emf.close();
+    }
+
+    @Test
     public void testEntities(){
-          // Get the entity manager for the tests.
-          EntityManagerFactory emf = Persistence.createEntityManagerFactory("ingressPU");
-          EntityManager em = emf.createEntityManager();
-          EntityTransaction trx = em.getTransaction();
 
-          try {
-             //Get a new transaction
+        //Get a new transaction
+        EntityTransaction trx = em.getTransaction();
+        try {
 
-             //Start the transaction
-             trx.begin();
-             //Persist the object in the DB
-             //Commit and end the transaction
-             trx.commit();
-          } catch (RuntimeException e) {
-             if (trx != null && trx.isActive()) {
+            //Start the transaction
+            trx.begin();
+            //Persist the object in the DB
+            //TODO persist some objects
+            //Commit and end the transaction
+            trx.commit();
+        } catch (RuntimeException e) {
+            if (trx != null && trx.isActive()) {
                 trx.rollback();
-             }
-             throw e;
-          } finally {
-             //Close the manager
-             em.close();
-             emf.close();
-          }
+            }
+            throw e;
+        }
 
     }
 }
