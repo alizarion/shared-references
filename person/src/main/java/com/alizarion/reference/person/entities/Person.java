@@ -28,10 +28,6 @@ public  class Person implements Serializable {
     @Column
     private Long id;
 
-
-
-
-
     @OneToMany(fetch = FetchType.EAGER,
             orphanRemoval = true,cascade = CascadeType.ALL)
     private Set<Address> addresses = new HashSet<Address>();
