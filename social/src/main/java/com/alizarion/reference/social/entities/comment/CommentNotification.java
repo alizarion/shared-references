@@ -30,4 +30,9 @@ public class CommentNotification extends Notification {
     public String getTypeKey() {
         return this.TYPE+"-notif-key";
     }
+
+    @Override
+    public Notification getInstance(Subject subject, Observer observer) {
+        return new CommentNotification(subject,observer);
+    }
 }

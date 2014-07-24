@@ -14,7 +14,7 @@ import java.util.Date;
 @Inheritance
 @Table(catalog = StaticParam.CATALOG,name = "notification")
 @DiscriminatorColumn(name = "type")
-public abstract class Notification implements Serializable {
+public abstract class Notification implements Serializable{
 
     @Id
     @TableGenerator(name="Notification_SEQ", table="sequence",catalog = StaticParam.CATALOG,
@@ -95,7 +95,7 @@ public abstract class Notification implements Serializable {
         return creationDate;
     }
 
-
+    public abstract Notification getInstance(Subject subject,Observer observer);
 
     @Override
     public boolean equals(Object o) {

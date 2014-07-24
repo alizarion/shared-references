@@ -49,10 +49,20 @@ public abstract class Subject implements Serializable {
         this.observers.remove(observer);
     }
 
-    public abstract  void notifyObservers();
+    public abstract  void notifyObservers(Notification notification);
+
+    public abstract  void notifyOwner(Notification notification);
 
     public Set<Observer> getObservers() {
         return observers;
+    }
+
+    public Observer getSubjectOwner() {
+        return subjectOwner;
+    }
+
+    public void setSubjectOwner(Observer subjectOwner) {
+        this.subjectOwner = subjectOwner;
     }
 
     public void setObservers(Set<Observer> observers) {

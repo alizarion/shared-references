@@ -1,5 +1,6 @@
 package com.alizarion.reference.social.entities.comment;
 
+import com.alizarion.reference.social.entities.notification.Notification;
 import com.alizarion.reference.social.entities.notification.Observer;
 import com.alizarion.reference.social.entities.notification.Subject;
 import com.alizarion.reference.staticparams.StaticParam;
@@ -62,6 +63,9 @@ public class Comment extends Subject implements Serializable{
     }
 
     public void setSignaled(Boolean signaled) {
+        if (!this.signaled && signaled) {
+            notifyOwner(new SignaledCommentNotification());
+        }
         this.signaled = signaled;
     }
 
@@ -82,10 +86,16 @@ public class Comment extends Subject implements Serializable{
     }
 
     @Override
-    public void notifyObservers() {
+    public void notifyObservers(Notification notification) {
         for (Observer ob : getObservers()) {
-            ob.notify(new CommentNotification(this,ob));
+            ob.notify(notification.getInstance(this,ob));
         }
+    }
+
+    @Override
+    public void notifyOwner(Notification notification) {
+        Observer owner = getSubjectOwner();
+        owner.notify(notification.getInstance(this,owner));
     }
 
     @Override
