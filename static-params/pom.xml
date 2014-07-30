@@ -24,6 +24,12 @@
             <name>Selim Bensenouci</name>
             <organization>Alizarion</organization>
         </developer>
+        <developer>
+            <id>sidahmed.mehani</id>
+            <email>sid.mehani@gmail.com</email>
+            <name>Sidahmed MEHANI</name>
+            <organization>Alizarion</organization>
+        </developer>
         
     </developers>
 
