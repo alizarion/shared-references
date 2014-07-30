@@ -5,6 +5,7 @@ import com.alizarion.reference.staticparams.StaticParam;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,9 +33,12 @@ public abstract class Subject implements Serializable {
     @JoinColumn(name = "subject_owner")
     private Observer subjectOwner;
 
+    @Column(name = "creation_date")
+    private Date creationDate;
+
 
     public Subject() {
-
+        this.creationDate = new Date();
     }
 
     public Subject(Observer observer) {
@@ -49,9 +53,9 @@ public abstract class Subject implements Serializable {
         this.observers.remove(observer);
     }
 
-    public abstract  void notifyObservers(Notification notification);
+    public abstract  void notifyObservers(Notification notification, Notifier notifier);
 
-    public abstract  void notifyOwner(Notification notification);
+    public abstract  void notifyOwner(Notification notification, Notifier notifier);
 
     public Set<Observer> getObservers() {
         return observers;
@@ -79,14 +83,26 @@ public abstract class Subject implements Serializable {
 
         Subject subject = (Subject) o;
 
+        if (creationDate != null ?
+                !creationDate.equals(subject.creationDate) :
+                subject.creationDate != null)
+            return false;
         if (id != null ? !id.equals(subject.id) :
                 subject.id != null) return false;
+        if (subjectOwner != null ? !subjectOwner.equals(
+                subject.subjectOwner) : subject.subjectOwner != null)
+            return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (subjectOwner != null
+                ? subjectOwner.hashCode() : 0);
+        result = 31 * result + (creationDate != null
+                ? creationDate.hashCode() : 0);
+        return result;
     }
 }

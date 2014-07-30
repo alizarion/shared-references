@@ -1,14 +1,21 @@
 package com.alizarion.reference.social.entities.comment;
 
+import com.alizarion.reference.social.entities.appretiation.DisLike;
+import com.alizarion.reference.social.entities.appretiation.Like;
+import com.alizarion.reference.social.entities.appretiation.LikeNotification;
 import com.alizarion.reference.social.entities.notification.Notification;
+import com.alizarion.reference.social.entities.notification.Notifier;
 import com.alizarion.reference.social.entities.notification.Observer;
 import com.alizarion.reference.social.entities.notification.Subject;
 import com.alizarion.reference.staticparams.StaticParam;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,10 +31,6 @@ public class Comment extends Subject implements Serializable{
     @Column(name = "value")
     private String value;
 
-    @Column(name = "creation_date")
-    @OrderColumn
-    private Date creationDate;
-
     @Column
     private Boolean signaled;
 
@@ -41,6 +44,16 @@ public class Comment extends Subject implements Serializable{
     private Set<Comment> answers = new HashSet<Comment>();
 
 
+    @OneToMany(fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    private Set<Like> likes= new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    private Set<DisLike> disLikes = new HashSet<>();
+
 
     public String getValue() {
         return value;
@@ -50,21 +63,15 @@ public class Comment extends Subject implements Serializable{
         this.value = value;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
 
     public Boolean getSignaled() {
         return signaled;
     }
 
-    public void setSignaled(Boolean signaled) {
+    public void setSignaled(Boolean signaled, Notifier notifier) {
         if (!this.signaled && signaled) {
-            notifyOwner(new SignaledCommentNotification());
+            notifyOwner(new SignaledCommentNotification(),notifier);
         }
         this.signaled = signaled;
     }
@@ -86,16 +93,22 @@ public class Comment extends Subject implements Serializable{
     }
 
     @Override
-    public void notifyObservers(Notification notification) {
+    public void notifyObservers(Notification notification,Notifier  notifier) {
         for (Observer ob : getObservers()) {
-            ob.notify(notification.getInstance(this,ob));
+            ob.notify(notification.getInstance(this,ob,(notifier != null ? notifier : null)));
         }
     }
 
     @Override
-    public void notifyOwner(Notification notification) {
+    public void notifyOwner(Notification notification, Notifier notifier) {
         Observer owner = getSubjectOwner();
-        owner.notify(notification.getInstance(this,owner));
+        owner.notify(notification.getInstance(this,owner,notifier));
+    }
+
+    public void addLikeAppreciation(Notifier notifier){
+        Like like = new Like((Observer)notifier);
+        this.likes.add(like);
+        notifyOwner(new LikeNotification(),notifier);
     }
 
     @Override
@@ -106,11 +119,6 @@ public class Comment extends Subject implements Serializable{
 
         Comment comment = (Comment) o;
 
-        if (creationDate != null ? !creationDate.equals(comment.creationDate)
-                : comment.creationDate != null)
-            return false;
-        if (signaled != null ? !signaled.equals(comment.signaled)
-                : comment.signaled != null) return false;
         if (value != null ? !value.equals(comment.value)
                 : comment.value != null) return false;
 
@@ -121,7 +129,6 @@ public class Comment extends Subject implements Serializable{
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
         return result;
     }
 }

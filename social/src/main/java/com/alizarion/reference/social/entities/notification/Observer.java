@@ -13,7 +13,7 @@ import java.util.Set;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Observer implements Serializable {
+public abstract class Observer implements Notifier, Serializable {
 
     @Id
     @TableGenerator(name="Observer_SEQ", table="sequence",catalog = StaticParam.CATALOG,

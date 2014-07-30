@@ -1,5 +1,4 @@
-package com.alizarion.reference.social.entities.comment;
-
+package com.alizarion.reference.social.entities.appretiation;
 
 import com.alizarion.reference.social.entities.notification.Notification;
 import com.alizarion.reference.social.entities.notification.Notifier;
@@ -14,23 +13,21 @@ import javax.persistence.OneToOne;
 /**
  * @author selim@openlinux.fr.
  */
-
 @Entity
-@DiscriminatorValue(value = CommentNotification.TYPE)
-public class CommentNotification extends Notification {
+@DiscriminatorValue(LikeNotification.TYPE)
+public class LikeNotification extends Notification {
 
-    public final static String TYPE= "comment";
+
+    public final static String TYPE =  "like";
 
     @OneToOne(targetEntity = Observer.class)
     @JoinColumn(name = "notifier_id")
     private Notifier notifier;
 
-
-    public CommentNotification() {
-        super();
+    public LikeNotification() {
     }
 
-    public CommentNotification(Subject subject, Observer observer,Notifier notifier) {
+    public LikeNotification(Subject subject, Observer observer,Notifier notifier) {
         super(subject, observer);
         this.notifier = notifier;
     }
@@ -50,6 +47,8 @@ public class CommentNotification extends Notification {
 
     @Override
     public Notification getInstance(Subject subject, Observer observer, Notifier notifier) {
-        return new CommentNotification(subject,observer, notifier);
+        return new LikeNotification(subject,observer,notifier) ;
     }
+
+
 }

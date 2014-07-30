@@ -16,6 +16,7 @@ import java.util.Date;
 @DiscriminatorColumn(name = "type")
 public abstract class Notification implements Serializable{
 
+
     @Id
     @TableGenerator(name="Notification_SEQ", table="sequence",catalog = StaticParam.CATALOG,
             pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
@@ -40,6 +41,8 @@ public abstract class Notification implements Serializable{
     @Column(name = "in_app_nofified")
     private Boolean inAppNotified;
 
+
+
     protected Notification() {
         this.creationDate = new Date();
     }
@@ -49,7 +52,13 @@ public abstract class Notification implements Serializable{
         this.observer = observer;
     }
 
-    public abstract String getTypeKey();
+    public abstract String getType();
+
+
+
+    public String getTypeKey(){
+        return getType()+"-notif-key";
+    }
 
     protected Notification(Subject subject) {
         this.subject = subject;
@@ -95,7 +104,7 @@ public abstract class Notification implements Serializable{
         return creationDate;
     }
 
-    public abstract Notification getInstance(Subject subject,Observer observer);
+    public abstract Notification getInstance(Subject subject,Observer observer,Notifier notifier);
 
     @Override
     public boolean equals(Object o) {
