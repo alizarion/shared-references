@@ -14,7 +14,7 @@
 
     <name>Login and credential entities.</name>
     <description>
-      Credentials, Roles and security workflows ...
+        Credentials, Roles and security workflows ...
     </description>
 
     <developers>
@@ -30,10 +30,14 @@
             <name>Sidahmed MEHANI</name>
             <organization>Alizarion</organization>
         </developer>
-        
+
     </developers>
 
     <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.newworks.reference.static-params</groupId>
             <artifactId>static-params</artifactId>

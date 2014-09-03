@@ -26,8 +26,12 @@ public class EntitiesTest {
 
     @After
     public void destroy(){
-        em.close();
-        emf.close();
+        if (em != null) {
+            em.close();
+        }
+        if (emf != null) {
+            emf.close();
+        }
     }
 
     /**
