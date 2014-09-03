@@ -24,7 +24,8 @@ public class Account extends Observer implements  Serializable {
     private String lastName;
 
 
-
-
-
+    @Override
+    public Long getId() {
+        return super.getId();
+    }
 }

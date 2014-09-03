@@ -33,12 +33,25 @@ public class EntitiesTest {
     public void testJPAEntities(){
         EntityTransaction trx = em.getTransaction();
 
-        trx.begin();
+        try {
+            // Start new transaction
+            trx.begin();
 
+            // Add some objects
 
-        trx.commit();
+            // commit the transaction
+            trx.commit();
+        } catch (RuntimeException e) {
+            if (trx != null && trx.isActive()) {
+                trx.rollback();
+            }
+            throw e;
+        }
 
 
     }
+
+
+
 
 }

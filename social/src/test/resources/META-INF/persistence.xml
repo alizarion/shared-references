@@ -7,8 +7,15 @@
         <class>com.alizarion.reference.social.entities.comment.Comment</class>
         <class>com.alizarion.reference.social.entities.comment.CommentNotification</class>
         <class>com.alizarion.reference.social.entities.notification.Notification</class>
+        <class>com.alizarion.reference.social.entities.notification.Notifier</class>
         <class>com.alizarion.reference.social.entities.notification.Subject</class>
         <class>com.alizarion.reference.social.entities.notification.Observer</class>
+        <class>com.alizarion.reference.social.entities.appretiation.Like</class>
+        <class>com.alizarion.reference.social.entities.appretiation.DisLike</class>
+        <class>com.alizarion.reference.social.entities.appretiation.Appreciation</class>
+        <class>com.alizarion.reference.social.entities.appretiation.DisLikeNotification</class>
+        <class>com.alizarion.reference.social.entities.comment.SignaledCommentNotification</class>
+
 
         <properties>
             <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:unit-testing-jpa"/>
