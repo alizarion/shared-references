@@ -1,24 +1,22 @@
-package com.alizarion.reference.address.entities;
+package com.alizarion.reference.location.entities;
 
 /**
  * @author selim@openlinux.fr.
  */
-
-import com.alizarion.reference.staticparams.StaticParam;
 
 import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 @NamedQuery(name = Address.FIND_ALL,query = "select a from Address a")
-@Table(catalog = StaticParam.CATALOG,name = "address")
+@Table(name = "location_address")
 @DiscriminatorColumn(name = "type")
 public abstract class Address {
 
     public static final String FIND_ALL = "Address.FIND_ALL";
 
     @Id
-    @TableGenerator(name="Address_SEQ", table="sequence",catalog = StaticParam.CATALOG,
+    @TableGenerator(name="Address_SEQ", table="sequence",
             pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
     @GeneratedValue(strategy=GenerationType.TABLE, generator="Address_SEQ")
     @Column

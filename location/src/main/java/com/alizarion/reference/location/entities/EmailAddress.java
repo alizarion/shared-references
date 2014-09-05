@@ -1,6 +1,4 @@
-package com.alizarion.reference.address.entities;
-
-import com.alizarion.reference.staticparams.StaticParam;
+package com.alizarion.reference.location.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +7,7 @@ import java.io.Serializable;
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(catalog = StaticParam.CATALOG, name = "email_address")
+@Table(name = "location_email_address")
 @DiscriminatorValue(value = EmailAddress.TYPE)
 @PrimaryKeyJoinColumn(name = "email_address_id")
 public class EmailAddress extends Address implements Serializable {

@@ -1,6 +1,4 @@
-package com.alizarion.reference.address.entities;
-
-import com.alizarion.reference.staticparams.StaticParam;
+package com.alizarion.reference.location.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +7,7 @@ import java.io.Serializable;
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(catalog = StaticParam.CATALOG,name = "language")
+@Table(name = "location_language")
 public class Language implements Serializable {
 
     @Column(name = "managed")

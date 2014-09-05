@@ -1,6 +1,4 @@
-package com.alizarion.reference.address.entities;
-
-import com.alizarion.reference.staticparams.StaticParam;
+package com.alizarion.reference.location.entities;
 
 import javax.persistence.*;
 
@@ -8,9 +6,9 @@ import javax.persistence.*;
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(catalog = StaticParam.CATALOG, name = "physical_address")
-@DiscriminatorValue(value = "physical")
-@PrimaryKeyJoinColumn(name = "physical_address_id")
+@Table(name = "location_geographical_address")
+@DiscriminatorValue(value = "geographical")
+@PrimaryKeyJoinColumn(name = "geographical_address_id")
 public class PhysicalAddress extends Address {
 
     @Column(name = "address_name",

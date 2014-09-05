@@ -1,7 +1,6 @@
-package com.alizarion.reference.address.entities;
+package com.alizarion.reference.location.entities;
 
-import com.alizarion.reference.address.utils.Helper;
-import com.alizarion.reference.staticparams.StaticParam;
+import com.alizarion.reference.location.utils.Helper;
 import org.apache.commons.lang3.LocaleUtils;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ import java.util.*;
  */
 
 @Entity
-@Table(catalog = StaticParam.CATALOG, name = "country")
+@Table( name = "location_country")
 public class Country implements Serializable {
 
     @Id

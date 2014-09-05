@@ -1,6 +1,6 @@
-package com.alizarion.reference.address.utils;
+package com.alizarion.reference.location.utils;
 
-import com.alizarion.reference.address.entities.Country;
+import com.alizarion.reference.location.entities.Country;
 
 import java.util.ResourceBundle;
 
