@@ -5,5 +5,5 @@ package com.alizarion.reference.staticparams;
  */
 public class StaticParam {
 
-    public static final String CATALOG =  "feeder";
+
 }
