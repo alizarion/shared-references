@@ -23,7 +23,7 @@ import java.util.Set;
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(catalog = StaticParam.CATALOG, name = "comment")
+@Table(name = "comment")
 public class Comment extends Subject implements Serializable{
 
 

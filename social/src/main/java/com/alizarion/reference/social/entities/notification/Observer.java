@@ -8,7 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Abstract representation of any subject observer
+ * Abstract representation of any subject observer, must be extended
+ * by any notifiable entity.
  * @author selim@openlinux.fr.
  */
 @Entity
@@ -16,7 +17,7 @@ import java.util.Set;
 public abstract class Observer implements Notifier, Serializable {
 
     @Id
-    @TableGenerator(name="Observer_SEQ", table="sequence",catalog = StaticParam.CATALOG,
+    @TableGenerator(name="Observer_SEQ", table="sequence",
             pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
     @GeneratedValue(strategy=GenerationType.TABLE, generator="Observer_SEQ")
     @Column

@@ -18,7 +18,7 @@ import java.util.Set;
 public abstract class Subject implements Serializable {
 
     @Id
-    @TableGenerator(name="Subject_SEQ", table="sequence",catalog = StaticParam.CATALOG,
+    @TableGenerator(name="Subject_SEQ", table="sequence",
             pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
     @GeneratedValue(strategy=GenerationType.TABLE, generator="Subject_SEQ")
     @Column

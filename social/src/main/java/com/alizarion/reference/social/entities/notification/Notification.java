@@ -8,17 +8,20 @@ import java.util.Date;
 
 /**
  * Notification base class, must be extend by all notifications type.
+ * all child must have a mapped notifier as notifier_id column and targeted by the
+ * notified entity
+ * @see com.alizarion.reference.social.entities.appretiation.DisLikeNotification implémentation
  * @author selim@openlinux.fr.
  */
 @Entity
 @Inheritance
-@Table(catalog = StaticParam.CATALOG,name = "notification")
+@Table(name = "notification")
 @DiscriminatorColumn(name = "type")
 public abstract class Notification implements Serializable{
 
 
     @Id
-    @TableGenerator(name="Notification_SEQ", table="sequence",catalog = StaticParam.CATALOG,
+    @TableGenerator(name="Notification_SEQ", table="sequence",
             pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
     @GeneratedValue(strategy=GenerationType.TABLE, generator="Notification_SEQ")
     @Column

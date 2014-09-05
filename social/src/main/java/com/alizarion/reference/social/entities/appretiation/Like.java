@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(catalog = StaticParam.CATALOG, name = "like")
+@Table( name = "like")
 public class Like extends Appreciation implements Serializable {
 
 

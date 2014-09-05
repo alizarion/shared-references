@@ -20,7 +20,7 @@ public abstract class Appreciation  implements Serializable{
 
 
     @Id
-    @TableGenerator(catalog = StaticParam.CATALOG,
+    @TableGenerator(
             name = "Appreciation_SEQ",
             table = "sequence",
             pkColumnName = "SEQ_NAME",
@@ -30,6 +30,9 @@ public abstract class Appreciation  implements Serializable{
     @Column
     private Long id;
 
+    /**
+     * who appreciate
+     */
     @ManyToOne
     private Observer owner;
 
