@@ -16,11 +16,11 @@ import java.util.Set;
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(catalog = StaticParam.CATALOG,name = "credential")
+@Table(name = "credential")
 public class Credential implements Serializable {
 
     @Id
-    @TableGenerator(name="Credential_SEQ", table="sequence",catalog = StaticParam.CATALOG,
+    @TableGenerator(name="Credential_SEQ", table="sequence",
             pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
     @GeneratedValue(strategy= GenerationType.TABLE, generator="Credential_SEQ")
     @Column
@@ -47,7 +47,7 @@ public class Credential implements Serializable {
     private Date creationDate;
 
     @ManyToMany
-    @JoinTable(catalog = StaticParam.CATALOG, name = "credential_role",
+    @JoinTable(name = "credential_role",
             joinColumns=@JoinColumn(name = "credential_id"),
             inverseJoinColumns=@JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();

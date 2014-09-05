@@ -11,7 +11,7 @@ import java.util.Date;
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(catalog = StaticParam.CATALOG,name = "role")
+@Table(name = "role")
 public class Role implements Serializable {
 
     /**
