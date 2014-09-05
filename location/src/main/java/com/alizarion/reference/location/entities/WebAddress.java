@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
+ * Simple class to store and persist web address information
  * @author selim@openlinux.fr.
  */
 @Entity
