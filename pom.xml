@@ -29,6 +29,7 @@
 
         <module>resource</module>
         <module>person</module>
+        <module>file-management</module>
 
         <module>social</module>
         <module>mail-services</module>
