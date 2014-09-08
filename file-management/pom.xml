@@ -14,7 +14,7 @@
 
     <name>File management ..</name>
     <description>
-      all managed and persisted file, images, videos, docs, sound …
+        all managed and persisted file, images, videos, docs, sound …
     </description>
 
     <developers>
@@ -30,11 +30,26 @@
             <name>Sidahmed MEHANI</name>
             <organization>Alizarion</organization>
         </developer>
-        
+
     </developers>
 
     <dependencies>
-       
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.alizarion.reference.resource</groupId>
+            <artifactId>resource</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <scm>
