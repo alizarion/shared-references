@@ -1,6 +1,5 @@
 package com.alizarion.reference.social.entities.notification;
 
-import com.alizarion.reference.staticparams.StaticParam;
 
 import javax.persistence.*;
 import java.io.Serializable;

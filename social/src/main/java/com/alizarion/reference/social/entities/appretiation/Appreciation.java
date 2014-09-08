@@ -1,10 +1,6 @@
 package com.alizarion.reference.social.entities.appretiation;
 
-import com.alizarion.reference.social.entities.notification.Notification;
 import com.alizarion.reference.social.entities.notification.Observer;
-import com.alizarion.reference.social.entities.notification.Subject;
-import com.alizarion.reference.staticparams.StaticParam;
-import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 import java.io.Serializable;

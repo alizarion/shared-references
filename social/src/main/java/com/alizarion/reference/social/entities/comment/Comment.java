@@ -7,15 +7,12 @@ import com.alizarion.reference.social.entities.notification.Notification;
 import com.alizarion.reference.social.entities.notification.Notifier;
 import com.alizarion.reference.social.entities.notification.Observer;
 import com.alizarion.reference.social.entities.notification.Subject;
-import com.alizarion.reference.staticparams.StaticParam;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
