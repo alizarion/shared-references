@@ -2,6 +2,7 @@ package com.alizarion.reference.resource.mbean;
 
 import com.alizarion.reference.resource.entities.PersistentResource;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -14,6 +15,7 @@ import java.net.URISyntaxException;
  * resources params that need to be persisted
  * @author selim@openlinux.fr.
  */
+@Stateless
 public abstract class PersistentMBean implements Serializable {
 
     @PersistenceContext
