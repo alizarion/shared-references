@@ -23,6 +23,7 @@
     </developers>
 
     <modules>
+        <module>exceptions</module>
         <module>static-params</module>
         <module>security</module>
         <module>location</module>
