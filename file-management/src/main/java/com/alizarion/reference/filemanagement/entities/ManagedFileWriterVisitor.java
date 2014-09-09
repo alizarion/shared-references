@@ -1,9 +1,6 @@
-package com.alizarion.reference.filemanagement.tools;
+package com.alizarion.reference.filemanagement.entities;
 
-import com.alizarion.reference.filemanagement.entities.ImageManagedFile;
-import com.alizarion.reference.filemanagement.entities.ManagedFile;
-import com.alizarion.reference.filemanagement.entities.ManagedFileVisitor;
-import com.alizarion.reference.filemanagement.entities.SimpleManagedFile;
+import com.alizarion.reference.filemanagement.tools.FileHelper;
 
 import java.io.*;
 
@@ -22,9 +19,6 @@ public class ManagedFileWriterVisitor implements ManagedFileVisitor {
      * inputStream that have to be writed on the file system
      */
     private InputStream inputStream;
-
-    public ManagedFileWriterVisitor() {
-    }
 
     public ManagedFileWriterVisitor(InputStream inputStream,
                                     String rootFolder) {
@@ -73,21 +67,15 @@ public class ManagedFileWriterVisitor implements ManagedFileVisitor {
     private boolean simpleManagedFilePathBasedWriter(ManagedFile managedFile){
         try {
             File fileToWrite =
-                    new File(rootFolder+ File.separator+
-                            managedFile.getType()+File.separator+
-                            FileHelper.dateToFilePath(managedFile.
-                                    getCreationDate())+File.separator+
-                            managedFile.getId());
+                    new File(FileHelper.
+                            getFileFullPath(managedFile,this.rootFolder));
             if (!fileToWrite.getParentFile().exists()){
-                fileToWrite.getParentFile().mkdirs();
+                if (!fileToWrite.getParentFile().mkdirs()){
+                    return false;
+                }
             }
-
             FileOutputStream out =
-                    new FileOutputStream(rootFolder+ File.separator+
-                            managedFile.getType()+File.separator+
-                            FileHelper.dateToFilePath(managedFile.
-                                    getCreationDate())+File.separator+
-                            managedFile.getId());
+                    new FileOutputStream(fileToWrite);
             try {
                 FileHelper.writeFile(this.inputStream,out);
                 return true;

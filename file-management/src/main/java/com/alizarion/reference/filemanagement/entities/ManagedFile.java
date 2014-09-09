@@ -1,5 +1,6 @@
 package com.alizarion.reference.filemanagement.entities;
 
+import org.apache.commons.io.FilenameUtils;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -36,7 +37,7 @@ public abstract class ManagedFile  implements Serializable {
     @Column(insertable = false,updatable = false )
     private String type;
 
-    @Column(name = "weight")
+    @Column(name = "weight_kb")
     private Long weight;
 
     @Column(name = "extension")
@@ -70,6 +71,7 @@ public abstract class ManagedFile  implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+        this.extension = FilenameUtils.getExtension(this.fileName);
     }
 
     public abstract String getType();

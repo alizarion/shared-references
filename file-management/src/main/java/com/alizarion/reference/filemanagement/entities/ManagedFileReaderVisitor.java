@@ -1,9 +1,6 @@
-package com.alizarion.reference.filemanagement.tools;
+package com.alizarion.reference.filemanagement.entities;
 
-import com.alizarion.reference.filemanagement.entities.ImageManagedFile;
-import com.alizarion.reference.filemanagement.entities.ManagedFile;
-import com.alizarion.reference.filemanagement.entities.ManagedFileVisitor;
-import com.alizarion.reference.filemanagement.entities.SimpleManagedFile;
+import com.alizarion.reference.filemanagement.tools.FileHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,12 +52,11 @@ public class ManagedFileReaderVisitor  implements ManagedFileVisitor {
      */
     private boolean getFile( ManagedFile managedFile){
         try {
-            this.file = new File(this.rootFolder.concat(File.separator).
-                    concat(managedFile.getType()).concat(File.separator).
-                    concat(FileHelper.dateToFilePath(managedFile.
-                            getCreationDate())).concat(File.separator).
-                    concat(managedFile.getId().toString()));
-            this.inputStream = new FileInputStream(this.file);
+            this.file = new File(FileHelper.
+                    getFileFullPath(managedFile,
+                            this.rootFolder));
+            this.inputStream =
+                    new FileInputStream(this.file);
             return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

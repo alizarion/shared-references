@@ -1,5 +1,7 @@
 package com.alizarion.reference.filemanagement.tools;
 
+import com.alizarion.reference.filemanagement.entities.ManagedFile;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,8 +26,32 @@ public class FileHelper {
                 File.separator+cal.get(Calendar.WEEK_OF_YEAR);
     }
 
+    public static String getFileFullPath(ManagedFile managedFile, String root, String folderDiscriminate,String fileDiscriminate){
+        return root.
+                concat(File.separator).
+                concat(folderDiscriminate).
+                concat(File.separator).
+                concat(managedFile.getType()).
+                concat(File.separator).
+                concat(dateToFilePath(managedFile.getCreationDate())).
+                concat(File.separator).
+                concat(managedFile.getId().toString()).
+                concat(fileDiscriminate);
+    }
+
+    public static String getFileFullPath(ManagedFile managedFile, String root){
+        return root.
+                concat(File.separator).
+                concat(managedFile.getType()).
+                concat(File.separator).
+                concat(dateToFilePath(managedFile.
+                        getCreationDate())).
+                concat(File.separator).
+                concat(managedFile.getId().toString());
+    }
+
     public static Boolean writeFile(InputStream inputStream ,
-                             FileOutputStream fileOutputStream)
+                                    FileOutputStream fileOutputStream)
             throws IOException {
 
         int BUFFER_SIZE = 8192;

@@ -13,19 +13,31 @@ public class ImageManagedFile extends ManagedFile implements ManagedFileVisitabl
 
     public final static String TYPE = "IMAGE";
 
-    @Column(name = "height")
+    @Column(name = "managed_image_height")
     private Integer height;
 
-    @Column(name = "width")
+    @Column(name = "managed_image_width")
     private Integer width;
 
-    @Column(name = "color_space",length = 5)
+    @Column(name = "managed_image_color_space",length = 5)
     private Integer colorSpace;
+
+    @Column(name = "managed_image_format")
+    private String format;
+
 
 
     @Override
     public void accept(ManagedFileVisitor managedFileVisitor) {
         managedFileVisitor.visit(this);
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     public Integer getHeight() {
