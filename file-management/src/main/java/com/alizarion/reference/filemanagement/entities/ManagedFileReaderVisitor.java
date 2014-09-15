@@ -1,5 +1,6 @@
 package com.alizarion.reference.filemanagement.entities;
 
+import com.alizarion.reference.filemanagement.exception.ReadingManagedFileException;
 import com.alizarion.reference.filemanagement.tools.FileHelper;
 
 import java.io.File;
@@ -28,13 +29,13 @@ public class ManagedFileReaderVisitor  implements ManagedFileVisitor {
     }
 
     @Override
-    public void visit(ImageManagedFile imageManagedFile) {
-        getFile(imageManagedFile);
+    public File visit(ImageManagedFile imageManagedFile) throws ReadingManagedFileException {
+      return getFile(imageManagedFile);
     }
 
     @Override
-    public void visit(SimpleManagedFile simpleManagedFile) {
-        getFile(simpleManagedFile);
+    public File visit(SimpleManagedFile simpleManagedFile) throws ReadingManagedFileException {
+      return getFile(simpleManagedFile);
     }
 
     public File getManagedFileAsFile(){
@@ -50,17 +51,18 @@ public class ManagedFileReaderVisitor  implements ManagedFileVisitor {
      * @param managedFile  to read
      * @return  true if file readed successfully.
      */
-    private boolean getFile( ManagedFile managedFile){
+    private File getFile( ManagedFile managedFile) throws ReadingManagedFileException {
         try {
             this.file = new File(FileHelper.
                     getFileFullPath(managedFile,
                             this.rootFolder));
             this.inputStream =
                     new FileInputStream(this.file);
-            return true;
+            return this.file;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new ReadingManagedFileException("error during reading file  "+
+                    FileHelper.getFileFullPath(managedFile,
+                            this.rootFolder),e);
         }
-        return false;
     }
 }

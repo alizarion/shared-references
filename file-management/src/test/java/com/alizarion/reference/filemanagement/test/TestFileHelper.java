@@ -15,7 +15,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.junit.Assert.assertFalse;
@@ -50,7 +49,7 @@ public class TestFileHelper {
     }
 
     @Test
-    public void testFileURIGetter() throws URISyntaxException, IOException {
+    public void testFileURIGetter() throws Exception {
 
         ImageManagedFile imageManagedFile= new ImageManagedFile();
 
@@ -58,7 +57,9 @@ public class TestFileHelper {
         trx.begin();
         ManagedImageFileDataVisitor fileDataVisitor =
                 new ManagedImageFileDataVisitor(this.fileToWrite);
-        imageManagedFile.accept(fileDataVisitor);
+
+            imageManagedFile.accept(fileDataVisitor);
+
 
         imageManagedFile = em.merge(imageManagedFile);
         ManagedFileWriterVisitor fileWriterVisitor =
@@ -73,6 +74,7 @@ public class TestFileHelper {
         ManagedImageScaledCacheVisitor scaledCacheVisitor =
                 new ManagedImageScaledCacheVisitor(this.rootFolder,199,100);
         imageManagedFile.accept(scaledCacheVisitor);
+        System.out.println(imageManagedFile);
         File cacheFile = scaledCacheVisitor.getCacheFile();
         trx.commit();
 

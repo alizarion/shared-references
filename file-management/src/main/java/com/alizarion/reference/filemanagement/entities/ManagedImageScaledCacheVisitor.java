@@ -1,5 +1,6 @@
 package com.alizarion.reference.filemanagement.entities;
 
+import com.alizarion.reference.filemanagement.exception.GeneratingCacheFileException;
 import com.alizarion.reference.filemanagement.tools.FileHelper;
 import com.alizarion.reference.filemanagement.tools.ImageFileHelper;
 
@@ -8,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
+ * Visitor that contain methods to generate image scaled cache.
  * @author selim@openlinux.fr.
  */
 public class ManagedImageScaledCacheVisitor implements ManagedFileVisitor{
@@ -46,12 +48,18 @@ public class ManagedImageScaledCacheVisitor implements ManagedFileVisitor{
     }
 
     @Override
-    public void visit(ImageManagedFile imageManagedFile) {
+    public File visit(ImageManagedFile imageManagedFile)
+            throws GeneratingCacheFileException {
         if(imageManagedFile.getWidth() <= this.newWidth ||
                 imageManagedFile.getWidth() <= this.newWidth){
             ManagedFileReaderVisitor readerVisitor =
                     new ManagedFileReaderVisitor(this.rootFolder);
-            imageManagedFile.accept(readerVisitor);
+            try {
+                imageManagedFile.accept(readerVisitor);
+            } catch (Exception e) {
+                throw new GeneratingCacheFileException(
+                        "error generatig cache file ",e);
+            }
             this.cacheFile = readerVisitor.getManagedFileAsFile();
         }  else {
 
@@ -69,7 +77,12 @@ public class ManagedImageScaledCacheVisitor implements ManagedFileVisitor{
 
                 ManagedFileReaderVisitor fileReaderVisitor =
                         new ManagedFileReaderVisitor(this.rootFolder);
-                imageManagedFile.accept(fileReaderVisitor);
+                try {
+                    imageManagedFile.accept(fileReaderVisitor);
+                } catch (Exception e) {
+                    throw  new GeneratingCacheFileException(
+                            "error generatig cache file ",e);
+                }
 
                 try {
                     BufferedImage imageSource =
@@ -80,8 +93,10 @@ public class ManagedImageScaledCacheVisitor implements ManagedFileVisitor{
                                     this.newWidth, this.newHeight);
                     if (!expectedFile.getParentFile().exists()) {
                         if (!expectedFile.getParentFile().mkdirs()) {
-                            throw new Exception("marche pas....");
-                            //TODO catcher les excpetions correctement...
+                            throw new GeneratingCacheFileException(
+                                    "Cannot create directories" +
+                                            " for generating cache" +
+                                            expectedFile.getParentFile());
                         }
                     }
                     ImageIO.write(scaledImage,
@@ -90,15 +105,17 @@ public class ManagedImageScaledCacheVisitor implements ManagedFileVisitor{
                     this.cacheFile = expectedFile;
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw  new GeneratingCacheFileException(
+                            "Cache generation failed for : " + imageManagedFile );
                 }
             }
         }
+        return this.cacheFile ;
     }
 
     @Override
-    public void visit(SimpleManagedFile simpleManagedFile) {
-
+    public Void visit(SimpleManagedFile simpleManagedFile) {
+        throw new UnsupportedOperationException("SimpleManagedFile cannot support cache");
     }
 
     public File getCacheFile() {

@@ -1,8 +1,12 @@
 package com.alizarion.reference.filemanagement.entities;
 
+import com.alizarion.reference.filemanagement.exception.WritingManagedFileException;
 import com.alizarion.reference.filemanagement.tools.FileHelper;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Simple class to write all kind of managedFile on the file system.
@@ -31,16 +35,8 @@ public class ManagedFileWriterVisitor implements ManagedFileVisitor {
      * @param imageManagedFile to write.
      */
     @Override
-    public void visit(ImageManagedFile imageManagedFile)  {
-        try {
-            if (!simpleManagedFilePathBasedWriter(imageManagedFile)){
-                //TODO ajouter un vrai traitement des exceptions
-                throw new Exception("Error wile file ImageManagedFile write");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public Boolean visit(ImageManagedFile imageManagedFile) throws WritingManagedFileException {
+        return simpleManagedFilePathBasedWriter(imageManagedFile);
     }
 
     /**
@@ -48,15 +44,8 @@ public class ManagedFileWriterVisitor implements ManagedFileVisitor {
      * @param simpleManagedFile to write
      */
     @Override
-    public void visit(SimpleManagedFile simpleManagedFile) {
-        try {
-            if (!simpleManagedFilePathBasedWriter(simpleManagedFile)){
-                //TODO ajouter un vrai traitement des exceptions
-                throw new Exception("Error wile file SimpleManagedFile write");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public Boolean visit(SimpleManagedFile simpleManagedFile) throws WritingManagedFileException {
+        return simpleManagedFilePathBasedWriter(simpleManagedFile);
     }
 
     /**
@@ -64,29 +53,28 @@ public class ManagedFileWriterVisitor implements ManagedFileVisitor {
      * @param managedFile managedfile to write
      * @return  true if writed successfully.
      */
-    private boolean simpleManagedFilePathBasedWriter(ManagedFile managedFile){
-        try {
-            File fileToWrite =
-                    new File(FileHelper.
-                            getFileFullPath(managedFile,this.rootFolder));
-            if (!fileToWrite.getParentFile().exists()){
-                if (!fileToWrite.getParentFile().mkdirs()){
-                    return false;
-                }
+    private Boolean simpleManagedFilePathBasedWriter(ManagedFile managedFile) throws WritingManagedFileException {
+        File fileToWrite =
+                new File(FileHelper.
+                        getFileFullPath(managedFile,this.rootFolder));
+        if (!fileToWrite.getParentFile().exists()){
+            if (!fileToWrite.getParentFile().mkdirs()){
+                throw new WritingManagedFileException("Cannot make " +
+                        fileToWrite.getParentFile().getAbsolutePath()
+                        + "Folder") ;
             }
-            FileOutputStream out =
-                    new FileOutputStream(fileToWrite);
-            try {
-                FileHelper.writeFile(this.inputStream,out);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
         }
+        FileOutputStream out;
+        try {
+            out = new FileOutputStream(fileToWrite);
+
+
+            FileHelper.writeFile(this.inputStream,out);
+            return null;
+        } catch (IOException e) {
+            throw new WritingManagedFileException(managedFile.toString(),e) ;
+        }
+
     }
 
 }

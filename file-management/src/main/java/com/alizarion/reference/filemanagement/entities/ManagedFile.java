@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * All Files that are managed by the application, images, videos, resources, .
  * @author selim@openlinux.fr.
  */
 @Entity
@@ -16,6 +17,7 @@ import java.util.Date;
 @Table(name = "file_management_managed_file")
 public abstract class ManagedFile  implements Serializable {
 
+    private static final long serialVersionUID = -5029119787687345370L;
     @Id
     @TableGenerator(name = "managed_file_SEQ",
             pkColumnName = "SEQ_NAME",
@@ -34,27 +36,58 @@ public abstract class ManagedFile  implements Serializable {
     @Column(name = "file_name",length = 255, nullable = false)
     private String fileName;
 
+    /**
+     * type of the downcast child
+     */
     @Column(insertable = false,updatable = false )
     private String type;
 
+    /**
+     * File Weight in kilo bytes.
+     */
     @Column(name = "weight_kb")
     private Long weight;
 
+    /**
+     * File name extension.
+     */
     @Column(name = "extension")
     private String extension;
 
+    /**
+     * Managed file state
+     */
     @Enumerated(EnumType.STRING)
     private ManagedFileState managedFileState;
 
+    /**
+     * Managed File unique complex unique id
+     */
     @GeneratedValue(generator = "managed-file-uuid")
     @GenericGenerator(name="managed-file-uuid",
-            strategy = "uuid")
+            strategy = "uuid2")
     @Column(name = "uuid",unique = true)
     private String UUID;
 
     protected ManagedFile() {
         this.managedFileState = ManagedFileState.US;
         this.creationDate = new Date();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setManagedFileState(ManagedFileState managedFileState) {
+        this.managedFileState = managedFileState;
+    }
+
+    public String getUUID() {
+        return UUID;
+    }
+
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
     }
 
     public Long getId() {
@@ -100,9 +133,7 @@ public abstract class ManagedFile  implements Serializable {
         return managedFileState;
     }
 
-    public void setManagedFileState(Enum managedFileState) {
-        managedFileState = managedFileState;
-    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -111,23 +142,19 @@ public abstract class ManagedFile  implements Serializable {
 
         ManagedFile that = (ManagedFile) o;
 
-        if (managedFileState != null ? !managedFileState.
-                equals(that.managedFileState) : that.managedFileState != null)
-            return false;
-        if (creationDate != null ? !creationDate.equals(that.creationDate) :
-                that.creationDate != null) return false;
-        if (extension != null ? !extension.equals(that.extension) :
-                that.extension != null) return false;
-        if (fileName != null ? !fileName.equals(that.fileName) :
-                that.fileName != null) return false;
-        if (id != null ? !id.equals(that.id) :
-                that.id != null) return false;
-        if (type != null ? !type.equals(that.type) :
-                that.type != null) return false;
-        if (weight != null ? !weight.equals(that.weight) :
-                that.weight != null) return false;
+        return !(managedFileState != null ?
+                !managedFileState.equals(that.managedFileState) :
+                that.managedFileState != null) &&
+                !(creationDate != null ? !creationDate.equals(that.creationDate) :
+                        that.creationDate != null) &&
+                !(extension != null ? !extension.equals(that.extension) :
+                        that.extension != null) &&
+                !(fileName != null ? !fileName.equals(that.fileName) :
+                        that.fileName != null) &&
+                !(id != null ? !id.equals(that.id) : that.id != null) &&
+                !(type != null ? !type.equals(that.type) : that.type != null) &&
+                !(weight != null ? !weight.equals(that.weight) : that.weight != null);
 
-        return true;
     }
 
     @Override
@@ -146,5 +173,27 @@ public abstract class ManagedFile  implements Serializable {
         result = 31 * result + (managedFileState != null ?
                 managedFileState.hashCode() : 0);
         return result;
+    }
+
+    /**
+     * Method that generate the uuid before persisting entity
+     */
+    @PrePersist
+    public void generateUUID(){
+        this.UUID = java.util.UUID.randomUUID().toString();
+    }
+
+    @Override
+    public String toString() {
+        return "ManagedFile{" +
+                "id=" + id +
+                ", creationDate=" + creationDate +
+                ", fileName='" + fileName + '\'' +
+                ", type='" + type + '\'' +
+                ", weight=" + weight +
+                ", extension='" + extension + '\'' +
+                ", managedFileState=" + managedFileState +
+                ", UUID='" + UUID + '\''
+                ;
     }
 }

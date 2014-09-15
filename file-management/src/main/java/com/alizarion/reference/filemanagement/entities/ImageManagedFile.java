@@ -1,36 +1,46 @@
 package com.alizarion.reference.filemanagement.entities;
 
+import com.alizarion.reference.exception.ApplicationException;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 /**
+ * Describe image files that are managed by the app.
  * @author selim@openlinux.fr.
  */
 @Entity
 @DiscriminatorValue(value = ImageManagedFile.TYPE)
 public class ImageManagedFile extends ManagedFile implements ManagedFileVisitable {
 
+    private static final long serialVersionUID = -7416614602874082506L;
+
     public final static String TYPE = "IMAGE";
 
+    /**
+     * Image height.
+     */
     @Column(name = "managed_image_height")
     private Integer height;
 
+    /**
+     * Image Width.
+     */
     @Column(name = "managed_image_width")
     private Integer width;
 
+    /**
+     * Image color spaces
+     */
     @Column(name = "managed_image_color_space",length = 5)
     private Integer colorSpace;
 
+    /**
+     * Source image Format
+     */
     @Column(name = "managed_image_format")
     private String format;
-
-
-
-    @Override
-    public void accept(ManagedFileVisitor managedFileVisitor) {
-        managedFileVisitor.visit(this);
-    }
 
     public String getFormat() {
         return format;
@@ -65,6 +75,13 @@ public class ImageManagedFile extends ManagedFile implements ManagedFileVisitabl
     }
 
     @Override
+    public  <ReturnType,T extends ApplicationException>
+    ReturnType accept(ManagedFileVisitor<ReturnType,T> managedFileVisitor)
+            throws T {
+        return managedFileVisitor.visit(this);
+    }
+
+    @Override
     public String getType() {
         return TYPE;
     }
@@ -77,14 +94,13 @@ public class ImageManagedFile extends ManagedFile implements ManagedFileVisitabl
 
         ImageManagedFile that = (ImageManagedFile) o;
 
-        if (colorSpace != null ? !colorSpace.equals(that.colorSpace) :
-                that.colorSpace != null) return false;
-        if (height != null ? !height.equals(that.height) :
-                that.height != null) return false;
-        if (width != null ? !width.equals(that.width) :
-                that.width != null) return false;
+        return !(colorSpace != null ? !colorSpace.equals(that.colorSpace) :
+                that.colorSpace != null) &&
+                !(height != null ? !height.equals(that.height) :
+                        that.height != null) &&
+                !(width != null ? !width.equals(that.width) :
+                        that.width != null);
 
-        return true;
     }
 
     @Override
@@ -97,5 +113,18 @@ public class ImageManagedFile extends ManagedFile implements ManagedFileVisitabl
         result = 31 * result + (colorSpace != null ?
                 colorSpace.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+
+        return super.toString() +
+                "ImageManagedFile{" +
+                "height=" + height +
+                ", width=" + width +
+                ", colorSpace=" + colorSpace +
+                ", format='" + format + '\'' +
+                '}'+ '\''+
+                '}';
     }
 }

@@ -26,7 +26,10 @@ public class FileHelper {
                 File.separator+cal.get(Calendar.WEEK_OF_YEAR);
     }
 
-    public static String getFileFullPath(ManagedFile managedFile, String root, String folderDiscriminate,String fileDiscriminate){
+    public static String getFileFullPath(ManagedFile managedFile,
+                                         String root,
+                                         String folderDiscriminate,
+                                         String fileDiscriminate){
         return root.
                 concat(File.separator).
                 concat(folderDiscriminate).

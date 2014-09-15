@@ -1,10 +1,14 @@
 package com.alizarion.reference.filemanagement.entities;
 
-/**
- * Created by sphinx on 05/09/14.
- */
-public interface ManagedFileVisitable {
+import com.alizarion.reference.exception.ApplicationException;
 
-    public void accept(ManagedFileVisitor managedFileVisitor);
+/**
+ * Defines an interface for classes that may be interpreted by a Visitor.
+ * @author selim@openlinux.fr
+ */
+public interface ManagedFileVisitable   {
+
+    public <ReturnType, T extends ApplicationException>
+    ReturnType accept(ManagedFileVisitor<ReturnType, T > managedFileVisitor) throws T;
 
 }

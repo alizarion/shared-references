@@ -1,5 +1,7 @@
 package com.alizarion.reference.filemanagement.entities;
 
+import com.alizarion.reference.filemanagement.exception.ManagedImageFileDataVisitorException;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
+ * Class that contain method to get image file meta data.
  * @author selim@openlinux.fr.
  */
 public class ManagedImageFileDataVisitor implements ManagedFileVisitor{
@@ -25,7 +28,7 @@ public class ManagedImageFileDataVisitor implements ManagedFileVisitor{
     }
 
     @Override
-    public void visit(ImageManagedFile imageManagedFile) {
+    public Void visit(ImageManagedFile imageManagedFile) throws ManagedImageFileDataVisitorException {
         try {
             imageManagedFile.setFileName(this.file.getName());
             BufferedImage image = ImageIO.read(new FileInputStream(this.file));
@@ -39,22 +42,29 @@ public class ManagedImageFileDataVisitor implements ManagedFileVisitor{
             Iterator<ImageReader> readerIterator =  ImageIO.
                     getImageReaders(inputStream);
             if (!readerIterator.hasNext()){
-                return;
+                throw new ManagedImageFileDataVisitorException(
+                        "ManagedImageFileDataVisitorException" +
+                                " cannot read image meta data of :  " +
+                                imageManagedFile.toString());
             }
-            //TODO gestion des erreur en cas d'echec lecture
             ImageReader imageReader =  readerIterator.next();
             imageManagedFile.setFormat(imageReader.getFormatName());
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ManagedImageFileDataVisitorException(
+                    "ManagedImageFileDataVisitorException" +
+                            " cannot read image meta data of :  " +
+                            imageManagedFile.toString());
 
         }
+        return null;
     }
 
     @Override
-    public void visit(SimpleManagedFile simpleManagedFile) {
-
+    public Void visit(SimpleManagedFile simpleManagedFile) {
+        throw new UnsupportedOperationException("SimpleManagedFile cannot " +
+                "support image meta data extraction.");
     }
 
 

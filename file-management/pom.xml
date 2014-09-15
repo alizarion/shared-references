@@ -42,11 +42,15 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
-
         </dependency>
         <dependency>
             <groupId>com.alizarion.reference.resource</groupId>
             <artifactId>resource</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alizarion.reference.exception</groupId>
+            <artifactId>exceptions</artifactId>
             <version>${project.version}</version>
         </dependency>
 

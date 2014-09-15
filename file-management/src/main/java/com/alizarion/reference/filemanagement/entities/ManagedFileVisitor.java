@@ -1,12 +1,14 @@
 package com.alizarion.reference.filemanagement.entities;
 
+import com.alizarion.reference.exception.ApplicationException;
+
 /**
- * Created by sphinx on 05/09/14.
+ * This interface contains the methods a visitor of the AST must implement.
  * @author selim@openlinux.fr
  */
-public interface ManagedFileVisitor {
+public interface ManagedFileVisitor <ReturnType, T extends  ApplicationException> {
 
-    public void visit(ImageManagedFile imageManagedFile);
+    public ReturnType visit(ImageManagedFile imageManagedFile) throws T;
 
-    public void visit(SimpleManagedFile simpleManagedFile);
+    public ReturnType visit(SimpleManagedFile simpleManagedFile) throws T;
 }
