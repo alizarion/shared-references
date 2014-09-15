@@ -45,6 +45,12 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.exception</groupId>
+            <artifactId>exceptions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <scm>

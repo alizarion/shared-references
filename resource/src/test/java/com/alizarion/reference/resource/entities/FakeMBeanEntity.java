@@ -1,4 +1,5 @@
 package com.alizarion.reference.resource.entities;
+import com.alizarion.reference.resource.exception.PersistentResourceNotFoundException;
 import com.alizarion.reference.resource.mbean.PersistentMBean;
 
 /**
@@ -17,7 +18,7 @@ public class FakeMBeanEntity extends PersistentMBean{
         return "fake.proprieties.for.unit.test";
     }
 
-    public String getKeyValue(){
+    public String getKeyValue() throws PersistentResourceNotFoundException {
         return getValue(KEY);
     }
 }

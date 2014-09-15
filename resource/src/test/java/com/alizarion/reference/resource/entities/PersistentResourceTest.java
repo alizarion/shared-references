@@ -1,5 +1,6 @@
 package com.alizarion.reference.resource.entities;
 
+import com.alizarion.reference.resource.exception.PersistentResourceNotFoundException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,7 +36,7 @@ public class PersistentResourceTest {
     }
 
     @Test
-    public void persistResourcesTest(){
+    public void persistResourcesTest() throws PersistentResourceNotFoundException {
 
         EntityTransaction trx = em.getTransaction();
         trx.begin();

@@ -1,6 +1,7 @@
 package com.alizarion.reference.resource.mbean;
 
 import com.alizarion.reference.resource.entities.PersistentResource;
+import com.alizarion.reference.resource.exception.PersistentResourceNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -18,6 +19,8 @@ import java.net.URISyntaxException;
 @Stateless
 public abstract class PersistentMBean implements Serializable {
 
+    private static final long serialVersionUID = -8901442021995218836L;
+
     @PersistenceContext
     EntityManager em;
 
@@ -28,7 +31,7 @@ public abstract class PersistentMBean implements Serializable {
         this.em = em;
     }
 
-    public String getValue(String s){
+    public String getValue(String s) throws PersistentResourceNotFoundException {
         try{
             PersistentResource persistentEntry = (PersistentResource)
                     em.createNamedQuery(PersistentResource.
@@ -38,12 +41,11 @@ public abstract class PersistentMBean implements Serializable {
 
             return persistentEntry.getValue();
         } catch (NoResultException e){
-            //TODO add specific exception hanlder
-            return null;
+            throw new PersistentResourceNotFoundException("No values for this key :" + s,e);
         }
     }
 
-    public void setValue(String key, String value){
+    public void setValue(String key, String value) throws PersistentResourceNotFoundException {
         try{
             PersistentResource persistentEntry = (PersistentResource)
                     em.createNamedQuery(PersistentResource.
@@ -55,15 +57,13 @@ public abstract class PersistentMBean implements Serializable {
             em.merge(persistentEntry);
 
         } catch (NoResultException e){
-            //TODO add specific exception hanlder
-
+            throw new PersistentResourceNotFoundException("No values for this key :" + key,e);
         }
     }
 
 
-    public URI getValueAsURI(String s) throws URISyntaxException {
+    public URI getValueAsURI(String s) throws URISyntaxException, PersistentResourceNotFoundException {
         return new URI(getValue(s));
-        //TODO add specific exception hanlder
     }
 
 
