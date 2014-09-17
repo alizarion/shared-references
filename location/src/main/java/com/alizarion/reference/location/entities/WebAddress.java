@@ -18,6 +18,8 @@ import java.net.URL;
 public class WebAddress extends Address implements Serializable {
 
 
+    private static final long serialVersionUID = 5070561554249537740L;
+
     @Column(name = "hostname")
     private String host;
 

@@ -14,6 +14,8 @@ public class PhoneAddress extends Address  implements Serializable{
 
     public final static String TYPE = "phone";
 
+    private static final long serialVersionUID = -3137992525091670060L;
+
 
     @Column(name = "number",nullable = false,length = 50)
     private String number;

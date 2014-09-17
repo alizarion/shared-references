@@ -12,6 +12,8 @@ import java.io.Serializable;
 @PrimaryKeyJoinColumn(name = "email_address_id")
 public class EmailAddress extends Address implements Serializable {
 
+    private static final long serialVersionUID = 3778051241478489845L;
+
     public final static String TYPE = "email";
 
     @Column(name = "email_address",unique = true)

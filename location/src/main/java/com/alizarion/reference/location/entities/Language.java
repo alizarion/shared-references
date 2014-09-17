@@ -10,6 +10,8 @@ import java.io.Serializable;
 @Table(name = "location_language")
 public class Language implements Serializable {
 
+    private static final long serialVersionUID = -1283144562330733745L;
+
     @Column(name = "managed")
     private Boolean managed;
 
@@ -21,5 +23,19 @@ public class Language implements Serializable {
         this.managed = false;
     }
 
+    public Boolean getManaged() {
+        return managed;
+    }
 
+    public void setManaged(Boolean managed) {
+        this.managed = managed;
+    }
+
+    public String getLangCode() {
+        return LangCode;
+    }
+
+    public void setLangCode(String langCode) {
+        LangCode = langCode;
+    }
 }
