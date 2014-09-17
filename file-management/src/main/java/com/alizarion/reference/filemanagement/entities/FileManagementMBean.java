@@ -1,5 +1,6 @@
 package com.alizarion.reference.filemanagement.entities;
 
+import com.alizarion.reference.exception.ApplicationError;
 import com.alizarion.reference.resource.exception.PersistentResourceNotFoundException;
 import com.alizarion.reference.resource.mbean.PersistentMBean;
 
@@ -22,7 +23,7 @@ public class FileManagementMBean extends PersistentMBean {
             "managed-file-root-folder";
 
     public final static String MANAGED_FILE_TEMP_FOLDER =
-                "managed-file-temp-folder";
+            "managed-file-temp-folder";
 
     @Override
     public String getCategory() {
@@ -30,9 +31,13 @@ public class FileManagementMBean extends PersistentMBean {
     }
 
     public URI getManagedFileRootFolder() throws
-            URISyntaxException,
             PersistentResourceNotFoundException {
-       return new  URI(getValue(MANAGED_FILE_ROOT_FOLDER));
+        try {
+            return getValueAsURI(MANAGED_FILE_ROOT_FOLDER);
+        } catch (URISyntaxException e) {
+            throw new ApplicationError("bad URI Syntax to get " +
+                    MANAGED_FILE_ROOT_FOLDER + "property",e);
+        }
     }
 
 
