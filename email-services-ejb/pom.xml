@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>reference</artifactId>
+        <groupId>com.alizarion.reference</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.alizarion.reference.email.service</groupId>
+    <artifactId>email-services-ejb</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>ejb</packaging>
+
+    <name>Email services.</name>
+    <description>
+        Emailing EJB services.
+    </description>
+
+    <developers>
+        <developer>
+            <id>selim.bensenouci</id>
+            <email>selim.bensenouci@gmail.com</email>
+            <name>Selim Bensenouci</name>
+            <organization>Alizarion</organization>
+        </developer>
+        <developer>
+            <id>sidahmed.mehani</id>
+            <email>sid.mehani@gmail.com</email>
+            <name>Sidahmed MEHANI</name>
+            <organization>Alizarion</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.alizarion.reference.email</groupId>
+            <artifactId>email</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+      <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-ejb-plugin</artifactId>
+            <configuration>
+                <ejbVersion>3.2</ejbVersion>
+            </configuration>
+        </plugin>
+      </plugins>
+    </build>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/email-services-ejb/</developerConnection>
+        <url>https://github.com/alizarion/shared-references.git/email-services-ejb/</url>
+    </scm>
+</project>

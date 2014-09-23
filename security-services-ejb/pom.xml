@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>reference</artifactId>
+        <groupId>com.alizarion.reference</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.alizarion.reference.security.services</groupId>
+    <artifactId>security-services-ejb</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Security EJB services .</name>
+    <description>
+        Change password workflow, email validation, security token management …
+    </description>
+
+    <developers>
+        <developer>
+            <id>selim.bensenouci</id>
+            <email>selim.bensenouci@gmail.com</email>
+            <name>Selim Bensenouci</name>
+            <organization>Alizarion</organization>
+        </developer>
+        <developer>
+            <id>sidahmed.mehani</id>
+            <email>sid.mehani@gmail.com</email>
+            <name>Sidahmed MEHANI</name>
+            <organization>Alizarion</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+        <!-- included module -->
+        <dependency>
+            <groupId>com.alizarion.reference.exception</groupId>
+            <artifactId>exceptions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/security-services-ejb/</developerConnection>
+        <url>https://github.com/alizarion/shared-references.git/security-services-ejb/</url>
+    </scm>
+</project>

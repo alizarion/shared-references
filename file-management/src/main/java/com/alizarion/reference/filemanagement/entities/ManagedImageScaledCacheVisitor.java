@@ -7,12 +7,13 @@ import com.alizarion.reference.filemanagement.tools.ImageFileHelper;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.concurrent.Callable;
 
 /**
  * Visitor that contain methods to generate image scaled cache.
  * @author selim@openlinux.fr.
  */
-public class ManagedImageScaledCacheVisitor implements ManagedFileVisitor{
+public class ManagedImageScaledCacheVisitor implements ManagedFileVisitor, Callable<File>{
 
     /**
      * root folder to discriminate cache files.
@@ -123,4 +124,8 @@ public class ManagedImageScaledCacheVisitor implements ManagedFileVisitor{
     }
 
 
+    @Override
+    public File call() throws Exception {
+        return null;
+    }
 }

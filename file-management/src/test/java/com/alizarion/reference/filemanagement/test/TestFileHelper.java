@@ -59,8 +59,6 @@ public class TestFileHelper {
                 new ManagedImageFileDataVisitor(this.fileToWrite);
 
             imageManagedFile.accept(fileDataVisitor);
-
-
         imageManagedFile = em.merge(imageManagedFile);
         ManagedFileWriterVisitor fileWriterVisitor =
                 new ManagedFileWriterVisitor(

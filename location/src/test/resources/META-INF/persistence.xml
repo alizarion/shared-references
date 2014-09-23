@@ -13,7 +13,7 @@
         <class>com.alizarion.reference.location.entities.Address</class>
         <class>com.alizarion.reference.location.entities.PhysicalAddress</class>
         <class>com.alizarion.reference.location.entities.PhoneAddress</class>
-        <class>com.alizarion.reference.location.entities.EmailAddress</class>
+        <class>com.alizarion.reference.location.entities.ElectronicAddress</class>
         <class>com.alizarion.reference.location.entities.Language</class>
         <class>com.alizarion.reference.location.entities.WebAddress</class>
 

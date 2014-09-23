@@ -22,8 +22,24 @@ public abstract class Address {
     @Column
     private Long id;
 
+    @Column(name = "audited")
+    private Boolean audited;
+
+    public Address() {
+        this.audited = false;
+    }
+
     public Long getId() {
         return id;
+    }
+
+
+    public Boolean getAudited() {
+        return audited;
+    }
+
+    public void setAudited(Boolean audited) {
+        this.audited = audited;
     }
 
     @Override
@@ -32,10 +48,9 @@ public abstract class Address {
 
         Address address = (Address) o;
 
-        if (id != null ? !id.equals(address.id) :
-                address.id != null) return false;
+        return !(id != null ? !id.equals(address.id) :
+                address.id != null);
 
-        return true;
     }
 
     @Override

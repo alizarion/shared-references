@@ -15,4 +15,5 @@ import javax.persistence.Table;
 public class MoralPerson extends Person {
 
 
+    private static final long serialVersionUID = -4319034734820858415L;
 }

@@ -11,6 +11,7 @@
     <groupId>com.alizarion.reference.exception</groupId>
     <artifactId>exceptions</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <name>Application exception management .</name>
     <description>

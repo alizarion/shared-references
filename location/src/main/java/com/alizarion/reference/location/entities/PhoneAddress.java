@@ -24,10 +24,13 @@ public class PhoneAddress extends Address  implements Serializable{
     @JoinColumn(name="country_id", nullable = false)
     private Country country;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "phone_type")
+    private PhoneType phoneType;
+
     public PhoneAddress() {
 
     }
-
 
     public PhoneAddress(final String number) {
         this.number = number;
@@ -49,27 +52,44 @@ public class PhoneAddress extends Address  implements Serializable{
         this.number = number;
     }
 
+    public PhoneType getPhoneType() {
+        return phoneType;
+    }
+
+    public void setPhoneType(PhoneType phoneType) {
+        this.phoneType = phoneType;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof PhoneAddress))
-            return false;
+        if (!(o instanceof PhoneAddress)) return false;
+        if (!super.equals(o)) return false;
 
         PhoneAddress that = (PhoneAddress) o;
 
-        if (country != null ? !country.equals(that.country)
-                : that.country != null) return false;
-        if (number != null ? !number.equals(that.number)
-                : that.number != null) return false;
+        return !(country != null ? !country.equals(that.country) :
+                that.country != null) &&
+                !(number != null ? !number.equals(that.number) :
+                        that.number != null) &&
+                phoneType == that.phoneType;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = number != null ?
-                number.hashCode() : 0;
-        result = 31 * result + (country != null ?
-                country.hashCode() : 0);
+        int result = super.hashCode();
+        result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        result = 31 * result + (phoneType != null ? phoneType.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PhoneAddress{" +
+                "number='" + number + '\'' +
+                ", country=" + country +
+                ", phoneType=" + phoneType +
+                '}';
     }
 }
