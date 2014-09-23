@@ -2,7 +2,6 @@ package com.alizarion.reference.emailing.provider;
 
 import com.alizarion.reference.emailing.entities.GenericRegisterEmail;
 import com.alizarion.reference.emailing.exception.EmailException;
-import com.alizarion.reference.emailing.helper.Helper;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
@@ -35,7 +34,7 @@ public class SimpleJavaMailProviderTest {
         BufferedWriter out2 =  new BufferedWriter(new FileWriter(file2));
         out2.write("blablabla in attachment2");
         out2.close();
-        this.registerEmail = (GenericRegisterEmail) Helper.getRegisterEmail();
+      //  this.registerEmail = (GenericRegisterEmail) Helper.getRegisterEmail();
 
     }
 

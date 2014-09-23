@@ -1,5 +1,6 @@
 package com.alizarion.reference.emailing.entities;
 
+import java.net.URI;
 import java.util.Locale;
 
 /**
@@ -22,9 +23,13 @@ public abstract class EmailAbstractBuilder {
 
     private Locale locale;
 
+    private URI templateRoot;
+
     protected EmailAbstractBuilder(final String from,
                                    final String to,
+                                   final URI templateRoot,
                                    final Locale locale) {
+        this.templateRoot = templateRoot;
         this.from = from;
         this.to = to;
         this.locale = locale;
@@ -67,6 +72,18 @@ public abstract class EmailAbstractBuilder {
 
     public Locale getLocale() {
         return locale;
+    }
+
+    public URI getTemplateRoot() {
+        return templateRoot;
+    }
+
+    public void setTemplateRoot(URI templateRoot) {
+        this.templateRoot = templateRoot;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 
     public abstract Email builder();

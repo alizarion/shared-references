@@ -2,6 +2,7 @@ package com.alizarion.reference.emailing.entities;
 
 import com.alizarion.reference.emailing.exception.EmailAttachmentSizeExceedException;
 import com.alizarion.reference.emailing.exception.EmailException;
+import com.alizarion.reference.emailing.exception.EmailRenderingException;
 import com.alizarion.reference.emailing.exception.PreparingEmailMessageException;
 
 import javax.mail.Message;
@@ -15,6 +16,7 @@ import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -68,38 +70,65 @@ public abstract class Email implements Serializable {
     @Column(name = "mail_locale")
     private Locale locale;
 
+    @Transient
+    private URI templateRoot;
 
 
-    public Email() {
-        this.creationDate = new Date();
-    }
-
+    /**
+     * Email default constructor with required fields.
+     * @param from email of the sender.
+     * @param to electronic address of the destination.
+     * @param templateRoot root folder that contain email template files.
+     * @param locale language that will be used to render the mail.
+     */
     public Email(String from,
                  String to,
-                 String cc,
-                 String cci) {
+                 URI templateRoot,
+                 Locale locale) {
+        this.templateRoot = templateRoot;
+        this.creationDate = new Date();
+        this.locale =locale;
         this.from = from;
         this.to = to;
-        this.cc = cc;
-        this.cci = cci;
+
     }
 
-    public final static String MAIL_SUBJECT_TEMPLATE = "Subject.";
+    public final static String MAIL_SUBJECT_TEMPLATE = "subject";
 
-    public final static String MAIL_TEXT_BODY_TEMPLATE = "Body-Text";
+    public final static String MAIL_TEXT_BODY_TEMPLATE = "bodyText";
 
-    public final static String MAIL_HTML_BODY_TEMPLATE = "Body-HTML";
+    public final static String MAIL_HTML_BODY_TEMPLATE = "bodyHTML";
 
-    public abstract String getSubject();
+    /**
+     * Method to get the email rendered subject.
+     * @return email subject as String.
+     * @throws EmailRenderingException oups problems.
+     */
+    public abstract String getSubject() throws EmailRenderingException;
 
-    public abstract String getTextBody();
+    /**
+     * Method to get the rendered body text part of the mail.
+     * @return email body text string.
+     * @throws EmailRenderingException  on problems.
+     */
+    public abstract String getTextBody() throws EmailRenderingException;
 
-    public abstract String getHTMLBody();
+
+    /**
+     * Method to get the rendered body html part of the mail.
+     * @return email body html string.
+     * @throws EmailRenderingException on problems.
+     */
+    public abstract String getHTMLBody() throws EmailRenderingException;
 
     public abstract List<File> getAttachments();
 
     public Long getId() {
         return id;
+    }
+
+    public URI getTemplateRoot() {
+        return templateRoot;
     }
 
     public Date getSendDate() {
@@ -154,14 +183,19 @@ public abstract class Email implements Serializable {
         this.cci = cci;
     }
 
-    public String getType() {
-        return type;
-    }
+    public abstract String getType() ;
 
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Method to get ready to send message.
+     * @param session mail session used to get message.
+     * @param attachmentMaxSize max size of the mail attachment.
+     * @return message that will be sent.
+     * @throws EmailException on problems.
+     */
     public MimeMessage getMessage(Session session,
                                   final Integer attachmentMaxSize)
             throws EmailException {
