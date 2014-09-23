@@ -19,7 +19,6 @@ public abstract class EmailAbstractBuilder {
 
     private String cci;
 
-    private String type;
 
     private Locale locale;
 
@@ -66,9 +65,6 @@ public abstract class EmailAbstractBuilder {
         return cci;
     }
 
-    public String getType() {
-        return type;
-    }
 
     public Locale getLocale() {
         return locale;
