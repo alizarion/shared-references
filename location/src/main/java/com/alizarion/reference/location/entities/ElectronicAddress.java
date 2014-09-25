@@ -50,4 +50,11 @@ public class ElectronicAddress extends Address implements Serializable {
     public int hashCode() {
         return emailAddress != null ? emailAddress.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "ElectronicAddress{" +
+                "emailAddress='" + emailAddress + '\'' +
+                '}';
+    }
 }
