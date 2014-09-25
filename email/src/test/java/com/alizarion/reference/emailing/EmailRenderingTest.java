@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 public class EmailRenderingTest {
 

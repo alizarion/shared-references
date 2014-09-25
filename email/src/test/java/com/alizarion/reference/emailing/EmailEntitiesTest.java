@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * @author selim@openlinux.fr.
+ * @author selim Bensneouci.
  */
 public class EmailEntitiesTest {
 

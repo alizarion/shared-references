@@ -4,7 +4,7 @@ import com.alizarion.reference.exception.ApplicationException;
 
 /**
  * Must be extended by all email exception.
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 public class EmailException  extends ApplicationException{
 

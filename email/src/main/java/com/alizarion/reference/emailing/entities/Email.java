@@ -26,7 +26,7 @@ import java.util.*;
  * only sent mail are persisted database,<br/>
  * which allows for a mastery of the
  * number of dispatch by time
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 @Entity
 @Table(name = "email_email_log")

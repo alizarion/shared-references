@@ -5,7 +5,7 @@ import com.alizarion.reference.exception.ApplicationError;
 /**
  * Error that occur on sending transaction,
  * for some reason that is beyond us
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 public class SendingEmailException extends ApplicationError {
 

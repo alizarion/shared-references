@@ -2,7 +2,7 @@ package com.alizarion.reference.emailing.exception;
 
 /**
  * Email attachment size exceed what is allowed in email properties params.
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 public class EmailAttachmentSizeExceedException extends EmailException {
 

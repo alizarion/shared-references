@@ -6,7 +6,7 @@ import java.util.Locale;
 /**
  * Builder class that can be used to help building <br/>
  * emails objects that can contains many properties.
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  * @see com.alizarion.reference.emailing.entities.Email
  */
 public abstract class EmailAbstractBuilder {

@@ -2,7 +2,7 @@ package com.alizarion.reference.emailing.exception;
 
 /**
  * And exception occur on handling email config params.
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 public class EmailConfigException extends EmailException {
 

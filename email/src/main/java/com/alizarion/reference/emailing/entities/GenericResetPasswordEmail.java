@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * Generic credentials reset password email
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 @Entity
 @DiscriminatorValue(value = GenericResetPasswordEmail.TYPE)

@@ -11,7 +11,7 @@ import java.net.URISyntaxException;
 
 /**
  * Email params.
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 public class EmailMBean extends PersistentMBean {
 

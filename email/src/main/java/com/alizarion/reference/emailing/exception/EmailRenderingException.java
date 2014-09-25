@@ -2,7 +2,7 @@ package com.alizarion.reference.emailing.exception;
 
 /**
  * Cannot render email template.
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 public class EmailRenderingException extends EmailException {
 

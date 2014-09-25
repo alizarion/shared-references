@@ -11,7 +11,7 @@ import java.net.URI;
 import java.util.*;
 
 /**
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 @Entity
 @DiscriminatorValue(value = GenericRegisterEmail.TYPE)

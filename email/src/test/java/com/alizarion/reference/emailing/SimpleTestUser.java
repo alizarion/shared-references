@@ -1,7 +1,7 @@
 package com.alizarion.reference.emailing;
 
 /**
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 public class SimpleTestUser {
 

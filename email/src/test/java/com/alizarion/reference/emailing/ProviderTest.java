@@ -4,7 +4,7 @@ import com.alizarion.reference.emailing.entities.Email;
 import com.alizarion.reference.emailing.provider.EmailProvider;
 
 /**
- * @author selim@openlinux.fr.
+ * @author Selim Bensenouci.
  */
 public class ProviderTest implements EmailProvider {
 
