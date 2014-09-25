@@ -25,9 +25,14 @@ To run these modules with the provided build scripts, you need the following:
 <br/>
 3. if you want to see the showcase you will need wildfly.
 <br/>
+
 How ?
 ----------------------
 <br/>
-See the README file in each individual library folder for specific details and information on how to run and use it.
+See the README file in each individual library folder for specific details and information <br/>
+on how to run and use it.
 <br/>
-Some libraries are designed to enhance or extend other libraries. These are noted in the Prerequisites column. If a quickstart lists prerequisites, those must be included to in your project, if you are using maven to package your project so look at dependencies section of earch of them.
+Some libraries are designed to enhance or extend other libraries. These are noted in <br/>
+the Prerequisites column. If a quickstart lists prerequisites, those must be included  <br/>
+to in your project, if you are using maven to package your project so look at dependencies <br/>
+section of earch of them.
