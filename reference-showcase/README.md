@@ -20,7 +20,7 @@ Deploying the application
 
 1. Start your WildFly server.
 <br/>
-> Do not forget to declare your environment variable JBOSS_HOME, M2_HOME, JAVA_HOME.
+> Do not forget to declare your environment variable JBOSS_HOME, M2_HOME, JAVA_HOME <blockquote>.
 <br/>
 <code>$JBOSS_HOME/bin/standalone.sh</code>
 <br/>
