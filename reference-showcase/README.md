@@ -20,9 +20,7 @@ Deploying the application
 
 1. Start your WildFly server.
 <br/>
---------------------------------
->do not forget to declare your environment variable JBOSS_HOME, M2_HOME, JAVA_HOME
--------------------------------
+>do not forget to declare your environment variable JBOSS_HOME, M2_HOME, JAVA_HOME.
 <br/>
 <code>$JBOSS_HOME/bin/standalone.sh</code>
 <br/>
@@ -30,7 +28,7 @@ Deploying the application
 <br/>
 <code>mvn clean:package</code>
 <br/>
-3. deploy the war using the maven wildfly plugin
+3. deploy the war using the maven wildfly plugin.
 <br/>
 <code>mvn wildfly:deploy</code>
  <br/>
