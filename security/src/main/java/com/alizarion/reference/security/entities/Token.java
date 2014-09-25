@@ -20,7 +20,7 @@ public abstract class Token implements Serializable {
     @Id
     @TableGenerator(name = "security_credential_SEQ",
             pkColumnName = "SEQ_NAME",
-            pkColumnValue = "SEQ_VALUE",
+            valueColumnName = "SEQ_COUNT",
             table = "sequence")
     @GeneratedValue(generator = "security_credential_SEQ",
             strategy = GenerationType.TABLE)
@@ -37,13 +37,12 @@ public abstract class Token implements Serializable {
     private Date expireDate;
 
     public Token() {
-        this.creationDate =  new Date();
-        this.expireDate = new Date(creationDate.getTime() + getValid());
-
     }
 
     public Token(
             final String generatedToken) {
+        this.creationDate =  new Date();
+        this.expireDate = new Date(creationDate.getTime() + getValid());
         this.token = generatedToken;
 
     }

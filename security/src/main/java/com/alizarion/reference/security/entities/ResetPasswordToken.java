@@ -24,8 +24,7 @@ public class ResetPasswordToken extends Token {
     @ManyToOne
     private Credential credential;
 
-    public ResetPasswordToken() {
-        super();
+    protected ResetPasswordToken() {
     }
 
     public ResetPasswordToken(Credential credential) {

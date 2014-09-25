@@ -17,7 +17,7 @@ public class SignInAttempt implements Serializable {
     @Id
     @TableGenerator(name = "security_sign_in_attempt_SEQ",
             pkColumnName = "SEQ_NAME",
-            pkColumnValue = "SEQ_VALUE",
+            valueColumnName = "SEQ_COUNT",
             table = "sequence")
     @GeneratedValue(generator ="security_sign_in_attempt_SEQ",
             strategy = GenerationType.TABLE)
