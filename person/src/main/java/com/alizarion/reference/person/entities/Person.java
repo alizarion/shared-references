@@ -80,4 +80,14 @@ public  class Person implements Serializable {
         this.secondaryAddresses = secondaryAddresses;
     }
 
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", primaryElectronicAddress=" + primaryElectronicAddress +
+                ", primaryPhoneAddress=" + primaryPhoneAddress +
+                ", primaryPhysicalAddress=" + primaryPhysicalAddress +
+                ", secondaryAddresses=" + secondaryAddresses +
+                '}';
+    }
 }

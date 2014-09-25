@@ -45,11 +45,18 @@ public class ValidateEmailToken extends Token {
         return electronicAddress;
     }
 
-    public void setElectronicAddress(final ElectronicAddress electronicAddress) {
+    public void setElectronicAddress(
+            final ElectronicAddress electronicAddress) {
         this.electronicAddress = electronicAddress;
     }
 
     public Person getPerson() {
+        return person;
+    }
+
+    public Person updatePersonWithAddress(){
+        this.person.
+                setPrimaryElectronicAddress(this.electronicAddress);
         return person;
     }
 
@@ -58,4 +65,11 @@ public class ValidateEmailToken extends Token {
     }
 
 
+    @Override
+    public String toString() {
+        return "ValidateEmailToken{" +
+                "electronicAddress=" + electronicAddress +
+                ", person=" + person +
+                '}';
+    }
 }

@@ -46,4 +46,14 @@ public class PhysicalPerson extends Person {
     public void setTitle(Enum title) {
         Title = title;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                " PhysicalPerson{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", Title=" + Title +
+                '}';
+    }
 }
