@@ -33,6 +33,7 @@
         <module>security</module>
         <module>email-services-ejb</module>
         <module>security-services-ejb</module>
+        <module>reference-showcase</module>
 
 
     </modules>
@@ -59,8 +60,6 @@
     </dependencyManagement>
 
     <dependencies>
-
-
 
         <!-- unit test  -->
         <dependency>
