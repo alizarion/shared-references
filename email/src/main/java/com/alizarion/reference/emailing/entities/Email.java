@@ -39,7 +39,7 @@ public abstract class Email implements Serializable {
     @Id
     @TableGenerator(name = "mail_logger_SEQ",
             pkColumnName = "SEQ_NAME",
-            pkColumnValue = "SEQ_VALUE",
+            valueColumnName = "SEQ_COUNT",
             table = "sequence")
     @GeneratedValue(strategy = GenerationType.TABLE,
             generator = "mail_logger_SEQ")
@@ -76,6 +76,8 @@ public abstract class Email implements Serializable {
     @Transient
     public  Map<String,Map<String,Object>> params = new HashMap<>();
 
+    protected Email() {
+    }
 
     /**
      * Email default constructor with required fields.

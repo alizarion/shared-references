@@ -33,6 +33,9 @@ public class GenericResetPasswordEmail extends Email {
     public  Map<String,Map<String,Object>> params = new HashMap<>();
 
 
+    public GenericResetPasswordEmail() {
+    }
+
     public GenericResetPasswordEmail(
             GenericResetPasswordEmailBuilder
                     builder) {

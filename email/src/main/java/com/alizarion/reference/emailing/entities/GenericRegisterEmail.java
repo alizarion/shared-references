@@ -27,6 +27,9 @@ public class GenericRegisterEmail extends Email {
     @Transient
     private  ValidateEmailToken emailToken;
 
+    public GenericRegisterEmail() {
+    }
+
     public GenericRegisterEmail(RegisterEmailBuilder builder) {
         super(builder.getFrom(),
                 builder.getTo(),
