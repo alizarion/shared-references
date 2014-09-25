@@ -16,10 +16,12 @@ public class UnsupportedOperationExceptionTest {
     public ExpectedException expectedException =  ExpectedException.none();
 
     @Test
-    public void unsupportedOperationExceptionTest() throws ApplicationException {
+    public void unsupportedOperationExceptionTest()
+            throws ApplicationException {
         expectedException.expect(UnsupportedOperationException.class);
         SimpleManagedFile simpleManagedFile = new SimpleManagedFile();
-        ManagedImageScaledCacheVisitor scaledCacheVisitor =  new ManagedImageScaledCacheVisitor("toto",100,300);
+        ManagedImageScaledCacheVisitor scaledCacheVisitor =
+                new ManagedImageScaledCacheVisitor("toto",100,300);
         simpleManagedFile.accept(scaledCacheVisitor);
     }
 }

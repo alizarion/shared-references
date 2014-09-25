@@ -51,8 +51,8 @@ public class ManagedImageScaledCacheVisitor implements ManagedFileVisitor, Calla
     @Override
     public File visit(ImageManagedFile imageManagedFile)
             throws GeneratingCacheFileException {
-        if(imageManagedFile.getWidth() <= this.newWidth ||
-                imageManagedFile.getWidth() <= this.newWidth){
+        if(imageManagedFile.getImageMetaData().getWidth() <= this.newWidth ||
+                imageManagedFile.getImageMetaData().getWidth() <= this.newWidth){
             ManagedFileReaderVisitor readerVisitor =
                     new ManagedFileReaderVisitor(this.rootFolder);
             try {

@@ -60,18 +60,26 @@ public class TestFileHelper {
 
             imageManagedFile.accept(fileDataVisitor);
         imageManagedFile = em.merge(imageManagedFile);
+
         ManagedFileWriterVisitor fileWriterVisitor =
                 new ManagedFileWriterVisitor(
                         new FileInputStream(this.fileToWrite),
                         this.rootFolder);
         imageManagedFile.accept(fileWriterVisitor);
+
         ManagedFileReaderVisitor managedFileReaderVisitor =
                 new ManagedFileReaderVisitor(this.rootFolder);
+
         imageManagedFile.accept(managedFileReaderVisitor);
-        assertFalse(!managedFileReaderVisitor.getManagedFileAsFile().exists());
+        assertFalse(!managedFileReaderVisitor.
+                getManagedFileAsFile().exists());
+
         ManagedImageScaledCacheVisitor scaledCacheVisitor =
-                new ManagedImageScaledCacheVisitor(this.rootFolder,199,100);
+                new ManagedImageScaledCacheVisitor(
+                        this.rootFolder,199,100);
+
         imageManagedFile.accept(scaledCacheVisitor);
+
         System.out.println(imageManagedFile);
         File cacheFile = scaledCacheVisitor.getCacheFile();
         trx.commit();

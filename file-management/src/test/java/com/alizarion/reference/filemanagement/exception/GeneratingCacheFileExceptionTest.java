@@ -16,8 +16,8 @@ public class GeneratingCacheFileExceptionTest {
     public void generationCacheExceptionTest() throws Exception {
         expectedException.expect(GeneratingCacheFileException.class);
         ImageManagedFile managedFile =  new ImageManagedFile();
-        managedFile.setHeight(700);
-        managedFile.setWidth(600);
+        managedFile.getImageMetaData().setHeight(700);
+        managedFile.getImageMetaData().setWidth(600);
         managedFile.setId(67L);
         managedFile.setFileName("toto");
         ManagedImageScaledCacheVisitor scaledCacheVisitor =

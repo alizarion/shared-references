@@ -2,10 +2,14 @@ package com.alizarion.reference.filemanagement.entities;
 
 import org.apache.commons.io.FilenameUtils;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * All Files that are managed by the application, images, videos, resources, .
@@ -21,7 +25,7 @@ public abstract class ManagedFile  implements Serializable {
     @Id
     @TableGenerator(name = "managed_file_SEQ",
             pkColumnName = "SEQ_NAME",
-            pkColumnValue = "SEQ_VALUE",
+            valueColumnName = "SEQ_COUNT",
             table = "sequence")
     @GeneratedValue(strategy = GenerationType.TABLE,
             generator = "managed_file_SEQ")
@@ -35,6 +39,12 @@ public abstract class ManagedFile  implements Serializable {
 
     @Column(name = "file_name",length = 255, nullable = false)
     private String fileName;
+
+
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            optional = false)
+    private ManagedFileMetaData  metaData;
 
     /**
      * type of the downcast child
@@ -69,9 +79,23 @@ public abstract class ManagedFile  implements Serializable {
     @Column(name = "uuid",unique = true)
     private String UUID;
 
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE},
+            fetch = FetchType.LAZY)
+    @LazyCollection(value = LazyCollectionOption.EXTRA)
+    private Set<GenericFileMetaData>  genericFileMetaData =
+            new HashSet<>();
+
     protected ManagedFile() {
         this.managedFileState = ManagedFileState.US;
         this.creationDate = new Date();
+    }
+
+    public ManagedFileMetaData getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(ManagedFileMetaData metaData) {
+        this.metaData = metaData;
     }
 
     public void setId(Long id) {
@@ -94,6 +118,10 @@ public abstract class ManagedFile  implements Serializable {
         return id;
     }
 
+    public void addGenericMetaData(final GenericFileMetaData genericMetaData){
+        this.genericFileMetaData.add(genericMetaData);
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }
@@ -105,6 +133,14 @@ public abstract class ManagedFile  implements Serializable {
     public void setFileName(String fileName) {
         this.fileName = fileName;
         this.extension = FilenameUtils.getExtension(this.fileName);
+    }
+
+    public Set<GenericFileMetaData> getGenericFileMetaData() {
+        return genericFileMetaData;
+    }
+
+    public void setGenericFileMetaData(Set<GenericFileMetaData> genericFileMetaData) {
+        this.genericFileMetaData = genericFileMetaData;
     }
 
     public abstract String getType();

@@ -32,10 +32,10 @@ public class ManagedImageFileDataVisitor implements ManagedFileVisitor{
         try {
             imageManagedFile.setFileName(this.file.getName());
             BufferedImage image = ImageIO.read(new FileInputStream(this.file));
-            imageManagedFile.setWidth(image.getWidth());
-            imageManagedFile.setHeight(image.getHeight());
+            imageManagedFile.getImageMetaData().setWidth(image.getWidth());
+            imageManagedFile.getImageMetaData().setHeight(image.getHeight());
             imageManagedFile.setWeight(this.file.length()/1024);
-            imageManagedFile.setColorSpace(image.getColorModel().
+            imageManagedFile.getImageMetaData().setColorSpace(image.getColorModel().
                     getColorSpace().getType());
             ImageInputStream inputStream = ImageIO.
                     createImageInputStream(this.file);
@@ -48,7 +48,7 @@ public class ManagedImageFileDataVisitor implements ManagedFileVisitor{
                                 imageManagedFile.toString());
             }
             ImageReader imageReader =  readerIterator.next();
-            imageManagedFile.setFormat(imageReader.getFormatName());
+            imageManagedFile.getImageMetaData().setFormat(imageReader.getFormatName());
 
 
         } catch (IOException e) {
