@@ -18,6 +18,7 @@
         Showcase of reference package use ...
     </description>
 
+
     <developers>
         <developer>
             <id>selim.bensenouci</id>
@@ -26,6 +27,25 @@
             <organization>Alizarion</organization>
         </developer>
     </developers>
+
+    <properties>
+        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered
+                       resources, i.e. build is platform dependent! -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- JBoss dependency versions -->
+        <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
+
+        <!-- other plugin versions -->
+        <version.compiler.plugin>3.1</version.compiler.plugin>
+        <version.war.plugin>2.1.1</version.war.plugin>
+
+        <!-- maven-compiler-plugin -->
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+
+    </properties>
+
 
     <repositories>
         <repository>
@@ -52,6 +72,36 @@
             <artifactId>jboss-jsf-api_2.2_spec</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <!-- Set the name of the war, used as the context root when the app is deployed. -->
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${version.war.plugin}</version>
+                <configuration>
+                    <!-- Java EE 7 doesn't require web.xml, Maven needs to catch up! -->
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <!-- WildFly plugin to deploy war -->
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${version.wildfly.maven.plugin}</version>
+            </plugin>
+            <!-- Compiler plugin enforces Java 1.6 compatibility and activates annotation processors. -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.compiler.plugin}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <scm>
         <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/showcase/</developerConnection>
