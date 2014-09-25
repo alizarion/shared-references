@@ -7,7 +7,6 @@ import org.stringtemplate.v4.STGroupFile;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Simple email tool helper.
@@ -23,24 +22,17 @@ public class EmailHelper {
      * @throws EmailRenderingException if cannot access to email part files.
      * @see org.antlr.stringtemplate.StringTemplate
      */
-    public static ST getStringTemplate(Email email,String part)
-            throws EmailRenderingException {
-        String path =  email.getTemplateRoot().toString()+
+    public static ST getStringTemplate(Email email,String part){
+        STGroupFile stFile = new STGroupFile(
+                getStringTemplatePartPath(email, part).getPath(),'$','$');
+        return stFile.getInstanceOf(part);
+    }
+
+    public static URI getStringTemplatePartPath(Email email,String part){
+        return new File(email.getTemplateRoot().toString()+
                 File.separator + email.getType() +
-                File.separator + part +
-                File.separator + "_"+
-                email.getLocale().getLanguage() + ".stg";
-        try {
-
-            File subjectFile = new File(new URI(path));
-            STGroupFile stFile = new STGroupFile(
-                    subjectFile.getAbsolutePath(),'$','$');
-            return stFile.getInstanceOf(part);
-        } catch (URISyntaxException e) {
-            throw new EmailRenderingException("cannot" +
-                    " access file :" +path ,e );
-        }
-
+                File.separator + part + "_" +
+                email.getLocale().getLanguage() + ".stg").toURI();
     }
 
 }

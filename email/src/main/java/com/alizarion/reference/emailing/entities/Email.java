@@ -4,6 +4,8 @@ import com.alizarion.reference.emailing.exception.EmailAttachmentSizeExceedExcep
 import com.alizarion.reference.emailing.exception.EmailException;
 import com.alizarion.reference.emailing.exception.EmailRenderingException;
 import com.alizarion.reference.emailing.exception.PreparingEmailMessageException;
+import com.alizarion.reference.emailing.tools.EmailHelper;
+import org.stringtemplate.v4.ST;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -17,9 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * class representing the email app,
@@ -29,9 +29,9 @@ import java.util.Locale;
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(name = "emailing_email_log")
+@Table(name = "email_email_log")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type")
+@DiscriminatorColumn(name = "mail_type")
 public abstract class Email implements Serializable {
 
     private static final long serialVersionUID = 6097443812365423254L;
@@ -73,6 +73,9 @@ public abstract class Email implements Serializable {
     @Transient
     private URI templateRoot;
 
+    @Transient
+    public  Map<String,Map<String,Object>> params = new HashMap<>();
+
 
     /**
      * Email default constructor with required fields.
@@ -99,19 +102,35 @@ public abstract class Email implements Serializable {
 
     public final static String MAIL_HTML_BODY_TEMPLATE = "bodyHTML";
 
+
+    public abstract  Map<String, Map<String, Object>> getParams();
+
     /**
      * Method to get the email rendered subject.
      * @return email subject as String.
      * @throws EmailRenderingException oups problems.
      */
-    public abstract String getSubject() throws EmailRenderingException;
+    public  String getSubject() throws EmailRenderingException{
+        ST st = EmailHelper.getStringTemplate(this, MAIL_SUBJECT_TEMPLATE);
+        for(Map.Entry entry :  getParams().get(MAIL_SUBJECT_TEMPLATE).entrySet()) {
+            st.add((String)entry.getKey(), entry.getValue());
+        }
+        return st.render();
+
+    }
 
     /**
      * Method to get the rendered body text part of the mail.
      * @return email body text string.
      * @throws EmailRenderingException  on problems.
      */
-    public abstract String getTextBody() throws EmailRenderingException;
+    public  String getTextBody() throws EmailRenderingException{
+        ST st = EmailHelper.getStringTemplate(this, MAIL_TEXT_BODY_TEMPLATE);
+        for(Map.Entry entry :  getParams().get(MAIL_TEXT_BODY_TEMPLATE).entrySet()) {
+            st.add((String)entry.getKey(), entry.getValue());
+        }
+        return st.render();
+    }
 
 
     /**
@@ -119,7 +138,13 @@ public abstract class Email implements Serializable {
      * @return email body html string.
      * @throws EmailRenderingException on problems.
      */
-    public abstract String getHTMLBody() throws EmailRenderingException;
+    public  String getHTMLBody() throws EmailRenderingException{
+        ST st = EmailHelper.getStringTemplate(this, MAIL_HTML_BODY_TEMPLATE);
+        for(Map.Entry entry :  getParams().get(MAIL_HTML_BODY_TEMPLATE).entrySet()) {
+            st.add((String)entry.getKey(), entry.getValue());
+        }
+        return st.render();
+    }
 
     public abstract List<File> getAttachments();
 

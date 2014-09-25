@@ -1,19 +1,14 @@
 package com.alizarion.reference.emailing.entities;
 
 
-import com.alizarion.reference.emailing.exception.EmailRenderingException;
-import com.alizarion.reference.emailing.tools.EmailHelper;
 import com.alizarion.reference.person.entities.ValidateEmailToken;
-import org.stringtemplate.v4.ST;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.io.File;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author selim@openlinux.fr.
@@ -40,29 +35,26 @@ public class GenericRegisterEmail extends Email {
         this.emailToken = builder.getToken();
         super.setCc(builder.getCc());
         super.setCci(builder.getCci());
+
+        Map<String,Object> subject = new HashMap<>();
+        Map<String,Object> bodyHTML = new HashMap<>();
+        Map<String,Object> bodyText = new HashMap<>();
+
+        subject.put("emailToken",builder.getToken());
+        bodyHTML.put("emailToken",builder.getToken());
+        bodyText.put("emailToken",builder.getToken());
+
+        this.params.put(MAIL_SUBJECT_TEMPLATE,subject);
+        this.params.put(MAIL_HTML_BODY_TEMPLATE,bodyHTML);
+        this.params.put(MAIL_TEXT_BODY_TEMPLATE,bodyText);
     }
 
 
     @Override
-    public String getSubject() throws EmailRenderingException {
-        ST st = EmailHelper.getStringTemplate(this,MAIL_SUBJECT_TEMPLATE);
-        st.add("emailToken",this.emailToken);
-        return st.render();
+    public Map<String, Map<String, Object>> getParams() {
+        return this.params;
     }
 
-    @Override
-    public String getTextBody() throws EmailRenderingException {
-        ST st = EmailHelper.getStringTemplate(this,MAIL_TEXT_BODY_TEMPLATE);
-        st.add("emailToken",this.emailToken);
-        return st.render();
-    }
-
-    @Override
-    public String getHTMLBody() throws EmailRenderingException {
-        ST st = EmailHelper.getStringTemplate(this,MAIL_HTML_BODY_TEMPLATE);
-        st.add("emailToken",this.emailToken);
-        return st.render();
-    }
 
     @Override
     public List<File> getAttachments() {
