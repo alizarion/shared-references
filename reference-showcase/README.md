@@ -33,7 +33,8 @@ Deploying the application
 <code>mvn wildfly:deploy</code>
 <br/>
 4. access to the webapp using 
-<code>http://localhost:8080/reference-showcase</code>
+<br/>
+[http://localhost:8080/reference-showcase](http://localhost:8080/reference-showcase)
 
 
 
