@@ -33,6 +33,6 @@ See the README file in each individual library folder for specific details and i
 on how to run and use it.
 <br/>
 Some libraries are designed to enhance or extend other libraries. These are noted in <br/>
-the Prerequisites column. If a quickstart lists prerequisites, those must be included  <br/>
+the Prerequisites column. If a library lists prerequisites, those must be included  <br/>
 to in your project, if you are using maven to package your project so look at dependencies <br/>
 section of earch of them.
