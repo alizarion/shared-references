@@ -13,7 +13,7 @@ Requirement
 
 All you need to build this project is Java 7.0 (Java SDK 1.7) or better, Maven 3.0 or better.<br/>
 The application this project produces is designed to be run on JBoss WildFly. <br/>
-they will use wildFly h2 in-memory database.
+they will use for persistence wildFly H2 in-memory database.
 
 Deploying the application
 --------------------------
@@ -31,7 +31,11 @@ Deploying the application
 3. deploy the war using the maven wildfly plugin.
 <br/>
 <code>mvn wildfly:deploy</code>
- <br/>
+<br/>
+4. access to the webapp using 
+<code>http://localhost:8080/reference-showcase</code>
+
+
 
 
 
