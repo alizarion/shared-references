@@ -15,10 +15,13 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Observer implements Notifier, Serializable {
 
+    private static final long serialVersionUID = -7335375139085431884L;
+
     @Id
-    @TableGenerator(name="Observer_SEQ", table="sequence",
-            pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="Observer_SEQ")
+    @TableGenerator(name="social_observer_SEQ", table="sequence",
+            pkColumnName="SEQ_NAME",
+            valueColumnName="SEQ_COUNT")
+    @GeneratedValue(strategy=GenerationType.TABLE, generator="social_observer_SEQ")
     @Column
     private Long id;
 
@@ -26,13 +29,17 @@ public abstract class Observer implements Notifier, Serializable {
     private Subject subject;
 
     @OneToMany(mappedBy = "observer",
-            cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+            cascade = CascadeType.ALL)
     private Set<Notification> notifications= new HashSet<>();
 
     protected Observer() {
     }
 
-    public  void notify(Notification notification){
+    /**
+     * Method to add some new notifications to this Observer.
+     * @param notification to add.
+     */
+    public void notify(Notification notification){
         this.notifications.add(notification);
     }
 
@@ -66,14 +73,22 @@ public abstract class Observer implements Notifier, Serializable {
 
         Observer observer = (Observer) o;
 
-        if (id != null ? !id.equals(observer.id) :
-                observer.id != null) return false;
+        return !(id != null ? !id.equals(observer.id) :
+                observer.id != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Observer{" +
+                "id=" + id +
+                ", subject=" + subject.getClass() +
+                ", notifications=" + notifications.size() +
+                '}';
     }
 }

@@ -11,19 +11,21 @@ import java.util.Date;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "social_appreciation")
 @DiscriminatorColumn(name = "type")
 public abstract class Appreciation  implements Serializable{
 
 
+    private static final long serialVersionUID = -3463066032135328655L;
+
     @Id
     @TableGenerator(
-            name = "Appreciation_SEQ",
+            name = "social_appreciation_SEQ",
             table = "sequence",
             pkColumnName = "SEQ_NAME",
-            pkColumnValue = "SEQ_COUNT")
+            valueColumnName= "SEQ_COUNT")
     @GeneratedValue(strategy = GenerationType.TABLE,
-            generator = "Appreciation_SEQ")
-    @Column
+            generator = "social_appreciation_SEQ")
     private Long id;
 
     /**
@@ -32,17 +34,17 @@ public abstract class Appreciation  implements Serializable{
     @ManyToOne
     private Observer owner;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date",nullable = false)
     private Date creationDate;
 
-    public Appreciation() {
-
+    protected Appreciation() {
+        this.creationDate = new Date();
     }
 
     public Appreciation(Observer owner) {
+        this.creationDate = new Date();
         this.owner = owner;
     }
-
 
     public Long getId() {
         return id;
@@ -70,14 +72,15 @@ public abstract class Appreciation  implements Serializable{
 
         Appreciation that = (Appreciation) o;
 
-        if (creationDate != null ? !creationDate.equals(that.creationDate)
-                : that.creationDate != null) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null)
-            return false;
-        if (owner != null ? !owner.equals(that.owner)
-                : that.owner != null) return false;
+        return !(creationDate != null ?
+                !creationDate.equals(that.creationDate) :
+                that.creationDate != null) &&
+                !(id != null ? !id.equals(that.id) :
+                        that.id != null) &&
+                !(owner != null ?
+                        !owner.equals(that.owner) :
+                        that.owner != null);
 
-        return true;
     }
 
     @Override

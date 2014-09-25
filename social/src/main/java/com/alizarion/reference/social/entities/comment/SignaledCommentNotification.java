@@ -19,6 +19,15 @@ public class SignaledCommentNotification extends Notification{
 
     public final static String TYPE = "comment-signaled";
 
+
+    private static final long serialVersionUID = -2124571666348432445L;
+
+    /**
+     * who will be notified, can be Observer
+     * child or other specific class,
+     * for example system broadcast message
+     * with abstract class Broadcaster...
+     */
     @OneToOne(targetEntity = Observer.class)
     @JoinColumn(name = "notifier_id")
     private Notifier notifier;
@@ -28,16 +37,33 @@ public class SignaledCommentNotification extends Notification{
         return TYPE;
     }
 
-    public SignaledCommentNotification() {
+    @Override
+    public Notifier getNotifier() {
+        return this.notifier;
     }
 
-    public SignaledCommentNotification(Subject subject, Observer observer, Notifier notifier) {
+
+    protected SignaledCommentNotification() {
+
+    }
+
+
+    public SignaledCommentNotification(
+            final Subject subject,
+            final Observer observer,
+            final Notifier notifier) {
         super(subject, observer);
         this.notifier =  notifier;
     }
 
+    /**
+     * Method to get same notification for different observers,
+     * to loop on observers that followed the same subject.
+     * @param observer new notified observer.
+     * @return new notification instance.
+     */
     @Override
-    public Notification getInstance(Subject subject, Observer observer,Notifier notifier) {
-        return new SignaledCommentNotification(subject,observer,notifier);
+    public Notification getInstance(final Observer observer) {
+        return new SignaledCommentNotification(getSubject(),observer,notifier);
     }
 }

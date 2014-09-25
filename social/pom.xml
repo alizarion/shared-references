@@ -15,7 +15,7 @@
 
     <name>Social functionalities.</name>
     <description>
-      like unlike, sharing and notifications …
+        like unlike, sharing and notifications …
     </description>
 
     <developers>
@@ -27,17 +27,27 @@
         </developer>
         <developer>
             <id>sidahmed.mehani</id>
-             <email>sid.mehani@gmail.com</email>
-             <name>Sidahmed MEHANI</name>
+            <email>sid.mehani@gmail.com</email>
+            <name>Sidahmed MEHANI</name>
             <organization>Alizarion</organization>
         </developer>
     </developers>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.alizarion.reference.exception</groupId>
+            <artifactId>exceptions</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
+
+
 
     </dependencies>
 

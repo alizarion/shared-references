@@ -15,6 +15,8 @@ public class DisLike extends Appreciation implements Serializable {
 
    public final static String TYPE =  "DISLIKE";
 
+    private static final long serialVersionUID = 7359559602461896125L;
+
     public DisLike() {
         super();
     }

@@ -21,16 +21,27 @@ public class CommentNotification extends Notification {
 
     public final static String TYPE= "comment";
 
+
+    private static final long serialVersionUID = 3032740949090986489L;
+
+
+    /**
+     * who will be notified, can be Observer
+     * child or other specific class,
+     * for example system broadcast message
+     * with abstract class Broadcaster...
+     */
     @OneToOne(targetEntity = Observer.class)
     @JoinColumn(name = "notifier_id")
     private Notifier notifier;
 
 
-    public CommentNotification() {
-        super();
+    protected CommentNotification() {
     }
 
-    public CommentNotification(Subject subject, Observer observer,Notifier notifier) {
+    public CommentNotification(final Subject subject,
+                               final Observer observer,
+                               final Notifier notifier) {
         super(subject, observer);
         this.notifier = notifier;
     }
@@ -45,11 +56,17 @@ public class CommentNotification extends Notification {
 
     @Override
     public String getType() {
-        return this.TYPE;
+        return TYPE;
     }
 
+    /**
+        * Method to get same notification for different observers,
+        * to loop on observers that followed the same subject.
+        * @param observer new notified observer.
+        * @return new notification instance.
+        */
     @Override
-    public Notification getInstance(Subject subject, Observer observer, Notifier notifier) {
-        return new CommentNotification(subject,observer, notifier);
+    public Notification getInstance(final Observer observer) {
+        return new CommentNotification(getSubject(),observer, notifier);
     }
 }

@@ -19,15 +19,25 @@ public class LikeNotification extends Notification {
 
 
     public final static String TYPE =  "like";
+    private static final long serialVersionUID = -2454973965126700138L;
 
+    /**
+     * who will be notified, can be Observer
+     * child or other specific class,
+     * for example system broadcast message
+     * with abstract class Broadcaster...
+     */
     @OneToOne(targetEntity = Observer.class)
     @JoinColumn(name = "notifier_id")
     private Notifier notifier;
 
-    public LikeNotification() {
-    }
+    protected LikeNotification() {
 
-    public LikeNotification(Subject subject, Observer observer,Notifier notifier) {
+      }
+
+    public LikeNotification(final Subject subject,
+                            final Observer observer,
+                            final Notifier notifier) {
         super(subject, observer);
         this.notifier = notifier;
     }
@@ -42,12 +52,18 @@ public class LikeNotification extends Notification {
 
     @Override
     public String getType() {
-        return this.TYPE;
+        return TYPE;
     }
 
+    /**
+     * Method to get same notification for different observers,
+     * to loop on observers that followed the same subject.
+     * @param observer new notified observer.
+     * @return new notification instance.
+     */
     @Override
-    public Notification getInstance(Subject subject, Observer observer, Notifier notifier) {
-        return new LikeNotification(subject,observer,notifier) ;
+    public Notification getInstance(final Observer observer) {
+        return new LikeNotification(getSubject(),observer,notifier) ;
     }
 
 

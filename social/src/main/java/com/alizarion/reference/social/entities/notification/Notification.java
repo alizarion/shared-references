@@ -13,50 +13,52 @@ import java.util.Date;
  * @author selim@openlinux.fr.
  */
 @Entity
-@Inheritance
-@Table(name = "notification")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "social_notification")
 @DiscriminatorColumn(name = "type")
-public abstract class Notification implements Serializable{
+public abstract class Notification implements Serializable {
 
 
+    private static final long serialVersionUID = -7099966886907706267L;
     @Id
-    @TableGenerator(name="Notification_SEQ", table="sequence",
+    @TableGenerator(name="social_notification_SEQ", table="sequence",
             pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="Notification_SEQ")
+    @GeneratedValue(strategy=GenerationType.TABLE, generator="social_notification_SEQ")
     @Column
     private Long id;
 
     @OneToOne
-    @JoinColumn(name="subject_id")
+    @JoinColumn(name="subject_id",nullable = false)
     private Subject subject;
 
     @ManyToOne
-    @JoinColumn(name="observer_id")
+    @JoinColumn(name="observer_id",nullable = false)
     private Observer observer;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date",nullable = false)
     private Date creationDate;
 
     @Column(name = "email_notified")
-    private Boolean emailNotified;
+    private boolean emailNotified;
 
     @Column(name = "in_app_nofified")
-    private Boolean inAppNotified;
-
+    private boolean inAppNotified;
 
 
     protected Notification() {
-        this.creationDate = new Date();
     }
 
-    protected Notification(Subject subject, Observer observer) {
+    protected Notification(final Subject subject,
+                           final Observer observer) {
+
         this.subject = subject;
         this.observer = observer;
+        this.creationDate =  new Date();
     }
 
     public abstract String getType();
 
-
+    public abstract Notifier getNotifier();
 
     public String getTypeKey(){
         return getType()+"-notif-key";
@@ -106,7 +108,13 @@ public abstract class Notification implements Serializable{
         return creationDate;
     }
 
-    public abstract Notification getInstance(Subject subject,Observer observer,Notifier notifier);
+    /**
+     * Method to get same notification for different observers,
+     * to loop on observers that followed the same subject.
+     * @param observer new notified observer.
+     * @return new notification instance.
+     */
+    public abstract Notification getInstance(Observer observer);
 
     @Override
     public boolean equals(Object o) {
@@ -114,16 +122,17 @@ public abstract class Notification implements Serializable{
 
         Notification that = (Notification) o;
 
-        if (creationDate != null ? !creationDate.equals(that.creationDate)
-                : that.creationDate != null) return false;
-        if (id != null ? !id.equals(that.id) :
-                that.id != null) return false;
-        if (observer != null ? !observer.equals(that.observer)
-                : that.observer != null) return false;
-        if (subject != null ? !subject.equals(that.subject) :
-                that.subject != null) return false;
+        return !(creationDate != null ?
+                !creationDate.equals(that.creationDate) :
+                that.creationDate != null) &&
+                !(id != null ? !id.equals(that.id) :
+                        that.id != null) &&
+                !(observer != null ? !observer.equals(that.observer) :
+                        that.observer != null) &&
+                !(subject != null ?
+                        !subject.equals(that.subject) :
+                        that.subject != null);
 
-        return true;
     }
 
     @Override

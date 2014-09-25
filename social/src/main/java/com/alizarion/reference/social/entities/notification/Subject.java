@@ -10,16 +10,19 @@ import java.util.Set;
 
 /**
  * Abstract representation of any subject can be observable.
+ * for more details of use see use case in Comment class.
+ * @see com.alizarion.reference.social.entities.comment.Comment
  * @author selim@openlinux.fr.
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Subject implements Serializable {
 
+    private static final long serialVersionUID = 3572723366673303254L;
     @Id
-    @TableGenerator(name="Subject_SEQ", table="sequence",
+    @TableGenerator(name="social_subject_SEQ", table="sequence",
             pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="Subject_SEQ")
+    @GeneratedValue(strategy=GenerationType.TABLE, generator="social_subject_SEQ")
     @Column
     private Long id;
 
@@ -36,11 +39,13 @@ public abstract class Subject implements Serializable {
     private Date creationDate;
 
 
-    public Subject() {
-        this.creationDate = new Date();
+    protected Subject() {
+
     }
 
     public Subject(Observer observer) {
+
+        this.creationDate = new Date();
         this.subjectOwner = observer;
     }
 
@@ -52,9 +57,17 @@ public abstract class Subject implements Serializable {
         this.observers.remove(observer);
     }
 
-    public abstract  void notifyObservers(Notification notification, Notifier notifier);
+    /**
+     * Method to notify many observers.
+     * @param notification to use for each of them
+     */
+    public abstract  void notifyObservers(Notification notification);
 
-    public abstract  void notifyOwner(Notification notification, Notifier notifier);
+    /**
+     * Method to notify subject main observer <p>the owner</p>
+     * @param notification to use.
+     */
+    public abstract  void notifyOwner(Notification notification);
 
     public Set<Observer> getObservers() {
         return observers;
@@ -63,6 +76,8 @@ public abstract class Subject implements Serializable {
     public Observer getSubjectOwner() {
         return subjectOwner;
     }
+
+    public abstract String getSubjectType();
 
     public void setSubjectOwner(Observer subjectOwner) {
         this.subjectOwner = subjectOwner;
@@ -82,17 +97,15 @@ public abstract class Subject implements Serializable {
 
         Subject subject = (Subject) o;
 
-        if (creationDate != null ?
+        return !(creationDate != null ?
                 !creationDate.equals(subject.creationDate) :
-                subject.creationDate != null)
-            return false;
-        if (id != null ? !id.equals(subject.id) :
-                subject.id != null) return false;
-        if (subjectOwner != null ? !subjectOwner.equals(
-                subject.subjectOwner) : subject.subjectOwner != null)
-            return false;
+                subject.creationDate != null) &&
+                !(id != null ? !id.equals(subject.id) :
+                        subject.id != null) &&
+                !(subjectOwner != null ?
+                        !subjectOwner.equals(subject.subjectOwner) :
+                        subject.subjectOwner != null);
 
-        return true;
     }
 
     @Override

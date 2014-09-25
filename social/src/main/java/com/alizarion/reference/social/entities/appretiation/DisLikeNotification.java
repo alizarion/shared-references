@@ -19,15 +19,26 @@ public class DisLikeNotification extends Notification {
 
     public final static String TYPE =  "dislike";
 
+    private static final long serialVersionUID = 3962952568182256944L;
+
+    /**
+     * who will be notified, can be Observer
+     * child or other specific class,
+     * for example system broadcast message
+     * with abstract class Broadcaster...
+     */
     @OneToOne(targetEntity = Observer.class)
     @JoinColumn(name = "notifier_id")
     private Notifier notifier;
 
-    public DisLikeNotification() {
+    protected DisLikeNotification() {
+
     }
 
     public DisLikeNotification(Subject subject, Observer observer, Notifier notifier) {
+
         super(subject, observer);
+
         this.notifier = notifier;
     }
 
@@ -41,11 +52,17 @@ public class DisLikeNotification extends Notification {
 
     @Override
     public String getType() {
-        return this.TYPE;
+        return TYPE;
     }
 
+    /**
+     * Method to get same notification for different observers,
+     * to loop on observers that followed the same subject.
+     * @param observer new notified observer.
+     * @return new notification instance.
+     */
     @Override
-    public Notification getInstance(Subject subject, Observer observer, Notifier notifier) {
-        return new DisLikeNotification(subject,observer,notifier);
+    public Notification getInstance(final Observer observer) {
+        return new DisLikeNotification(getSubject(),observer,notifier);
     }
 }
