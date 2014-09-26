@@ -6,7 +6,7 @@ Author : Selim Bensenouci
 What is that?
 --------------
 
-Simple java toolkit which makes DAO manager creating easier,<br/>
+Simple java toolkit which makes DAO manager creating easier
 currently only CRUD jpa operations are implemented(persist, merge, find, findAll ...)
 
 How to use it?
