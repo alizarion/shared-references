@@ -16,10 +16,13 @@ for your JPA DAO manager class you need to extent class JpaDao, and pass the ent
 <br/>
 <code>
 
-public class PersonDao extends JpaDao<Long,Person> {<br/>
+public class PersonDao extends JpaDao<Long,Person> {
+<br/>
 public PersonDao(EntityManager entityManager) {
+<br/>
         super(entityManager);
-    }
+        <br/>
+    }<br/>
 }
 
 </code> 
