@@ -6,13 +6,13 @@ Author : Selim Bensenouci
 What is that?
 --------------
 
-Simple java toolkit which makes DAO manager creating easier
-currently only CRUD jpa operations are implemented(persist, merge, find, findAll ...)
+Simple java toolkit which makes DAO manager creating easier  
+currently only CRUD jpa operations are implemented(persist, merge, find, findAll ...)  
 
 How to use it?
 --------------
 
-for your JPA DAO manager class you need to extent class JpaDao, and pass the entity manager to the construtor.
+for your JPA DAO manager class you need to extent class JpaDao, and pass the entity manager to the construtor.  
 
 ```java
 public class PersonDao extends JpaDao<Long,Person> {
@@ -24,11 +24,7 @@ public class PersonDao extends JpaDao<Long,Person> {
         }
 }
 ```  
- 
-
-<br/>
-And now you can use it in your ejb service.
-<br/>
+And now you can use it in your ejb service.  
 
 ```java
 
