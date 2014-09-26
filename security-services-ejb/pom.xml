@@ -44,6 +44,19 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <configuration>
+                    <ejbVersion>3.2</ejbVersion>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
     <scm>
         <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/security-services-ejb/</developerConnection>
         <url>https://github.com/alizarion/shared-references.git/security-services-ejb/</url>
