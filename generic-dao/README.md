@@ -16,10 +16,33 @@ for your JPA DAO manager class you need to extent class JpaDao, and pass the ent
 <br/>
 <code>
 public class PersonDao extends JpaDao<Long,Person> {
-
-    public ResourceDao(EntityManager entityManager) {
+public PersonDao(EntityManager entityManager) {
         super(entityManager);
     }
-    
-}</code> 
+}
+</code> 
 <br/>
+And now you can use it in your ejb service.
+<br/>
+
+<code>
+@Stateful
+public class Movies {
+    @PersistenceContext
+    private EntityManager entityManager;
+    
+    private PersonDao personDao; 
+    
+    @PostConstruct
+    public void setUp(){
+    this.personDao =  new PersonDao(this.entityManager);
+    }
+    public List<Person> getAllRegistredPerson(){
+        return personDao.findAll();
+    }
+
+}
+</code> 
+<br/>
+
+
