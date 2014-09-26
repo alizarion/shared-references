@@ -24,22 +24,25 @@ And now you can use it in your ejb service.
 <br/>
 
 <code>
-@Stateful
-public class Movies {
-    @PersistenceContext
-    private EntityManager entityManager;
-    
-    private PersonDao personDao; 
-    
-    @PostConstruct
-    public void setUp(){
-    this.personDao =  new PersonDao(this.entityManager);
-    }
-    public List<Person> getAllRegistredPerson(){
-        return personDao.findAll();
-    }
 
+@Statefull
+public class PersonService{
+
+        @PersistenceContext
+        private EntityManager entityManager;
+    
+        private PersonDao personDao; 
+    
+        @PostConstruct
+         public void setUp(){
+        this.personDao =  new PersonDao(this.entityManager);
+        }
+        
+        public List<Person> getAllRegistredPerson(){
+        return personDao.findAll();
+        }
 }
+
 </code> 
 <br/>
 
