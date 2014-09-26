@@ -25,9 +25,9 @@ Deploying the application
 `mvn clean:package`  
 3. deploy the war using the maven wildfly plugin.  
 `mvn wildfly:deploy`  
-4. access to the webapp using.   
-
-[http://localhost:8080/reference-showcase](http://localhost:8080/reference-showcase)
+4. access to the webapp using.  
+[http://localhost:8080/reference-showcase](http://localhost:8080/reference-showcase)  
+> Blockquotes are very handy in email to emulate reply text.
 
 
 
