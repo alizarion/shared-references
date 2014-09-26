@@ -13,26 +13,24 @@ How to use it?
 --------------
 
 for your JPA DAO manager class you need to extent class JpaDao, and pass the entity manager to the construtor.
-<br/>
 
-<code>
-
+```java
 public class PersonDao extends JpaDao<Long,Person> {
 
-public PersonDao(EntityManager entityManager) {
-
-        super(entityManager);
+        public PersonDao(EntityManager entityManager) {
         
-    }
+            super(entityManager);
+        
+        }
 }
-
-</code> 
+```  
+ 
 
 <br/>
 And now you can use it in your ejb service.
 <br/>
 
-<code>
+```java
 
 @Statefull
 public class PersonService{
@@ -51,8 +49,6 @@ public class PersonService{
         return personDao.findAll();
         }
 }
-
-</code> 
-<br/>
+```
 
 
