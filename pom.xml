@@ -22,11 +22,12 @@
     </developers>
 
     <modules>
+        <module>generic-dao</module>
         <module>exceptions</module>
         <module>static-params</module>
         <module>location</module>
         <module>person</module>
-        <module>resource</module>
+        <module>resource-services-ejb</module>
         <module>file-management</module>
         <module>social</module>
         <module>email</module>
