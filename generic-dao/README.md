@@ -20,7 +20,11 @@ public class PersonDao extends JpaDao<Long,Person> {<br/>
 public PersonDao(EntityManager entityManager) {
         super(entityManager);
     }
-}</code> 
+}
+
+</code> 
+
+
 <br/>
 And now you can use it in your ejb service.
 <br/>
