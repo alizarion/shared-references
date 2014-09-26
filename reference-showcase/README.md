@@ -19,16 +19,12 @@ Deploying the application
 --------------------------
 
 1. Start your WildFly server.  
->Do not forget to declare your environment variable `JBOSS_HOME, M2_HOME, JAVA_HOME`.  
+> Do not forget to declare your environment variable `JBOSS_HOME, M2_HOME, JAVA_HOME`.  
 `$JBOSS_HOME/bin/standalone.sh`  
 2. package the war application using maven.  
-
 `mvn clean:package`  
-
 3. deploy the war using the maven wildfly plugin.  
-
 `mvn wildfly:deploy`  
-
 4. access to the webapp using.   
 
 [http://localhost:8080/reference-showcase](http://localhost:8080/reference-showcase)
