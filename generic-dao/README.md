@@ -33,7 +33,7 @@ And now you can use it in your ejb service.
 ```java
 
 @Statefull
-public class PersonService{
+public class PersonService implements Serializable{
 
         @PersistenceContext
         private EntityManager entityManager;
