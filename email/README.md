@@ -17,6 +17,10 @@ each of them has specific folder that contain StringTemplate files by language.
 
 exemple:  
 
+we want to create Resgister validation email  
+
+1. we extend Email class to define specific email type  
+
 'GenericRegisterEmail' extend 'Email'
 
 ```java
@@ -33,3 +37,5 @@ public class GenericRegisterEmail extends Email {
     
 }
 ```
+2. creation of 'register-email' folder, that containt 3 files (subject_en.stg, bodyHTML_en.stg,  
+bodyText_en.stg) that contain subject mime html and mime text email template.
