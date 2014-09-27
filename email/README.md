@@ -37,5 +37,6 @@ public class GenericRegisterEmail extends Email {
     
 }
 ```
-2. creation of 'register-email' folder, that containt 3 files (subject_en.stg, bodyHTML_en.stg,  
-bodyText_en.stg) that contain subject mime html and mime text email template.
+2. Creation of 'register-email' folder, that containt 3 files ( subject_en.stg, bodyHTML_en.stg,  
+bodyText_en.stg).
+
