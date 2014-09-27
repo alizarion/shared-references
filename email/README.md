@@ -19,8 +19,7 @@ exemple:
 
 'GenericRegisterEmail' extend 'Email'
 
-
-'''java
+```java
 @Entity
 @DiscriminatorValue(value = GenericRegisterEmail.TYPE)
 public class GenericRegisterEmail extends Email {
@@ -33,5 +32,4 @@ public class GenericRegisterEmail extends Email {
     
     
 }
-
-'''
+```
