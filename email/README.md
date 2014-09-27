@@ -40,3 +40,66 @@ public class GenericRegisterEmail extends Email {
 2. Creation of 'register-email' folder, that containt 3 files ( subject_en.stg, bodyHTML_en.stg,  
 bodyText_en.stg).
 
+3. pass to the new email constructor specific fields used in rendering as   
+4. collection of  Map<String,Oject>.
+
+
+```java
+
+ public GenericRegisterEmail(RegisterEmailBuilder builder) {
+        super(builder.getFrom(),
+                builder.getTo(),
+                builder.getTemplateRoot(),
+                builder.getLocale());
+        this.emailToken = builder.getToken();
+        super.setCc(builder.getCc());
+        super.setCci(builder.getCci());
+
+        Map<String,Object> subject = new HashMap<>();
+        Map<String,Object> bodyHTML = new HashMap<>();
+        Map<String,Object> bodyText = new HashMap<>();
+
+        subject.put("emailToken",builder.getToken());
+        bodyHTML.put("emailToken",builder.getToken());
+        bodyText.put("emailToken",builder.getToken());
+
+        this.params.put(MAIL_SUBJECT_TEMPLATE,subject);
+        this.params.put(MAIL_HTML_BODY_TEMPLATE,bodyHTML);
+        this.params.put(MAIL_TEXT_BODY_TEMPLATE,bodyText);
+    }
+    
+````
+
+5. send the your new specific mail to 'EmailProvider'   
+
+*. example with 'SimpleJavaMailProvider':
+
+```java
+
+    GenericRegisterEmail genericRegisterEmail = new GenericRegisterEmail(registerEmailData);
+    SimpleJavaMailProvider javaMailProvider =  new SimpleJavaMailProvider();
+    javaMailProvider.sendMail(this.registerEmail);
+
+```
+
+*. with 'EmailProviderService' EJB using Jboss mail resource present in email-services-ejb.
+
+```java
+
+    // Inject EJB provider service 
+    @Ejb 
+    private EmailProviderService provider;
+    
+    public void sendGenericRegistredEmail(XXXX dataToSend){
+    
+    GenericRegisterEmail email = new GenericRegisterEmail.  
+    GenericRegisterEmailBuilder(from,to,dataToSend).build(); // you can use   
+                                                            //generic email builder to create email with required field 
+    provider.send(email);
+    
+    }
+
+
+
+
+
