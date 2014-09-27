@@ -40,8 +40,8 @@ public class GenericRegisterEmail extends Email {
 2. Creation of 'register-email' folder, that containt 3 files ( subject_en.stg, bodyHTML_en.stg,  
 bodyText_en.stg).
 
-3. pass to the new email constructor specific fields used in rendering as   
-collection of  Map<String,Oject>, some fields in parent constructor are required:   
+3. pass to the new email constructor specific fields, that will be used in rendering as   
+collection of  Map<String,Oject>, some fields in the parent constructor are required:   
     * from => sender email   
     * to => destination email   
     * locale => language to use for render email content   
