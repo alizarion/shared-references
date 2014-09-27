@@ -41,10 +41,16 @@ public class GenericRegisterEmail extends Email {
 bodyText_en.stg).
 
 3. pass to the new email constructor specific fields used in rendering as   
-4. collection of  Map<String,Oject>.
+collection of  Map<String,Oject>, some fields in parent constructor are required: 
+    *. from => sender email
+    *. to => destination email
+    *. locale => language to use for render email content
+    *. you can extend the parent constructor to pass specific email fields.
 
 
 ```java
+
+ // Required fiels for every email are 
 
  public GenericRegisterEmail(RegisterEmailBuilder builder) {
         super(builder.getFrom(),
@@ -77,7 +83,7 @@ bodyText_en.stg).
 ```java
 
     GenericRegisterEmail genericRegisterEmail = new GenericRegisterEmail(registerEmailData);
-    SimpleJavaMailProvider javaMailProvider =  new SimpleJavaMailProvider();
+    SimpleJavaMailProvider javaMailProvider =  new SimpleJavaMailProvider(fom,to,locale,dataToSend);
     javaMailProvider.sendMail(this.registerEmail);
 
 ```
@@ -94,7 +100,7 @@ bodyText_en.stg).
     
     // you can use generic email builder to create email with required fields
     GenericRegisterEmail email = new GenericRegisterEmail.  
-    GenericRegisterEmailBuilder(from,to,dataToSend).build();   
+    GenericRegisterEmailBuilder(from,to,Locale.getDefault(), dataToSend).build();   
     provider.send(email);
     
     }
