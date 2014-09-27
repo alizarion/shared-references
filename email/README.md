@@ -42,10 +42,10 @@ bodyText_en.stg).
 
 3. pass to the new email constructor specific fields used in rendering as   
 collection of  Map<String,Oject>, some fields in parent constructor are required:   
-    *. from => sender email   
-    *. to => destination email   
-    *. locale => language to use for render email content   
-    *. you can extend the parent constructor to pass specific email fields.   
+    * from => sender email   
+    * to => destination email   
+    * locale => language to use for render email content   
+    * you can extend the parent constructor to pass specific email fields.   
 
 
 ```java
