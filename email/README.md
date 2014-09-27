@@ -92,13 +92,13 @@ bodyText_en.stg).
     
     public void sendGenericRegistredEmail(XXXX dataToSend){
     
+    // you can use generic email builder to create email with required fields
     GenericRegisterEmail email = new GenericRegisterEmail.  
-    GenericRegisterEmailBuilder(from,to,dataToSend).build(); // you can use   
-                                                            //generic email builder to create email with required field 
+    GenericRegisterEmailBuilder(from,to,dataToSend).build();   
     provider.send(email);
     
     }
-
+```
 
 
 
