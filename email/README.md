@@ -19,8 +19,7 @@ exemple:
 
 we want to create Resgister validation email  
 
-1. we extend Email class to define specific email type  
-
+1. we extend Email class to define specific email type
 `GenericRegisterEmail` extend `Email`
 
 ```java
@@ -39,7 +38,6 @@ public class GenericRegisterEmail extends Email {
 ```
 2. Creation of `register-email` folder, that containt 3 files ( subject_en.stg, bodyHTML_en.stg,  
 bodyText_en.stg).
-
 3. pass to the new email constructor specific fields, that will be used in rendering as   
 collection of  Map<String,Oject>, some fields in the parent constructor are required:   
     * from => sender email   
