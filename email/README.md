@@ -45,9 +45,7 @@ collection of  Map<String,Oject>, some fields in the parent constructor are requ
     * from => sender email   
     * to => destination email   
     * locale => language to use for render email content   
-    * you can extend the parent constructor to pass specific email fields.   
-
-
+    * you can extend the parent constructor to pass specific email fields.
 ```java
 
  // Required fiels for every email are 
@@ -75,7 +73,6 @@ collection of  Map<String,Oject>, some fields in the parent constructor are requ
     }
     
 ````
-
 4. send the your new specific mail to `EmailProvider`   
 
 * example with `SimpleJavaMailProvider`:
