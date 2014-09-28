@@ -76,7 +76,7 @@ collection of  Map<String,Oject>, some fields in the parent constructor are requ
     
 ````
 
-+ send the your new specific mail to `EmailProvider`   
+4. send the your new specific mail to `EmailProvider`   
 
 * example with `SimpleJavaMailProvider`:
 
