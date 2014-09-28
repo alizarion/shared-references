@@ -21,7 +21,7 @@ we want to create Resgister validation email
 
 1. we extend Email class to define specific email type  
 
-'GenericRegisterEmail' extend 'Email'
+`GenericRegisterEmail` extend `Email`
 
 ```java
 @Entity
@@ -37,7 +37,7 @@ public class GenericRegisterEmail extends Email {
     
 }
 ```
-2. Creation of 'register-email' folder, that containt 3 files ( subject_en.stg, bodyHTML_en.stg,  
+2. Creation of `register-email` folder, that containt 3 files ( subject_en.stg, bodyHTML_en.stg,  
 bodyText_en.stg).
 
 3. pass to the new email constructor specific fields, that will be used in rendering as   
@@ -76,9 +76,9 @@ collection of  Map<String,Oject>, some fields in the parent constructor are requ
     
 ````
 
-4. send the your new specific mail to 'EmailProvider'   
+4. send the your new specific mail to `EmailProvider`   
 
-*. example with 'SimpleJavaMailProvider':
+*. example with `SimpleJavaMailProvider`:
 
 ```java
 
@@ -88,7 +88,7 @@ collection of  Map<String,Oject>, some fields in the parent constructor are requ
 
 ```
 
-*. with 'EmailProviderService' EJB using Jboss mail resource present in email-services-ejb.
+*. with `EmailProviderService` EJB using Jboss mail resource present in email-services-ejb.
 
 ```java
 
