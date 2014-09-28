@@ -78,7 +78,7 @@ collection of  Map<String,Oject>, some fields in the parent constructor are requ
 
 4. send the your new specific mail to `EmailProvider`   
 
-*. example with `SimpleJavaMailProvider`:
+* example with `SimpleJavaMailProvider`:
 
 ```java
 
@@ -88,7 +88,7 @@ collection of  Map<String,Oject>, some fields in the parent constructor are requ
 
 ```
 
-*. with `EmailProviderService` EJB using Jboss mail resource present in email-services-ejb.
+* with `EmailProviderService` EJB using Jboss mail resource present in email-services-ejb.
 
 ```java
 
