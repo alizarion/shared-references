@@ -9,10 +9,15 @@ what is that?
 this provides mail rendering and loggin system, it also offers a email  
 provider interface that must be implemented by all kind of mail provider.
 
+sent email are mapped using JPA with database as loggin system.
+
 how to use it?
 --------------
 
-the abstract class Email must be extended by every kind of emails,  
+This library allows one hand the management of email rendering `by extending Email`, and the other,    
+publishing transmission services to sent them `using EmailProvider services`.
+
+The abstract class Email must be extended by every kind of emails,  
 each of them has specific folder that contain StringTemplate files by language.  
 
 exemple:  
@@ -43,8 +48,8 @@ bodyText_en.stg).
 3\ pass to the new email constructor specific fields, that will be used in rendering as   
 collection of  Map<String,Oject>, some fields in the parent constructor are required:   
     * from => sender email   
-    * to => destination email   
-    * locale => language to use for render email content   
+    * to => primary recipient  
+    * locale => language that will be used to render the message
     * you can extend the parent constructor to pass specific email fields.   
 
 
