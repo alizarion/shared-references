@@ -61,15 +61,18 @@ collection of `Map<String,Oject>`, some fields in the parent constructor are req
 
 ```java
 
+ private EmailTokenObject emailToken; 
 
- public GenericRegisterEmail(RegisterEmailBuilder builder) {
-        super(builder.getFrom(),
-                builder.getTo(),
-                builder.getTemplateRoot(),
-                builder.getLocale());
-        this.emailToken = builder.getToken();
-        super.setCc(builder.getCc());
-        super.setCci(builder.getCci());
+ public GenericRegisterEmail(String from,
+                            String to,
+                            URI templateRoot,
+                            Locale language,
+                            EmailTokenObject datas) {
+        super(from
+                to,
+                templateRoot,
+                language);
+        this.emailToken = datas;
 
         // email subject data map
         Map<String,Object> subject = new HashMap<>();
@@ -80,9 +83,9 @@ collection of `Map<String,Oject>`, some fields in the parent constructor are req
         // email text body data map
         Map<String,Object> bodyText = new HashMap<>();
 
-        subject.put("emailToken",builder.getToken());
-        bodyHTML.put("emailToken",builder.getToken());
-        bodyText.put("emailToken",builder.getToken());
+        subject.put("emailToken",this.emailToken);
+        bodyHTML.put("emailToken",this.emailToken);
+        bodyText.put("emailToken",this.emailToken);
 
         this.params.put(MAIL_SUBJECT_TEMPLATE,subject);
         this.params.put(MAIL_HTML_BODY_TEMPLATE,bodyHTML);
