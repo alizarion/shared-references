@@ -20,9 +20,10 @@ publishing transmission services to sent them `using EmailProvider services`.
 The abstract class Email must be extended by every kind of emails,  
 each of them has specific folder that contain StringTemplate files by language.  
 
-example:  
+example:    
 
-we want to create Resgister validation email  
+We want to create Resgister validation email, that will send to new users,   
+email which contain token to activate their account.  
 
 1\ we extend Email class to define specific email type
 `GenericRegisterEmail` extend `Email`
@@ -45,8 +46,13 @@ public class GenericRegisterEmail extends Email {
 2\ Creation of `register-email` folder, that containt 3 files ( subject_en.stg, bodyHTML_en.stg,  
 bodyText_en.stg).  
 
-3\ pass to the new email constructor specific fields, that will be used in rendering as   
+3\ The constructor of your email must take data to be contained in the email, they must   
+be inserted into a Map <String, Object>, each part of the email has its own Map  
+objects allowing them exposed diffrentes data.   
+
+Pass to the new email constructor specific fields, that will be used in rendering as   
 collection of  Map<String,Oject>, some fields in the parent constructor are required:   
+
     * from => sender email   
     * to => primary recipient  
     * locale => language that will be used to render the message
@@ -55,7 +61,6 @@ collection of  Map<String,Oject>, some fields in the parent constructor are requ
 
 ```java
 
- // Required fiels for every email are 
 
  public GenericRegisterEmail(RegisterEmailBuilder builder) {
         super(builder.getFrom(),
@@ -81,7 +86,7 @@ collection of  Map<String,Oject>, some fields in the parent constructor are requ
     
 ````  
 
-4\  send the your new specific mail to `EmailProvider`   
+4\  send your email to `EmailProvider`   
 
 * example with `SimpleJavaMailProvider`:
 
