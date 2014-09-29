@@ -71,8 +71,13 @@ collection of `Map<String,Oject>`, some fields in the parent constructor are req
         super.setCc(builder.getCc());
         super.setCci(builder.getCci());
 
+        // email subject data map
         Map<String,Object> subject = new HashMap<>();
+                
+        // email html body data map
         Map<String,Object> bodyHTML = new HashMap<>();
+        
+        // email text body data map
         Map<String,Object> bodyText = new HashMap<>();
 
         subject.put("emailToken",builder.getToken());
