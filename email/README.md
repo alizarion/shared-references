@@ -83,8 +83,13 @@ collection of `Map<String,Oject>`, some fields in the parent constructor are req
         // email text body data map
         Map<String,Object> bodyText = new HashMap<>();
 
+        // binding  datas map to subject 
         subject.put("emailToken",this.emailToken);
+        
+        // binding  datas map to html body 
         bodyHTML.put("emailToken",this.emailToken);
+        
+        // binding  datas map to text body
         bodyText.put("emailToken",this.emailToken);
 
         this.params.put(MAIL_SUBJECT_TEMPLATE,subject);
