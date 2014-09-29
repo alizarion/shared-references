@@ -20,7 +20,7 @@ publishing transmission services to sent them `using EmailProvider services`.
 The abstract class Email must be extended by every kind of emails,  
 each of them has specific folder that contain StringTemplate files by language.  
 
-exemple:  
+example:  
 
 we want to create Resgister validation email  
 
