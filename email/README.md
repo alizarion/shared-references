@@ -47,11 +47,11 @@ public class GenericRegisterEmail extends Email {
 bodyText_en.stg).  
 
 3\ The constructor of your email must take data to be contained in the email, they must   
-be inserted into a Map <String, Object>, each part of the email has its own Map  
+be inserted into a `Map<String, Object>`, each part of the email has its own Map  
 objects allowing them exposed diffrentes data.   
 
 Pass to the new email constructor specific fields, that will be used in rendering as   
-collection of  Map<String,Oject>, some fields in the parent constructor are required:   
+collection of `Map<String,Oject>`, some fields in the parent constructor are required:   
 
     * from => sender email   
     * to => primary recipient  
