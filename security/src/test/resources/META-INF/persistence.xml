@@ -5,6 +5,15 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.alizarion.reference.security.entities.Credential</class>
         <class>com.alizarion.reference.security.entities.Role</class>
+        <class>com.alizarion.reference.security.entities.CredentialRole</class>
+        <class>com.alizarion.reference.security.entities.SignInAttempt</class>
+        <class>com.alizarion.reference.security.entities.Token</class>
+        <class>com.alizarion.reference.security.entities.ResetPasswordToken</class>
+        <class>com.alizarion.reference.security.entities.oauth.server.OAuthApplication</class>
+        <class>com.alizarion.reference.security.entities.oauth.server.OAuthApplicationKey</class>
+        <class>com.alizarion.reference.security.entities.oauth.server.OAuthAuthorization</class>
+        <class>com.alizarion.reference.security.entities.oauth.server.OAuthAccessToken</class>
+        <class>com.alizarion.reference.entities.TestApplication</class>
         <properties>
             <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:unit-testing-jpa"/>
             <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>

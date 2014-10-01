@@ -10,68 +10,64 @@ import java.util.UUID;
  * @author selim@openlinux.fr.
  * @see Credential
  */
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@DiscriminatorColumn(name = "type")
-public abstract class Token implements Serializable {
+@Embeddable
+public  class Token implements Serializable {
 
     private static final long serialVersionUID = -3037923959251158170L;
 
-    @Id
-    @TableGenerator(name = "security_credential_SEQ",
-            pkColumnName = "SEQ_NAME",
-            valueColumnName = "SEQ_COUNT",
-            table = "sequence")
-    @GeneratedValue(generator = "security_credential_SEQ",
-            strategy = GenerationType.TABLE)
-    @Column(unique = true)
-    private Long id;
-
-    @Column(name = "creation_date",nullable = false)
+    @Column(name = "token_creation_date",
+            nullable = false)
     private Date creationDate;
 
-    @Column(name = "token",unique = true)
-    private String token;
+    @Column(name = "token_value",
+            unique = true)
+    private String value;
 
-    @Column(name = "expire_date",nullable = false)
+    @Column(name = "token_expire_date",
+            nullable = false)
     private Date expireDate;
 
     public Token() {
+
     }
 
-    public Token(
-            final String generatedToken) {
+    /**
+     * default constructor of all tokens
+     * @param duration Token duration in second.
+     * @param generatedToken Token value.
+     */
+    public Token(final long duration,
+                 final String generatedToken) {
         this.creationDate =  new Date();
-        this.expireDate = new Date(creationDate.getTime() + getValid());
-        this.token = generatedToken;
+        this.expireDate = new Date(creationDate.getTime() + (duration * 1000));
+        this.value = generatedToken;
 
     }
 
-    public Long getId() {
-        return id;
+
+    public boolean isValidToken(){
+        return (new Date()).after(this.expireDate);
     }
 
     public Date getCreationDate() {
         return creationDate;
     }
 
-    public String getToken(){
-        return this.token;
+    public String getValue(){
+        return this.value;
     }
 
     public Date getExpireDate() {
         return expireDate;
     }
 
-    protected void setExpireDate(Date expireDate) {
+    protected void setExpireDate(final Date expireDate) {
         this.expireDate = expireDate;
     }
 
-    /**
-     * Method to get token validity time.
-     * @return period in milliseconds.
-     */
-    public abstract long getValid();
+    public void revoke(){
+        this.expireDate = new Date();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -84,8 +80,8 @@ public abstract class Token implements Serializable {
                 that.creationDate != null) &&
                 !(expireDate != null ? !expireDate.equals(that.expireDate) :
                         that.expireDate != null) &&
-                !(token != null ? !token.equals(that.token) :
-                        that.token != null);
+                !(value != null ? !value.equals(that.value) :
+                        that.value != null);
 
     }
 
@@ -93,17 +89,26 @@ public abstract class Token implements Serializable {
     public int hashCode() {
         int result = creationDate != null ?
                 creationDate.hashCode() : 0;
-        result = 31 * result + (token != null ?
-                token.hashCode() : 0);
+        result = 31 * result + (value != null ?
+                value.hashCode() : 0);
         result = 31 * result + (expireDate != null ?
                 expireDate.hashCode() : 0);
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Token{" +
+                "creationDate=" + creationDate +
+                ", value='" + value + '\'' +
+                ", expireDate=" + expireDate +
+                '}';
+    }
+
     @PrePersist
     public void prePersist(){
-        if (this.token == null){
-            this.token = UUID.randomUUID().toString();
+        if (this.value == null){
+            this.value = UUID.randomUUID().toString();
         }
     }
 }

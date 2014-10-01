@@ -29,6 +29,16 @@ public class Role implements Serializable {
             length = 11)
     private String role;
 
+
+    /**
+     * role key label
+     */
+    @Column(name = "key",
+            unique = true,
+            nullable = false,
+            length = 11)
+    private String key;
+
     /**
      * description field of the role
      */
@@ -83,6 +93,10 @@ public class Role implements Serializable {
      */
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     @Override

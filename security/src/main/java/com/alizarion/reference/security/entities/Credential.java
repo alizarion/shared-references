@@ -45,11 +45,21 @@ public class Credential implements Serializable {
     @Column(name = "credential_creation_date" ,nullable = false)
     private Date creationDate;
 
-    @ManyToMany
-    @JoinTable(name = "credential_role",
-            joinColumns=@JoinColumn(name = "credential_id"),
-            inverseJoinColumns=@JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    @OneToMany(cascade = {CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REMOVE},
+            fetch = FetchType.EAGER)
+    private Set<CredentialRole> credentialRoles = new HashSet<>();
+
+    public Credential(final String userName,
+                      final String password,
+                      final Set<CredentialRole> credentialRoles) {
+        this.userName = userName;
+        this.password = password;
+        this.state = CredentialState.P;
+        this.creationDate = new Date();
+        this.credentialRoles = credentialRoles;
+    }
 
     public Long getId() {
         return id;
@@ -64,12 +74,21 @@ public class Credential implements Serializable {
         return userName;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+
+    public Set<CredentialRole> getCredentialRoles() {
+        return credentialRoles;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setCredentialRoles(final Set<CredentialRole> credentialRoles) {
+        this.credentialRoles = credentialRoles;
+    }
+
+    public Set<Role> getRoles(){
+        Set<Role> roles = new HashSet<>();
+        for (CredentialRole  credentialRole : this.credentialRoles){
+            roles.add(credentialRole.getRole());
+        }
+        return roles;
     }
 
     public void setUserName(String userName) {
@@ -98,9 +117,6 @@ public class Credential implements Serializable {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
 
     @Override
     public boolean equals(Object o) {
