@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>reference</artifactId>
+        <groupId>com.alizarion.reference</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.alizarion.reference.security.ws</groupId>
+    <artifactId>security-services-ws</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Security web services .</name>
+    <description>
+        OAuth web services and many security EJB
+    </description>
+
+    <developers>
+        <developer>
+            <id>selim.bensenouci</id>
+            <email>selim.bensenouci@gmail.com</email>
+            <name>Selim Bensenouci</name>
+            <organization>Alizarion</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+
+    </dependencies>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/security-services-ws/</developerConnection>
+        <url>https://github.com/alizarion/shared-references.git/security-services-ws/</url>
+    </scm>
+</project>
