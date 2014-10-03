@@ -1,6 +1,6 @@
 package com.alizarion.reference.resource.entities;
 
-import com.alizarion.reference.resource.dao.ResourceDao;
+import com.alizarion.reference.resource.dao.ResourceJpaDao;
 import com.alizarion.reference.resource.exception.PersistentResourceNotFoundException;
 import org.junit.After;
 import org.junit.Assert;
@@ -50,7 +50,7 @@ public class PersistentResourceTest {
         fakeMBeanEntity.setEm(em);
         String keyValue = fakeMBeanEntity.getKeyValue();
         Assert.assertEquals(persistentResource.getValue(), keyValue);
-        List<PersistentResource> persistentResources = new ResourceDao(em).findAll();
+        List<PersistentResource> persistentResources = new ResourceJpaDao(em).findAll();
         assertFalse(persistentResources.isEmpty());
         trx.commit();
 

@@ -9,6 +9,8 @@ public class FakeMBeanEntity extends PersistentMBean{
 
     public final static String KEY = "fake-key";
 
+    private static final long serialVersionUID = 2278971463338754727L;
+
     public FakeMBeanEntity() {
 
     }

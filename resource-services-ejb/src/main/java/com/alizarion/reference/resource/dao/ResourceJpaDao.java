@@ -8,9 +8,9 @@ import javax.persistence.EntityManager;
 /**
  * @author selim@openlinux.fr.
  */
-public class ResourceDao extends JpaDao<Long,PersistentResource> {
+public class ResourceJpaDao extends JpaDao<Long,PersistentResource> {
 
-    public ResourceDao(EntityManager entityManager) {
+    public ResourceJpaDao(EntityManager entityManager) {
         super(entityManager);
     }
 

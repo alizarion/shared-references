@@ -3,7 +3,6 @@ package com.alizarion.reference.resource.mbean;
 import com.alizarion.reference.resource.entities.PersistentResource;
 import com.alizarion.reference.resource.exception.PersistentResourceNotFoundException;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -12,11 +11,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * Persistent Mbean must be extented by all
- * resources params that need to be persisted
+ * Persistent Mbean must be extented by all <br/>
+ * resources params that need to be persisted. <br/>
+ * each implementation of this bean must extend getCategory <br/>
+ * method that provide category name of persisted resources, convention <br/>
+ * naming is to use de artifact groupId of the maven module<br/>
+ * extended by category of properties name example :<br/>
+ * <p>my.inverse.domain.group.name.category</p>
+ *  <br/>
+ * and a set of key that define every persisted property key.
  * @author selim@openlinux.fr.
  */
-@Stateless
+
 public abstract class PersistentMBean implements Serializable {
 
     private static final long serialVersionUID = -8901442021995218836L;
