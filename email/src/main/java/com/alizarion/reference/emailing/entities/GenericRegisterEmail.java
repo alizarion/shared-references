@@ -43,9 +43,9 @@ public class GenericRegisterEmail extends Email {
         Map<String,Object> bodyHTML = new HashMap<>();
         Map<String,Object> bodyText = new HashMap<>();
 
-        subject.put("emailToken",builder.getToken());
-        bodyHTML.put("emailToken",builder.getToken());
-        bodyText.put("emailToken",builder.getToken());
+        subject.put("emailToken",this.emailToken);
+        bodyHTML.put("emailToken",this.emailToken);
+        bodyText.put("emailToken",this.emailToken);
 
         this.params.put(MAIL_SUBJECT_TEMPLATE,subject);
         this.params.put(MAIL_HTML_BODY_TEMPLATE,bodyHTML);

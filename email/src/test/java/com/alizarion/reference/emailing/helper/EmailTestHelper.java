@@ -9,7 +9,7 @@ import com.alizarion.reference.location.entities.ElectronicAddress;
 import com.alizarion.reference.person.entities.PhysicalPerson;
 import com.alizarion.reference.person.entities.Title;
 import com.alizarion.reference.person.entities.ValidateEmailToken;
-import com.alizarion.reference.security.entities.Credential;
+import com.alizarion.reference.security.SecurityTestFactory;
 import com.alizarion.reference.security.entities.ResetPasswordToken;
 
 import java.io.BufferedWriter;
@@ -38,9 +38,8 @@ public  class EmailTestHelper {
         person.setTitle(Title.MR);
         ElectronicAddress electronicAddress =
                 new ElectronicAddress("selim@openlinux.fr");
-        ValidateEmailToken validateEmailToken =
-                new ValidateEmailToken(electronicAddress,person);
-        return validateEmailToken;
+
+        return new ValidateEmailToken(electronicAddress,person,7000L);
 
     }
 
@@ -56,12 +55,14 @@ public  class EmailTestHelper {
                 GenericResetPasswordEmailBuilder("selim@openlinux.fr",
                 getPhysicalPersonWithAddress(),
                 uri,Locale.FRENCH,
-                new ResetPasswordToken(new Credential())).builder();
+                new ResetPasswordToken(3600L,
+                        SecurityTestFactory.
+                                getPasswordRegistredCredential("user1"))).builder();
     }
 
 
-
-    public static void createTemplateFiles(Email email) throws EmailRenderingException, IOException {
+    public static void createTemplateFiles(Email email)
+            throws EmailRenderingException, IOException {
         File subject = new File(EmailHelper.
                 getStringTemplatePartPath(email, Email.MAIL_SUBJECT_TEMPLATE));
         subject.getParentFile().mkdir();

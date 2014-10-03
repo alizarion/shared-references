@@ -34,7 +34,8 @@ public class SimpleJavaMailProviderTest {
         BufferedWriter out2 =  new BufferedWriter(new FileWriter(file2));
         out2.write("blablabla in attachment2");
         out2.close();
-      //  this.registerEmail = (GenericRegisterEmail) Helper.getRegisterEmail();
+        this.registerEmail = new GenericRegisterEmail();
+
 
     }
 

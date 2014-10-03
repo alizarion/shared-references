@@ -23,6 +23,8 @@ public class GenericResetPasswordEmail extends Email {
 
     public static final String TYPE =  "reset-password";
 
+    private static final long serialVersionUID = -6225646738037147059L;
+
     @Transient
     private ResetPasswordToken passwordToken;
 

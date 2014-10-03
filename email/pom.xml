@@ -1,4 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+          http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -55,11 +58,21 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>com.alizarion.reference.security</groupId>
             <artifactId>security</artifactId>
             <version>${project.version}</version>
+
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.security</groupId>
+            <artifactId>security</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.alizarion.reference.location</groupId>
@@ -68,13 +81,14 @@
             <scope>provided</scope>
         </dependency>
         <!-- included module -->
-              <dependency>
-                  <groupId>com.alizarion.reference.exception</groupId>
-                  <artifactId>exceptions</artifactId>
-                  <version>${project.version}</version>
-              </dependency>
+        <dependency>
+            <groupId>com.alizarion.reference.exception</groupId>
+            <artifactId>exceptions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
     </dependencies>
+
 
     <scm>
         <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/email/</developerConnection>

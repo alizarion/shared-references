@@ -7,9 +7,10 @@
 
     <persistence-unit name="emailingPU"  transaction-type="RESOURCE_LOCAL">
 
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>com.alizarion.reference.emailing.entities.Email</class>
-        <class>com.alizarion.reference.emailing.entities.GenericRegisterEmail</class>
+        <!-- to auto detect entity outside the test packages-->
+        <jar-file>${project.build.outputDirectory}</jar-file>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
         <properties>
             <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:unit-testing-jpa"/>
             <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>
