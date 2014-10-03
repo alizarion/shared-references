@@ -1,9 +1,10 @@
-package com.alizarion.reference.emailing.entities;
+package com.alizarion.reference.email.services;
 
 import com.alizarion.reference.exception.ApplicationError;
 import com.alizarion.reference.resource.exception.PersistentResourceNotFoundException;
 import com.alizarion.reference.resource.mbean.PersistentMBean;
 
+import javax.ejb.Stateless;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.net.URI;
@@ -13,6 +14,7 @@ import java.net.URISyntaxException;
  * Email params.
  * @author Selim Bensenouci.
  */
+@Stateless
 public class EmailMBean extends PersistentMBean {
 
     public final static String CATEGORY =
