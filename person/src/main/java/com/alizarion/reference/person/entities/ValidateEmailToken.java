@@ -4,21 +4,31 @@ import com.alizarion.reference.location.entities.ElectronicAddress;
 import com.alizarion.reference.security.entities.Token;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author selim@openlinux.fr.
  */
 @Entity
 @Table(name = "security_token_validate_electronic_address")
-public class ValidateEmailToken extends Token {
+public class ValidateEmailToken implements Serializable {
+
+
+    @Id
+    @TableGenerator(
+            name = "security_token_validate_electronic_address_SEQ",
+            pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT",
+            table = "sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE,
+            generator = "security_token_validate_electronic_address_SEQ")
+    private Long id;
 
     public static final String TYPE="Validate-email-token";
 
-    public static final long VALID_DAYS = 15;
+    @Embedded
+    private Token validationToken;
 
     @OneToOne(optional = false)
     private ElectronicAddress electronicAddress;
@@ -29,16 +39,16 @@ public class ValidateEmailToken extends Token {
     private static final long serialVersionUID = -5115069743327104540L;
 
     public ValidateEmailToken(final ElectronicAddress electronicAddress,
-                              final Person person) {
-        super(SecurityHelper.getRandomAlphaNumericString(130));
+                              final Person person,
+                              final long duration) {
+        this.validationToken =  new Token(duration,
+                SecurityHelper.getRandomAlphaNumericString(130));
         this.electronicAddress = electronicAddress;
         this.person =  person;
 
     }
 
-    @Override
-    public long getValid() {
-        return VALID_DAYS * 24 * 3600;
+    public ValidateEmailToken() {
     }
 
     public ElectronicAddress getElectronicAddress() {
@@ -50,6 +60,10 @@ public class ValidateEmailToken extends Token {
         this.electronicAddress = electronicAddress;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Person getPerson() {
         return person;
     }
@@ -58,6 +72,10 @@ public class ValidateEmailToken extends Token {
         this.person.
                 setPrimaryElectronicAddress(this.electronicAddress);
         return person;
+    }
+
+    public Token getValidationToken() {
+        return validationToken;
     }
 
     public void setPerson(Person person) {

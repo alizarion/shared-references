@@ -21,7 +21,7 @@ public class PhysicalPerson extends Person {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "title",length = 5)
-    private Enum Title;
+    private Title title;
 
     public String getFirstName() {
         return firstName;
@@ -39,12 +39,12 @@ public class PhysicalPerson extends Person {
         this.lastName = lastName;
     }
 
-    public Enum getTitle() {
-        return Title;
+    public Title getTitle() {
+        return title;
     }
 
-    public void setTitle(Enum title) {
-        Title = title;
+    public void setTitle(Title title) {
+        this.title = title;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class PhysicalPerson extends Person {
                 " PhysicalPerson{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", Title=" + Title +
+                ", Title=" + title +
                 '}';
     }
 }
