@@ -1,0 +1,102 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>reference</artifactId>
+        <groupId>com.alizarion.reference</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.alizarion.reference.persistence</groupId>
+    <artifactId>persistence-unit</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Common persistence unit .</name>
+    <description>
+        persistence unit list all shared references jpa entities.
+    </description>
+
+    <developers>
+        <developer>
+            <id>selim.bensenouci</id>
+            <email>selim.bensenouci@gmail.com</email>
+            <name>Selim Bensenouci</name>
+            <organization>Alizarion</organization>
+        </developer>
+
+    </developers>
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.alizarion.reference.email</groupId>
+            <artifactId>email</artifactId>
+            <scope>provided</scope>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alizarion.reference.filemanagement</groupId>
+            <artifactId>file-management</artifactId>
+            <scope>provided</scope>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alizarion.reference.location</groupId>
+            <artifactId>location</artifactId>
+            <scope>provided</scope>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alizarion.reference.person</groupId>
+            <artifactId>person</artifactId>
+            <scope>provided</scope>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alizarion.reference.resource</groupId>
+            <artifactId>resource</artifactId>
+            <scope>provided</scope>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alizarion.reference.social</groupId>
+            <artifactId>social</artifactId>
+            <scope>provided</scope>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.security</groupId>
+            <artifactId>security</artifactId>
+            <scope>provided</scope>
+            <version>${parent.version}</version>
+        </dependency>
+
+
+
+
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <scm>
+        <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/persistence-unit/</developerConnection>
+        <url>https://github.com/alizarion/shared-references.git/persistence-unit/</url>
+    </scm>
+</project>
