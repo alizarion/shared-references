@@ -11,24 +11,22 @@
     <groupId>com.alizarion.reference.security.services</groupId>
     <artifactId>security-services-ejb</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>ejb</packaging>
 
     <name>Security EJB services .</name>
     <description>
-        Change password workflow, email validation, security token management …
+        Reset password workflow, Oauth client and server implementation, email validation, security token management …
     </description>
+
+    <properties>
+        <version.oltu>1.0.0</version.oltu>
+    </properties>
 
     <developers>
         <developer>
             <id>selim.bensenouci</id>
             <email>selim.bensenouci@gmail.com</email>
             <name>Selim Bensenouci</name>
-            <organization>Alizarion</organization>
-        </developer>
-        <developer>
-            <id>sidahmed.mehani</id>
-            <email>sid.mehani@gmail.com</email>
-            <name>Sidahmed MEHANI</name>
             <organization>Alizarion</organization>
         </developer>
 
@@ -42,6 +40,66 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alizarion.reference.security</groupId>
+            <artifactId>security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.security</groupId>
+            <artifactId>security</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.resource</groupId>
+            <artifactId>resource</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- OLTU implementation of OAuth-->
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
+            <version>${version.oltu}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.common</artifactId>
+            <version>${version.oltu}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>
+            <version>${version.oltu}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.commons</groupId>
+            <artifactId>org.apache.oltu.commons.json</artifactId>
+            <version>${version.oltu}</version>
+        </dependency>
+        <!-- test unitaire-->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>
@@ -53,6 +111,7 @@
                     <ejbVersion>3.2</ejbVersion>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
