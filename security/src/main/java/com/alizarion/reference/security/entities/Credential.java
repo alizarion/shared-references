@@ -19,19 +19,23 @@ public class Credential implements Serializable {
     private static final long serialVersionUID = 8712203414431845759L;
 
     @Id
-    @TableGenerator(name="security_credential_SEQ", table="sequence",
-            pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
-    @GeneratedValue(strategy= GenerationType.TABLE, generator="security_credential_SEQ")
+    @TableGenerator(name="security_credential_SEQ",
+            table="sequence",
+            pkColumnName="SEQ_NAME",
+            valueColumnName="SEQ_COUNT")
+    @GeneratedValue(strategy= GenerationType.TABLE,
+            generator="security_credential_SEQ")
     @Column
     private Long id;
 
-    @Column(name = "user_name",unique = true,nullable = false)
+    @Column(name = "user_name",
+            unique = true)
     private String userName;
 
     /**
      * SHA1 user password
      */
-    @Column(name = "password",nullable = false)
+    @Column(name = "password")
     private String password;
 
     /**
@@ -39,35 +43,62 @@ public class Credential implements Serializable {
      * activated A / reset P / disabled D
      */
     @Enumerated(EnumType.STRING)
-    @Column(name="state", nullable = false,length = 11)
+    @Column(name="state",
+            nullable = false,
+            length = 11)
     private CredentialState state;
 
-    @Column(name = "credential_creation_date" ,nullable = false)
+    /**
+     * Credential state, to now if the credentials has been
+     * activated A / reset P / disabled D
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name="logon",
+            nullable = false,
+            length = 11)
+    private LogOnType logon;
+
+    @Column(name = "credential_creation_date",
+            nullable = false)
     private Date creationDate;
 
     @OneToMany(cascade = {CascadeType.MERGE,
             CascadeType.PERSIST,
             CascadeType.REMOVE},
             fetch = FetchType.EAGER)
-    private Set<CredentialRole> credentialRoles = new HashSet<>();
+    private Set<CredentialRole> credentialRoles =
+            new HashSet<>();
+
+
+    public Credential(final Set<Role>
+                              roles) {
+        for (Role  role : roles){
+            this.credentialRoles.
+                    add(new CredentialRole(role,this));
+        }
+        this.state = CredentialState.P;
+        this.logon =  LogOnType.S;
+        this.creationDate = new Date();
+    }
+
 
     public Credential(final String userName,
                       final String password,
-                      final Set<CredentialRole> credentialRoles) {
+                      final Set<Role>
+                              roles) {
         this.userName = userName;
         this.password = password;
         this.state = CredentialState.P;
+        this.logon =  LogOnType.P;
         this.creationDate = new Date();
-        this.credentialRoles = credentialRoles;
+        for (Role  role : roles){
+            this.credentialRoles.
+                    add(new CredentialRole(role,this));
+        }
     }
 
     public Long getId() {
         return id;
-    }
-
-
-    public Credential() {
-        this.creationDate = new Date();
     }
 
     public String getUserName() {

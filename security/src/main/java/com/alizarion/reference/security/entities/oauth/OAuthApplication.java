@@ -1,14 +1,13 @@
-package com.alizarion.reference.security.entities.oauth.server;
+package com.alizarion.reference.security.entities.oauth;
 
-import com.alizarion.reference.security.entities.CredentialRole;
-import com.alizarion.reference.security.tools.SecurityHelper;
+import com.alizarion.reference.security.entities.Credential;
+import com.alizarion.reference.security.entities.RoleGroup;
+import com.alizarion.reference.security.exception.oauth.InvalidScopeException;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * class that contain main information of each <br/>
@@ -19,9 +18,7 @@ import java.util.UUID;
  * @see OAuthApplicationKey
  */
 @Entity
-@Table(name = "security_oauth_application")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @NamedQueries({@NamedQuery(name = OAuthApplication.FIND_BY_ClIENT_ID,
         query = "select oa from OAuthApplication oa where" +
                 " oa.applicationKey.clientId = :clientId " ),
@@ -59,13 +56,14 @@ public abstract class OAuthApplication implements Serializable {
     private URL callback;
 
     @Embedded
-    private OAuthApplicationKey applicationKey;
+    protected OAuthApplicationKey applicationKey;
 
-    @OneToMany(cascade = {CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REMOVE})
-    private Set<OAuthAuthorization> authorizations = new HashSet<>();
-
+    /**
+     * default in app role that
+     * this service will grant.
+     */
+    @OneToOne
+    protected RoleGroup defaultRoles;
 
     protected OAuthApplication() {
 
@@ -77,6 +75,10 @@ public abstract class OAuthApplication implements Serializable {
         this.name = name;
         this.homePage = homePage;
         this.callback = callback;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -103,30 +105,26 @@ public abstract class OAuthApplication implements Serializable {
         this.callback = callback;
     }
 
-    public OAuthAuthorization addAuthorization(final long refreshTokenDuration,
-                                               final Set<CredentialRole> roles){
-        OAuthAuthorization  authorization =  new OAuthAuthorization(
-                refreshTokenDuration,this,roles);
-        this.authorizations.add(authorization);
-        return authorization;
+    public RoleGroup getDefaultRoles() {
+        return defaultRoles;
     }
 
+    public void setDefaultRoles(RoleGroup defaultRoles) {
+        this.defaultRoles = defaultRoles;
+    }
 
-    public Set<OAuthAuthorization> getAuthorizations() {
-        return authorizations;
+    public abstract OAuthAuthorization addAuthorization(
+            final Credential credential,
+            final Set<String> roles) throws InvalidScopeException;
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public OAuthApplicationKey getApplicationKey() {
         return applicationKey;
     }
 
-    @PrePersist
-    public void prePersist(){
-        this.applicationKey = new OAuthApplicationKey(
-                UUID.randomUUID().toString(),
-                SecurityHelper.
-                        getRandomAlphaNumericString(300));
-    }
 
     @Override
     public String toString() {
@@ -136,7 +134,6 @@ public abstract class OAuthApplication implements Serializable {
                 ", homePage=" + homePage +
                 ", callback=" + callback +
                 ", applicationKey=" + applicationKey +
-                ", authorizations=" + authorizations.size() +
                 '}';
     }
 }

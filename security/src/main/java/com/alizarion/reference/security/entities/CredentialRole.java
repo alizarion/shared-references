@@ -41,8 +41,6 @@ public class CredentialRole {
         return role;
     }
 
-
-
     public Credential getCredential() {
         return credential;
     }

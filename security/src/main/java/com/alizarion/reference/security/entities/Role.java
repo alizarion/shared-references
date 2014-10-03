@@ -1,102 +1,57 @@
 package com.alizarion.reference.security.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Class to define users role
+ * In application users Roles
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(name = "security_role")
-public class Role implements Serializable {
+@Table(name = "security_roles")
+public class Role {
 
-    /**
-     * simple incremental id
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(unique = true)
-    private Long id;
+    @ManyToOne
+    private CredentialRole credentialRole;
 
-    /**
-     * role key label
-     */
-    @Column(name = "role",
-            unique = true,
-            nullable = false,
-            length = 11)
-    private String role;
+    @EmbeddedId
+    private RoleKey roleKey;
 
-
-    /**
-     * role key label
-     */
-    @Column(name = "key",
-            unique = true,
-            nullable = false,
-            length = 11)
-    private String key;
-
-    /**
-     * description field of the role
-     */
-    @Column(name = "description")
-    private String description;
-
-    /**
-     * date of creation or last update
-     */
-    @Column(name = "role_creation_date",nullable = false)
-    private Date creationDate;
+    @ManyToMany
+    private Set<RoleGroup> group = new HashSet<>();
 
     public Role() {
-        this.creationDate = new Date();
     }
 
-    /**
-     * Simple method to get role id.
-     * @return role id
-     */
-    public Long getId() {
-        return id;
+    public Role(final CredentialRole credentialRole,
+                final RoleKey role) {
+        this.credentialRole = credentialRole;
+        this.roleKey = role;
     }
 
-    /**
-     * Simple method to get role key.
-     * @return  role key
-     */
-    public String getRole() {
-        return role;
+    public Role(final CredentialRole credentialRole,
+                final RoleKey role,
+                final Set<RoleGroup> group) {
+        this.credentialRole = credentialRole;
+        this.roleKey = role;
+        this.group = group;
     }
 
-    /**
-     * Simple method to get the role description
-     * @return  role description
-     */
-    public String getDescription() {
-        return description;
+    public Role(RoleKey role) {
+        this.roleKey = role;
     }
 
-    /**
-     *  Method to set the role description.
-     * @param description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
+    public RoleKey getRoleKey() {
+        return roleKey;
     }
 
-    /**
-     * Method to get creation/last update date.
-     * @return  creation/last update date
-     */
-    public Date getCreationDate() {
-        return creationDate;
+    public CredentialRole getCredentialRole() {
+        return credentialRole;
     }
 
-    public String getKey() {
-        return key;
+    public Set<RoleGroup> getGroup() {
+        return group;
     }
 
     @Override
@@ -105,33 +60,21 @@ public class Role implements Serializable {
 
         Role role1 = (Role) o;
 
-        if (creationDate != null ? !creationDate.equals(role1.creationDate)
-                : role1.creationDate != null) return false;
-        if (description != null ? !description.equals(role1.description)
-                : role1.description != null) return false;
-        if (id != null ? !id.equals(role1.id) : role1.id != null) return false;
-        if (role != null ? !role.equals(role1.role) :
-                role1.role != null) return false;
+        return !(credentialRole != null ?
+                !credentialRole.equals(role1.credentialRole) :
+                role1.credentialRole != null) &&
+                !(group != null ? !group.equals(role1.group) :
+                        role1.group != null) &&
+                !(roleKey != null ? !roleKey.equals(role1.roleKey) :
+                        role1.roleKey != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (role != null ? role.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        int result = credentialRole != null ? credentialRole.hashCode() : 0;
+        result = 31 * result + (roleKey != null ? roleKey.hashCode() : 0);
+        result = 31 * result + (group != null ? group.hashCode() : 0);
         return result;
     }
-
-    /**
-     * Method to update creation date on persist or merge.
-     */
-    @PrePersist
-    @PreUpdate
-    protected void updateCreationDate(){
-        this.creationDate = new Date();
-    }
-
 }

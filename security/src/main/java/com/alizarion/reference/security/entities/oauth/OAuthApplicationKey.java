@@ -1,4 +1,4 @@
-package com.alizarion.reference.security.entities.oauth.server;
+package com.alizarion.reference.security.entities.oauth;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -20,7 +20,6 @@ public class OAuthApplicationKey {
     }
 
     @Column(name = "client_id",
-            nullable = false,
             unique = true,
             updatable = false)
     private String clientId;

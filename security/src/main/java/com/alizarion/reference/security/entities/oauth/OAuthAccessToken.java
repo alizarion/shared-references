@@ -1,7 +1,6 @@
-package com.alizarion.reference.security.entities.oauth.server;
+package com.alizarion.reference.security.entities.oauth;
 
 import com.alizarion.reference.security.entities.Token;
-import com.alizarion.reference.security.tools.SecurityHelper;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,15 +11,26 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "security_oauth_access_token")
+@NamedQueries({@NamedQuery(name =
+        OAuthAccessToken.FIND_ALIVE_BY_CREDENTIAL,
+        query = "select ot from OAuthAccessToken ot where " +
+                "ot.authorization.credential.id = :credentialId and" +
+                " ot.bearer.expireDate > :today "),
+        @NamedQuery(name = OAuthAccessToken.FIND_BY_TOKEN,
+                query = "select ot from OAuthAccessToken ot" +
+                        " where ot.bearer.value = :accessToken")})
 public class OAuthAccessToken implements Serializable {
 
 
     private static final long serialVersionUID = -7896930421192239848L;
 
-    public final static String FIND_CREDENTIAL = "OAuthAccessToken.FIND_CREDENTIAL";
+
+    public static final String FIND_ALIVE_BY_CREDENTIAL = "OAuthAccessToken.FIND_ALIVE_BY_CREDENTIAL";
+
+    public static final String FIND_BY_TOKEN = "OAuthAccessToken.FIND_BY_TOKEN";
 
     @EmbeddedId
-    private Token token;
+    private Token bearer;
 
     @ManyToOne(optional = false)
     private OAuthAuthorization authorization;
@@ -30,16 +40,14 @@ public class OAuthAccessToken implements Serializable {
     }
 
 
-    public OAuthAccessToken(final long duration,
-                            final OAuthAuthorization authorization) {
-        this.authorization = authorization;
-        this.token =  new Token(duration,
-                SecurityHelper.getRandomAlphaNumericString(300));
+    public OAuthAccessToken(Token token,final OAuthAuthorization parent) {
+        this.authorization = parent;
+        this.bearer =  token;
     }
 
 
-    public Token getToken() {
-        return token;
+    public Token getBearer() {
+        return bearer;
     }
 
     public OAuthAuthorization getAuthorization() {
@@ -55,14 +63,14 @@ public class OAuthAccessToken implements Serializable {
         return !(authorization != null ?
                 !authorization.equals(that.authorization)
                 : that.authorization != null) &&
-                !(token != null ? !token.equals(that.token) :
-                        that.token != null);
+                !(bearer != null ? !bearer.equals(that.bearer) :
+                        that.bearer != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = token != null ? token.hashCode() : 0;
+        int result = bearer != null ? bearer.hashCode() : 0;
         result = 31 * result + (authorization != null ?
                 authorization.hashCode() : 0);
         return result;
@@ -71,7 +79,7 @@ public class OAuthAccessToken implements Serializable {
     @Override
     public String toString() {
         return "OAuthAccessToken{" +
-                "token=" + token +
+                "token=" + bearer +
                 ", authorization=" + authorization +
                 '}';
     }

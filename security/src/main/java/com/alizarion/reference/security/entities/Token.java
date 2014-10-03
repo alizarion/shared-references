@@ -27,8 +27,8 @@ public  class Token implements Serializable {
             nullable = false)
     private Date expireDate;
 
-    public Token() {
 
+    public Token() {
     }
 
     /**
@@ -39,11 +39,22 @@ public  class Token implements Serializable {
     public Token(final long duration,
                  final String generatedToken) {
         this.creationDate =  new Date();
-        this.expireDate = new Date(creationDate.getTime() + (duration * 1000));
+        this.expireDate = new Date(creationDate.getTime() +
+                (duration * 1000));
         this.value = generatedToken;
 
     }
 
+    public Token(final String generatedToken) {
+           this.creationDate =  new Date();
+           this.value = generatedToken;
+
+       }
+
+    public void addTime(final long duration){
+        this.expireDate.setTime(this.expireDate.
+                getTime()+(duration *1000));
+    }
 
     public boolean isValidToken(){
         return (new Date()).after(this.expireDate);
@@ -67,6 +78,13 @@ public  class Token implements Serializable {
 
     public void revoke(){
         this.expireDate = new Date();
+    }
+
+    public long expireIn(){
+        long creation =  this.creationDate.getTime();
+        long expire =  this.expireDate.getTime();
+        long diff =  expire - creation;
+        return diff/1000;
     }
 
     @Override

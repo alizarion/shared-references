@@ -26,6 +26,11 @@ public class ResetPasswordToken implements Serializable{
     protected ResetPasswordToken() {
     }
 
+    /**
+     * instantiate new reset password token
+     * @param duration time to keep token , in seconds.
+     * @param credential credential.
+     */
     public ResetPasswordToken(final long duration,Credential credential) {
         this.token = new Token(duration,
                 SecurityHelper.getRandomAlphaNumericString(130));

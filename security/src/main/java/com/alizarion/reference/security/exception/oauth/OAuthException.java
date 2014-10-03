@@ -1,4 +1,4 @@
-package com.alizarion.reference.security.exception;
+package com.alizarion.reference.security.exception.oauth;
 
 import com.alizarion.reference.exception.ApplicationException;
 
