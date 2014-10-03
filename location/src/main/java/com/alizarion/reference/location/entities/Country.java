@@ -13,7 +13,20 @@ import java.util.*;
 
 @Entity
 @Table( name = "location_country")
+@NamedQueries({@NamedQuery(name = Country.FIND_COUNTRY_LIKE,
+        query = "select c from Country " +
+                "c where c.id like :id"),
+        @NamedQuery(name = Country.FIND_COUNTRY_BY_ID,
+                query = "select c from Country c " +
+                        "where c.id = :country")})
+
 public class Country implements Serializable {
+
+    private static final long serialVersionUID = 4830188899708469462L;
+
+    public final static String FIND_COUNTRY_LIKE = "Country.FIND_COUNTRY_LIKE";
+    public final static String FIND_COUNTRY_BY_ID = "Country.FIND_COUNTRY_BY_ID";
+
 
     @Id
     @Column(name = "country_id",length = 2)

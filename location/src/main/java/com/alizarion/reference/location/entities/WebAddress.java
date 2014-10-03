@@ -15,10 +15,15 @@ import java.net.URL;
 @Table(name = "location_web_address")
 @DiscriminatorValue(value = "web")
 @PrimaryKeyJoinColumn(name = "web_address_id")
+@NamedQuery(name = WebAddress.FIND_BY_PART,
+        query = "select wa from WebAddress wa" +
+                " where wa.sourceURI like :part")
 public class WebAddress extends Address implements Serializable {
 
-
     private static final long serialVersionUID = 5070561554249537740L;
+
+    public final static String FIND_BY_PART =
+            "WebAddress.FIND_BY_PART";
 
     @Column(name = "hostname")
     private String host;

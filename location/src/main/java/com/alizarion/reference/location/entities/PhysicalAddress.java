@@ -9,7 +9,27 @@ import javax.persistence.*;
 @Table(name = "location_geographical_address")
 @DiscriminatorValue(value = "geographical")
 @PrimaryKeyJoinColumn(name = "geographical_address_id")
+@NamedQueries({@NamedQuery(
+        name = PhysicalAddress.FIND_BY_PART,
+        query = "select pa from PhysicalAddress pa where" +
+                " pa.name like :part or " +
+                "pa.street like :part"),
+        @NamedQuery(
+                name = PhysicalAddress.
+                        FIND_BY_PART_WITH_COUNTRY_ZIP,
+                query = "select pa from PhysicalAddress pa where " +
+                        "pa.name like :part  and pa.street" +
+                        " like :part and pa.zipCode like :zipCode" +
+                        " and pa.country.id like :countryId")})
 public class PhysicalAddress extends Address {
+
+    public static final String  FIND_BY_PART =
+            "PhysicalAddress.FIND_BY_PART";
+
+    public static final String
+            FIND_BY_PART_WITH_COUNTRY_ZIP =
+            "PhysicalAddress." +
+                    "FIND_BY_PART_WITH_COUNTRY_ZIP";
 
     @Column(name = "address_name",
             nullable = true)
@@ -17,7 +37,7 @@ public class PhysicalAddress extends Address {
 
 
     @Column(name = "street",nullable = false)
-    private String Street;
+    private String street;
 
     @Column(name = "postal_code",
             nullable = false,
@@ -35,7 +55,7 @@ public class PhysicalAddress extends Address {
     public PhysicalAddress(String street,
                            String zipCode,
                            Country country) {
-        Street = street;
+        this.street = street;
         this.zipCode = zipCode;
         this.country = country;
     }
@@ -49,11 +69,11 @@ public class PhysicalAddress extends Address {
     }
 
     public String getStreet() {
-        return Street;
+        return street;
     }
 
     public void setStreet(String street) {
-        Street = street;
+        this.street = street;
     }
 
     public String getZipCode() {
@@ -78,23 +98,23 @@ public class PhysicalAddress extends Address {
 
         PhysicalAddress that = (PhysicalAddress) o;
 
-        if (Street != null ? !Street.equals(that.Street)
-                : that.Street != null) return false;
-        if (country != null ? !country.equals(that.country)
-                : that.country != null) return false;
-        if (name != null ? !name.equals(that.name)
-                : that.name != null) return false;
-        if (zipCode != null ? !zipCode.equals(that.zipCode)
-                : that.zipCode != null) return false;
+        return !(street != null ? !street.equals(that.street)
+                : that.street != null) &&
+                !(country != null ?
+                        !country.equals(that.country) :
+                        that.country != null) &&
+                !(name != null ? !name.equals(that.name) :
+                        that.name != null) &&
+                !(zipCode != null ? !zipCode.equals(that.zipCode) :
+                        that.zipCode != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (Street != null
-                ? Street.hashCode() : 0);
+        result = 31 * result + (street != null
+                ? street.hashCode() : 0);
         result = 31 * result + (zipCode != null
                 ? zipCode.hashCode() : 0);
         result = 31 * result + (country != null

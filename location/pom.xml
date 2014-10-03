@@ -48,8 +48,24 @@
             <scope>provided</scope>
         </dependency>
 
-    </dependencies>
+        <dependency>
+            <groupId>com.alizarion.reference.dao</groupId>
+            <artifactId>generic-dao</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
+
+
+
+    </dependencies>
+    <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+    </build>
     <scm>
         <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/address/</developerConnection>
         <url>https://github.com/alizarion/shared-references.git/address/</url>

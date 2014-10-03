@@ -10,7 +10,24 @@ import java.io.Serializable;
 @Table(name = "location_email_address")
 @DiscriminatorValue(value = ElectronicAddress.TYPE)
 @PrimaryKeyJoinColumn(name = "email_address_id")
+@NamedQueries(
+        {@NamedQuery(name =
+                ElectronicAddress.FIND_BY_PART,
+                query = "select ea from ElectronicAddress ea where " +
+                        "ea.emailAddress like :emailPart"),
+                @NamedQuery(name =
+                        ElectronicAddress.FIND_BY_EMAIL,
+                        query = "select ea from ElectronicAddress ea where " +
+                                "ea.emailAddress = :email")}
+)
+
 public class ElectronicAddress extends Address implements Serializable {
+
+    public static final String FIND_BY_PART =
+            "ElectronicAddress.FIND_BY_PART";
+
+    public static final String FIND_BY_EMAIL =
+            "ElectronicAddress.FIND_BY_EMAIL";
 
     private static final long serialVersionUID = 3778051241478489845L;
 
@@ -40,10 +57,11 @@ public class ElectronicAddress extends Address implements Serializable {
 
         ElectronicAddress that = (ElectronicAddress) o;
 
-        if (emailAddress != null ? !emailAddress.equals(
-                that.emailAddress) : that.emailAddress != null) return false;
+        return !(emailAddress != null ?
+                !emailAddress.equals(
+                        that.emailAddress) :
+                that.emailAddress != null);
 
-        return true;
     }
 
     @Override
