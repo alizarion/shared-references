@@ -15,7 +15,7 @@ public abstract class JpaDao<K,E>  implements Dao<K,E>{
 
     protected Class<E> entityClass;
 
-    EntityManager em;
+    protected EntityManager em;
 
     @SuppressWarnings(value = "unchecked")
     protected JpaDao(EntityManager entityManager) {
@@ -52,5 +52,11 @@ public abstract class JpaDao<K,E>  implements Dao<K,E>{
         return em.createQuery("select e from "+
                 entityClass.getName() +
                 " e").getResultList();
+    }
+
+
+
+    public EntityManager getEntityManager(){
+        return this.em;
     }
 }
