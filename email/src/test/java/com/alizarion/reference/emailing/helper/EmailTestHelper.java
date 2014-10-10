@@ -11,12 +11,14 @@ import com.alizarion.reference.person.entities.Title;
 import com.alizarion.reference.person.entities.ValidateEmailToken;
 import com.alizarion.reference.security.SecurityTestFactory;
 import com.alizarion.reference.security.entities.ResetPasswordToken;
+import com.alizarion.reference.security.entities.Role;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 
@@ -31,7 +33,6 @@ public  class EmailTestHelper {
     }
 
     public static ValidateEmailToken getValidateEmailToken(){
-        //TODO refaire le test avec les bonnes entités
         PhysicalPerson person = new PhysicalPerson();
         person.setFirstName("Bensenouci");
         person.setLastName("Selim");
@@ -51,13 +52,14 @@ public  class EmailTestHelper {
     }
 
     public static GenericResetPasswordEmail getGenericResetPasswordEmail(URI uri){
+
         return  (GenericResetPasswordEmail) new  GenericResetPasswordEmail.
                 GenericResetPasswordEmailBuilder("selim@openlinux.fr",
                 getPhysicalPersonWithAddress(),
                 uri,Locale.FRENCH,
                 new ResetPasswordToken(3600L,
                         SecurityTestFactory.
-                                getPasswordRegistredCredential("user1"))).builder();
+                                getPasswordRegistredCredential("user1",new HashSet<Role>()))).builder();
     }
 
 
