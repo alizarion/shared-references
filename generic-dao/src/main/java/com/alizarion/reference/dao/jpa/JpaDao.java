@@ -18,7 +18,7 @@ public abstract class JpaDao<K,E>  implements Dao<K,E>{
     protected EntityManager em;
 
     @SuppressWarnings(value = "unchecked")
-    protected JpaDao(EntityManager entityManager) {
+    public JpaDao(EntityManager entityManager) {
         this.em = entityManager;
         ParameterizedType genericSuperclass =
                 (ParameterizedType) getClass()
