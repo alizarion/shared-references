@@ -1,4 +1,4 @@
-package com.alizarion.reference.security.resources;
+package com.alizarion.reference.security.services.resources;
 
 import com.alizarion.reference.resource.exception.PersistentResourceNotFoundException;
 import com.alizarion.reference.resource.mbean.PersistentMBean;
@@ -15,7 +15,7 @@ public class OAuthServerMBean extends PersistentMBean {
     private static final long serialVersionUID = -2814861837506911399L;
 
     public static final String CATEGORY =
-            "com.alizarion.reference.security.oauth.server";
+            "com.alizarion.reference.security.services.oauth.server";
 
     public static final String REFRESH_TOKEN_DURATION_SECOND =
             "refresh-token-duration-second";
@@ -47,10 +47,10 @@ public class OAuthServerMBean extends PersistentMBean {
     public Long getAccessTokenDurationSecond(){
         try {
             return Long.parseLong(
-                    getValue(REFRESH_TOKEN_DURATION_SECOND));
+                    getValue(ACCESS_TOKEN_DURATION_SECOND));
         } catch (PersistentResourceNotFoundException e) {
             return  Long.parseLong(
-                    bundle.getString(REFRESH_TOKEN_DURATION_SECOND));
+                    bundle.getString(ACCESS_TOKEN_DURATION_SECOND));
 
         }
     }

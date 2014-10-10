@@ -18,9 +18,7 @@
         Reset password workflow, Oauth client and server implementation, email validation, security token management …
     </description>
 
-    <properties>
-        <version.oltu>1.0.0</version.oltu>
-    </properties>
+
 
     <developers>
         <developer>
@@ -33,6 +31,29 @@
     </developers>
 
     <dependencies>
+
+
+        <!-- oauth Oltu lib -->
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
+            <version>${version.oltu}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
+            <version>${version.oltu}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.common</artifactId>
+            <version>${version.oltu}</version>
+            <scope>compile</scope>
+        </dependency>
+
+
         <!-- included module -->
         <dependency>
             <groupId>com.alizarion.reference.exception</groupId>
@@ -61,36 +82,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- OLTU implementation of OAuth-->
-        <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
-            <version>1.0.0</version>
-        </dependency>
 
-        <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.client</artifactId>
-            <version>${version.oltu}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.common</artifactId>
-            <version>${version.oltu}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>
-            <version>${version.oltu}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.oltu.commons</groupId>
-            <artifactId>org.apache.oltu.commons.json</artifactId>
-            <version>${version.oltu}</version>
-        </dependency>
         <!-- test unitaire-->
 
         <dependency>

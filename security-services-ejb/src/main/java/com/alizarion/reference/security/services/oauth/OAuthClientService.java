@@ -1,10 +1,11 @@
-package com.alizarion.reference.security.oauth;
+package com.alizarion.reference.security.services.oauth;
 
 import com.alizarion.reference.security.doa.OAuthJpaDao;
-import com.alizarion.reference.security.entities.Credential;
 import com.alizarion.reference.security.entities.Token;
 import com.alizarion.reference.security.entities.oauth.OAuthAccessToken;
+import com.alizarion.reference.security.entities.oauth.OAuthCredential;
 import com.alizarion.reference.security.entities.oauth.client.OAuthClientAuthorization;
+import com.alizarion.reference.security.entities.oauth.client.OAuthScopeClient;
 import com.alizarion.reference.security.entities.oauth.client.OAuthServerApplication;
 import com.alizarion.reference.security.exception.oauth.ClientIdNotFoundException;
 import com.alizarion.reference.security.exception.oauth.InvalidRefreshTokenException;
@@ -51,9 +52,9 @@ public class OAuthClientService implements Serializable {
      * @throws InvalidScopeException if scope not linked to the app.
      */
     public OAuthClientAuthorization getOAuthCodeRequest(
-            final Credential user,
+            final OAuthCredential user,
             final String clientId,
-            final Set<String> scopes)
+            final Set<OAuthScopeClient> scopes)
             throws InvalidScopeException,
             ClientIdNotFoundException {
         OAuthServerApplication application =
@@ -62,36 +63,24 @@ public class OAuthClientService implements Serializable {
         OAuthClientAuthorization authorization =
                 (OAuthClientAuthorization)
                         application.
-                                addAuthorization(user, scopes);
+                                addAuthorization(user,scopes);
         this.authDao.merge(application);
         this.em.refresh(authorization);
         return authorization;
     }
 
     public OAuthClientAuthorization getOAuthCodeRequest(
-            final Credential user,
+            final OAuthCredential user,
             final String clientId)
             throws InvalidScopeException, ClientIdNotFoundException {
         OAuthServerApplication application =
                 this.authDao.
                         findOAuthServerApplicationByClientId(clientId);
-        return getOAuthCodeRequest(user,clientId,application.
-                getRequestedScopeByDefault().
-                getKeys());
+        return getOAuthCodeRequest(user,clientId,
+                application.getDefaultClientScopes());
     }
 
-    public OAuthClientAuthorization getOAuthCodeRequest(
-            final String clientId)
-            throws InvalidScopeException,ClientIdNotFoundException {
-        OAuthServerApplication application =
-                this.authDao.
-                        findOAuthServerApplicationByClientId(clientId);
-        return getOAuthCodeRequest(
-                new Credential(application.
-                        getDefaultRoles().getRoles()),clientId,
-                application.getRequestedScopeByDefault().getKeys());
 
-    }
 
     /**
      * Method to persist new received access token.
@@ -137,7 +126,7 @@ public class OAuthClientService implements Serializable {
 
     public OAuthClientAuthorization getAliveRefreshToken(final Long credentialId)
             throws InvalidRefreshTokenException {
-         return this.authDao.findAliveRefreshToken(credentialId);
+        return this.authDao.findAliveRefreshToken(credentialId);
     }
 
 

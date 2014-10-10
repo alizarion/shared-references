@@ -1,4 +1,4 @@
-package com.alizarion.reference.security.oauth;
+package com.alizarion.reference.security.services.oauth;
 
 /**
  * @author selim@openlinux.fr.

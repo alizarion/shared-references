@@ -1,4 +1,4 @@
-package com.alizarion.reference.security.oauth;
+package com.alizarion.reference.security.services.oauth;
 
 import com.alizarion.reference.security.doa.OAuthJpaDao;
 import org.junit.Test;
