@@ -1,12 +1,12 @@
 package com.alizarion.reference.security.entities;
 
+import com.alizarion.reference.security.entities.oauth.OAuthCredential;
+import com.alizarion.reference.security.entities.oauth.OAuthRole;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class contain credentials information for user login.
@@ -14,9 +14,12 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "security_credential")
-public class Credential implements Serializable {
+@NamedQueries(@NamedQuery(name = Credential.FIND_BY_USERNAME_NAMED_QUERY,
+        query = "select c from Credential c where c.userName = :username "))
+public class Credential implements OAuthCredential<OAuthRole>,Serializable {
 
     private static final long serialVersionUID = 8712203414431845759L;
+
 
     @Id
     @TableGenerator(name="security_credential_SEQ",
@@ -62,7 +65,7 @@ public class Credential implements Serializable {
             nullable = false)
     private Date creationDate;
 
-    @OneToMany(cascade = {CascadeType.MERGE,
+    @OneToMany(mappedBy = "credential",cascade = {CascadeType.MERGE,
             CascadeType.PERSIST,
             CascadeType.REMOVE},
             fetch = FetchType.EAGER)
@@ -83,11 +86,9 @@ public class Credential implements Serializable {
 
 
     public Credential(final String userName,
-                      final String password,
                       final Set<Role>
                               roles) {
         this.userName = userName;
-        this.password = password;
         this.state = CredentialState.P;
         this.logon =  LogOnType.P;
         this.creationDate = new Date();
@@ -97,9 +98,68 @@ public class Credential implements Serializable {
         }
     }
 
-    public Long getId() {
-        return id;
+    public Credential() {
     }
+
+    public LogOnType getLogon() {
+        return logon;
+    }
+
+    public void setLogon(LogOnType logon) {
+        this.logon = logon;
+    }
+
+    public String getId() {
+        return id.toString();
+    }
+
+    public String getStringId() {
+        return id.toString();
+    }
+
+    @Override
+    public OAuthCredential init(Set<String> scopes) {
+        Set<Role>  roles= new HashSet<>();
+        for (String scope : scopes){
+            roles.add(new Role(new RoleKey(scope)));
+        }
+        return new Credential(roles);
+
+    }
+
+
+    @Override
+    public String getUsername() {
+        return this.userName;
+    }
+
+    @Override
+    public Set<String> getAvailableScopes() {
+        Set<String> scopes = new HashSet<>();
+        for (Role role:getRoles()){
+            scopes.add(role.getRoleKey().getKey());
+        }
+        return scopes;
+    }
+
+    @Override
+    public boolean setScopes(Set<String> scopes) {
+        return false;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Set<OAuthRole> getOAuthRoles() {
+        return (Set<OAuthRole>)(Set<?>)  getRoles();
+
+
+    }
+
+    @Override
+    public boolean addScope(String scope) {
+        return false;
+    }
+
 
     public String getUserName() {
         return userName;

@@ -16,6 +16,8 @@ import java.util.Set;
 @Table(name = "security_role_group")
 public class RoleGroup implements Serializable {
 
+    private static final long serialVersionUID = 1343055955274494336L;
+
     @EmbeddedId
     private RoleGroupKey group;
 

@@ -1,5 +1,7 @@
 package com.alizarion.reference.security.entities;
 
+import com.alizarion.reference.security.entities.oauth.OAuthRole;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,12 +12,24 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "security_roles")
-public class Role {
+public class Role implements OAuthRole {
 
-    @ManyToOne
-    private CredentialRole credentialRole;
+    private static final long serialVersionUID = 3487799026854810752L;
 
-    @EmbeddedId
+    @Id
+    @TableGenerator(name="security_roles_SEQ",
+            table="sequence",
+            pkColumnName="SEQ_NAME",
+            valueColumnName="SEQ_COUNT")
+    @GeneratedValue(strategy= GenerationType.TABLE,
+            generator="security_roles_SEQ")
+    @Column
+    private Long id;
+
+    @OneToMany(mappedBy = "role")
+    private Set<CredentialRole> credentialRoles = new HashSet<>();
+
+    @Embedded
     private RoleKey roleKey;
 
     @ManyToMany
@@ -24,57 +38,54 @@ public class Role {
     public Role() {
     }
 
-    public Role(final CredentialRole credentialRole,
-                final RoleKey role) {
-        this.credentialRole = credentialRole;
+    public Role( final RoleKey role) {
         this.roleKey = role;
     }
 
-    public Role(final CredentialRole credentialRole,
-                final RoleKey role,
-                final Set<RoleGroup> group) {
-        this.credentialRole = credentialRole;
+    public Role(
+            final RoleKey role,
+            final Set<RoleGroup> group) {
         this.roleKey = role;
         this.group = group;
-    }
-
-    public Role(RoleKey role) {
-        this.roleKey = role;
     }
 
     public RoleKey getRoleKey() {
         return roleKey;
     }
 
-    public CredentialRole getCredentialRole() {
-        return credentialRole;
-    }
-
     public Set<RoleGroup> getGroup() {
         return group;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getRoleId() {
+        return this.getRoleKey().getKey();
+    }
+
+
+
+    public Set<CredentialRole> getCredentialRoles() {
+        return credentialRoles;
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Role)) return false;
 
-        Role role1 = (Role) o;
+        Role role = (Role) o;
 
-        return !(credentialRole != null ?
-                !credentialRole.equals(role1.credentialRole) :
-                role1.credentialRole != null) &&
-                !(group != null ? !group.equals(role1.group) :
-                        role1.group != null) &&
-                !(roleKey != null ? !roleKey.equals(role1.roleKey) :
-                        role1.roleKey != null);
+        if (roleKey != null ? !roleKey.equals(role.roleKey) : role.roleKey != null) return false;
 
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = credentialRole != null ? credentialRole.hashCode() : 0;
-        result = 31 * result + (roleKey != null ? roleKey.hashCode() : 0);
-        result = 31 * result + (group != null ? group.hashCode() : 0);
-        return result;
+        return roleKey != null ? roleKey.hashCode() : 0;
     }
 }

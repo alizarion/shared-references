@@ -1,11 +1,12 @@
 package com.alizarion.reference.security.entities.oauth;
 
-import com.alizarion.reference.security.entities.Credential;
-import com.alizarion.reference.security.entities.RoleGroup;
 import com.alizarion.reference.security.exception.oauth.InvalidScopeException;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
 
@@ -22,15 +23,25 @@ import java.util.Set;
 @NamedQueries({@NamedQuery(name = OAuthApplication.FIND_BY_ClIENT_ID,
         query = "select oa from OAuthApplication oa where" +
                 " oa.applicationKey.clientId = :clientId " ),
+        @NamedQuery(name = OAuthApplication.FIND_BY_CLIENT_ID_REDIRECT_URI,
+                query = "select oa from OAuthApplication oa where" +
+                        " oa.applicationKey.clientId = :clientId " +
+                        "and oa.redirectURI = :redirectURI" ),
+        @NamedQuery(name = OAuthApplication.FIND_BY_CLIENT_ID_AND_SECRET,
+                query = "select oa from OAuthApplication oa where" +
+                        " oa.applicationKey.clientId = :clientId " +
+                        "and oa.applicationKey.clientSecret = :clientSecret" ),
         @NamedQuery(name = OAuthApplication.FIND_BY_APP_NAME,
                 query = "select oa from OAuthApplication" +
                         " oa where oa.name = :appName")})
-public abstract class OAuthApplication implements Serializable {
+public abstract class OAuthApplication<T extends OAuthScope> implements Serializable {
 
     private static final long serialVersionUID = 7604489775936326241L;
 
     public final static String FIND_BY_APP_NAME = "OAuthApplication.FIND_BY_APP_NAME";
     public final static String FIND_BY_ClIENT_ID = "OAuthApplication.FIND_BY_ClIENT_ID";
+    public final static String FIND_BY_CLIENT_ID_REDIRECT_URI = "OAuthApplication.FIND_BY_CLIENT_ID_REDIRECT_URI";
+    public final static String FIND_BY_CLIENT_ID_AND_SECRET = "OAuthApplication.FIND_BY_CLIENT_ID_AND_SECRET";
 
 
     @Id
@@ -48,22 +59,18 @@ public abstract class OAuthApplication implements Serializable {
     @Column(name = "home_page_url",
             nullable = false,
             unique = true)
-    private URL homePage;
+    private String homePage;
 
-    @Column(name = "callback_url",
+    @Column(name = "redirect_uri",
             nullable = false,
             unique = true)
-    private URL callback;
+    private String redirectURI;
 
     @Embedded
     protected OAuthApplicationKey applicationKey;
 
-    /**
-     * default in app role that
-     * this service will grant.
-     */
-    @OneToOne
-    protected RoleGroup defaultRoles;
+
+
 
     protected OAuthApplication() {
 
@@ -71,10 +78,16 @@ public abstract class OAuthApplication implements Serializable {
 
     public OAuthApplication(final String name,
                             final URL homePage,
-                            final URL callback) {
+                            final URI callback) {
         this.name = name;
-        this.homePage = homePage;
-        this.callback = callback;
+        this.homePage = homePage.toString();
+        this.redirectURI = callback.toString();
+    }
+
+
+    public void setApplicationKey(
+            final OAuthApplicationKey applicationKey) {
+        this.applicationKey = applicationKey;
     }
 
     public Long getId() {
@@ -89,33 +102,25 @@ public abstract class OAuthApplication implements Serializable {
         this.name = name;
     }
 
-    public URL getHomePage() {
-        return homePage;
+    public URL getHomePage() throws MalformedURLException {
+        return new URL(this.homePage);
     }
 
     public void setHomePage(URL homePage) {
-        this.homePage = homePage;
+        this.homePage = homePage.toString();
     }
 
-    public URL getCallback() {
-        return callback;
+    public URI getRedirectURI() throws URISyntaxException {
+        return new URI(redirectURI);
     }
 
-    public void setCallback(URL callback) {
-        this.callback = callback;
-    }
-
-    public RoleGroup getDefaultRoles() {
-        return defaultRoles;
-    }
-
-    public void setDefaultRoles(RoleGroup defaultRoles) {
-        this.defaultRoles = defaultRoles;
+    public void setRedirectURI(URI callback) {
+        this.redirectURI = callback.toString();
     }
 
     public abstract OAuthAuthorization addAuthorization(
-            final Credential credential,
-            final Set<String> roles) throws InvalidScopeException;
+            final OAuthCredential credential,
+            final Set<T> roles) throws InvalidScopeException;
 
     public void setId(Long id) {
         this.id = id;
@@ -132,7 +137,7 @@ public abstract class OAuthApplication implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", homePage=" + homePage +
-                ", callback=" + callback +
+                ", callback=" + redirectURI +
                 ", applicationKey=" + applicationKey +
                 '}';
     }

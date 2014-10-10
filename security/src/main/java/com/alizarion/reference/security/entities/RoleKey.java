@@ -1,9 +1,6 @@
 package com.alizarion.reference.security.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,20 +16,19 @@ public class RoleKey implements Serializable {
     /**
      * role key label
      */
-    @Column(name = "role",
-            unique = true,
+    @Column(name = "role_name",
             nullable = false,
-            length = 11)
-    private String role;
+            length = 25)
+    private String name;
 
 
     /**
      * role key label
      */
-    @Column(name = "key",
+    @Column(name = "unique_key",
             unique = true,
             nullable = false,
-            length = 11)
+            length = 25)
     private String key;
 
     /**
@@ -51,10 +47,15 @@ public class RoleKey implements Serializable {
 
     }
 
-    public RoleKey(final String role,
+
+    protected RoleKey(final String key) {
+
+    }
+
+    public RoleKey(final String name,
                    final String key,
                    final String description) {
-        this.role = role;
+        this.name = name;
         this.key = key;
         this.description = description;
         this.creationDate = new Date();
@@ -64,8 +65,8 @@ public class RoleKey implements Serializable {
      * Simple method to get role key.
      * @return  role key
      */
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
     /**
@@ -96,34 +97,25 @@ public class RoleKey implements Serializable {
         return key;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (!(o instanceof RoleKey)) return false;
 
         RoleKey roleKey = (RoleKey) o;
 
-
-        return !(description != null ?
-                !description.equals(roleKey.description) :
-                roleKey.description != null) &&
-                !(key != null ? !key.equals(roleKey.key) :
-                        roleKey.key != null) &&
-                !(role != null ?
-                        !role.equals(roleKey.role) :
-                        roleKey.role != null);
+        return !(key != null ?
+                !key.equals(roleKey.key)
+                : roleKey.key != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = role != null ? role.hashCode() : 0;
-        result = 31 * result + (key != null ? key.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
-        return result;
+        return key != null ?
+                key.hashCode() : 0;
     }
-
     /**
      * Method to update creation date on persist or merge.
      */
@@ -136,7 +128,7 @@ public class RoleKey implements Serializable {
     @Override
     public String toString() {
         return "InAppRole{" +
-                "role='" + role + '\'' +
+                "role='" + name + '\'' +
                 ", key='" + key + '\'' +
                 ", description='" + description + '\'' +
                 ", creationDate=" + creationDate +

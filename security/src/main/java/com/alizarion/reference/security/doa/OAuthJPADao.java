@@ -3,6 +3,7 @@ package com.alizarion.reference.security.doa;
 import com.alizarion.reference.dao.jpa.JpaDao;
 import com.alizarion.reference.security.entities.oauth.OAuthAccessToken;
 import com.alizarion.reference.security.entities.oauth.OAuthApplication;
+import com.alizarion.reference.security.entities.oauth.OAuthCredential;
 import com.alizarion.reference.security.entities.oauth.client.OAuthClientAuthorization;
 import com.alizarion.reference.security.entities.oauth.client.OAuthServerApplication;
 import com.alizarion.reference.security.entities.oauth.server.OAuthClientApplication;
@@ -39,6 +40,24 @@ public class OAuthJpaDao extends JpaDao<Long,OAuthApplication> {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private OAuthApplication findOAuthApplicationByClientIdAndRedirectURI(
+            final String clientId,
+            final String redirectURI)
+            throws ClientIdNotFoundException {
+        List<OAuthApplication> result = this.em.
+                createNamedQuery(OAuthApplication.
+                        FIND_BY_CLIENT_ID_REDIRECT_URI).
+                setParameter("clientId", clientId)
+                .setParameter("redirectURI",redirectURI).getResultList();
+        if (result.isEmpty()) {
+            throw new ClientIdNotFoundException(clientId);
+        } else {
+            return result.get(0);
+        }
+    }
+
+
     public OAuthServerApplication
     findOAuthServerApplicationByClientId(
             final String clientId)
@@ -59,6 +78,19 @@ public class OAuthJpaDao extends JpaDao<Long,OAuthApplication> {
         try {
             return (OAuthClientApplication)
                     findOAuthApplicationByClientId(clientId);
+        } catch (ClassCastException e) {
+            throw new ClientIdNotFoundException(clientId, e);
+
+        }
+    }
+
+    public OAuthClientApplication
+    findOAuthClientApplicationByClientIdAndRedirectURI(
+            final String clientId,final String redirectURI)
+            throws ClientIdNotFoundException {
+        try {
+            return (OAuthClientApplication)
+                    findOAuthApplicationByClientIdAndRedirectURI(clientId,redirectURI);
         } catch (ClassCastException e) {
             throw new ClientIdNotFoundException(clientId, e);
 
@@ -195,6 +227,19 @@ public class OAuthJpaDao extends JpaDao<Long,OAuthApplication> {
             return result.get(0);
         }
 
+    }
 
+    public OAuthCredential findOAuthCredentialByUsername(final String username)
+            throws BadCredentialException {
+        List<OAuthCredential> result = this.em.createNamedQuery(
+                OAuthCredential.FIND_BY_USERNAME_NAMED_QUERY)
+                .setParameter("username", username)
+                .getResultList();
+
+        if (result.isEmpty()){
+            throw new BadCredentialException(username);
+        }   else {
+            return result.get(0);
+        }
     }
 }

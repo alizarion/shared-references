@@ -2,79 +2,102 @@ package com.alizarion.reference.security;
 
 import com.alizarion.reference.security.entities.*;
 import com.alizarion.reference.security.entities.oauth.OAuthApplicationKey;
-import com.alizarion.reference.security.entities.oauth.client.OAuthScope;
-import com.alizarion.reference.security.entities.oauth.client.OAuthScopeGroup;
+import com.alizarion.reference.security.entities.oauth.OAuthRole;
+import com.alizarion.reference.security.entities.oauth.client.OAuthScopeClient;
+import com.alizarion.reference.security.entities.oauth.client.OAuthScopeClientGroup;
 import com.alizarion.reference.security.entities.oauth.client.OAuthServerApplication;
 import com.alizarion.reference.security.entities.oauth.server.OAuthClientApplication;
+import com.alizarion.reference.security.entities.oauth.server.OAuthScopeServer;
+import com.alizarion.reference.security.entities.oauth.server.OAuthScopeServerGroup;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * @author selim@openlinux.fr.
  */
 public class SecurityTestFactory  {
 
-    public static Set<RoleKey> getRoleKeys(){
-        Set<RoleKey>  roleKeys  =  new HashSet<>();
-        roleKeys.add(new RoleKey("test","test-key","mon role de test"));
-        roleKeys.add(new RoleKey("test2","test2-key","mon role de test2"));
-
-        return roleKeys;
+    public static RoleKey getRoleKeys(String disc){
+        return new RoleKey(disc+" role key",disc+"-key","ma rolekey " +disc);
     }
 
-    public static Set<Role> getRoles(){
-        Set<Role>  roles  =  new HashSet<>();
-        for(RoleKey roleKey  :  getRoleKeys()){
-            roles.add(new Role(roleKey));
-        }
-        return roles;
+    public static Role getRole(String disc){
+        return new Role(getRoleKeys(disc));
     }
 
-    public static Set<OAuthScope> getScopes(){
-        Set<OAuthScope>  scopes  =  new HashSet<>();
-        for(RoleKey roleKey  :  getRoleKeys()){
-            scopes.add(new OAuthScope(roleKey));
-        }
-        return scopes;
-    }
-
-    public static OAuthScopeGroup getScopeGroup(){
-        return new OAuthScopeGroup(new RoleGroupKey("users","all users"), getScopes());
+    public static OAuthScopeServer getServerScope(
+            String scopeDisc,
+            Role role){
+        return new OAuthScopeServer(
+                getRoleKeys(scopeDisc),
+                role);
     }
 
 
-    public static RoleGroup getRoleGroup(){
-        return new RoleGroup(new RoleGroupKey("user-inapp","logged users"),getRoles());
+    public static OAuthScopeClient getClientScopes(String scopeDisc ){
+        return new OAuthScopeClient(
+                getRoleKeys(scopeDisc));
     }
 
-    public static Credential getPasswordRegistredCredential(String discriminator){
-        return new Credential(discriminator + "FirstName",discriminator+"lastName",getRoles());
+    public static OAuthScopeServerGroup getServerScopeGroup(
+            String groupDisc,Set<OAuthScopeServer> scopeServers){
+        return new OAuthScopeServerGroup(new RoleGroupKey(
+                groupDisc+"-group-server-scope-group",
+                "all  "+groupDisc+" server scopes"),
+                scopeServers);
     }
 
-    public static OAuthServerApplication getOAuthServerApplication() throws MalformedURLException {
+
+    public static OAuthScopeClientGroup getClientScopeGroup(String groupDisc,Set<OAuthScopeClient> scopeClients ){
+        return new OAuthScopeClientGroup(new RoleGroupKey(
+                groupDisc+"-group-client-scope-group",
+                "all  "+groupDisc+" client scopes"),scopeClients);
+    }
+
+
+    public static RoleGroup getRoleGroup(String groupDisc,Set<Role>  roles){
+        return new RoleGroup(new RoleGroupKey(groupDisc+"-app-roles-group","logged users"),roles);
+    }
+
+    public static Credential getPasswordRegistredCredential(String discriminator,Set<Role> roles){
+        Credential credential =  new Credential(discriminator + "username",roles);
+        credential.setPassword("toto");
+        return credential;
+    }
+
+    public static OAuthServerApplication getOAuthServerApplication(Set<Role> clientRoles) throws MalformedURLException, URISyntaxException {
         OAuthServerApplication application =
-                new OAuthServerApplication("facebook",
-                        new URL("http://facebook.com"),
-                        new URL("http://facebook.com/api"),
-                        new OAuthApplicationKey("clientId",
-                                UUID.randomUUID().toString()));
-        application.setAllowedScopes(getScopes());
-        application.setRequestedScopeByDefault(getScopeGroup());
-        application.setDefaultRoles(getRoleGroup());
+                new OAuthServerApplication("myproject",
+                        new URL("http://myproject.com"),
+                        new URI("http://myproject.com/api/callback"),
+                        new URL("http://facebook.com/api/authz"),
+                        new URL("http://facebook.com/api/token"),
+                        new OAuthApplicationKey("clientId","clientSecret"));
+        application.addClientAuthorizedScope(getClientScopes("email"));
+        application.addClientAuthorizedScope(getClientScopes("notification"));
+        application.setGrantedRoles((Set<OAuthRole>) (Set<?>) clientRoles);
         return application;
     }
 
-    public static OAuthClientApplication getOAuthClientApplication() throws MalformedURLException {
+    public static OAuthClientApplication getOAuthClientApplication(Set<Role> serverRoles) throws MalformedURLException, URISyntaxException {
         OAuthClientApplication application =
-                new OAuthClientApplication("facebook",
-                        new URL("http://facebook.com"),
-                        new URL("http://facebook.com/api"));
+                new OAuthClientApplication("myproject",
+                        new URL("http://myproject.com"),
+                        new URI("http://myproject.com/api/callback"));
         application.generateApplicationKey();
-        application.setDefaultRoles(getRoleGroup());
+        int i = 0;
+        for (Role role : serverRoles){
+            application.addAllowedServerScope(getServerScope("scope"+i,role));
+            i++;
+        }
+        //same getApplicationKey that that the generated OAuthServerApplication
+        application.setApplicationKey(
+                getOAuthServerApplication(serverRoles).
+                        getApplicationKey());
         return application;
     }
 

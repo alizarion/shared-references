@@ -1,6 +1,7 @@
 package com.alizarion.reference.security.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  *
@@ -8,7 +9,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "security_credential_roles")
-public class CredentialRole {
+public class CredentialRole implements Serializable {
+
+    private static final long serialVersionUID = 1927873365012535601L;
 
     @Id
     @TableGenerator(name = "security_credential_roles_SEQ",
@@ -19,10 +22,12 @@ public class CredentialRole {
             strategy = GenerationType.TABLE)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @ManyToOne
+    @JoinColumn(name = "credential_id")
     private Credential credential;
 
 
@@ -30,6 +35,9 @@ public class CredentialRole {
                           final Credential credential) {
         this.role = role;
         this.credential = credential;
+    }
+
+    public CredentialRole() {
     }
 
     public Long getId() {

@@ -1,14 +1,13 @@
 package com.alizarion.reference.security.entities.oauth.client;
 
-import com.alizarion.reference.security.entities.Credential;
-import com.alizarion.reference.security.entities.oauth.OAuthApplication;
-import com.alizarion.reference.security.entities.oauth.OAuthApplicationKey;
-import com.alizarion.reference.security.entities.oauth.OAuthAuthorization;
+import com.alizarion.reference.security.entities.oauth.*;
 import com.alizarion.reference.security.exception.oauth.InvalidScopeException;
 
 import javax.persistence.*;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -20,13 +19,26 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "security_oauth_server_application")
-public class OAuthServerApplication extends OAuthApplication{
+public class OAuthServerApplication extends OAuthApplication<OAuthScopeClient> {
 
     private static final long serialVersionUID = 4124715375581000690L;
 
-    @OneToMany
-    private Set<OAuthScope> allowedScopes =
+
+    @OneToMany(cascade =
+            {CascadeType.MERGE,CascadeType.PERSIST},
+            mappedBy = "application")
+    private Set<OAuthScopeClient> clientAuthorizedScopes = new HashSet<>();
+
+    /**
+     * Granted roles in client app
+     * on Oauth authorization success.
+     */
+    @ManyToMany(cascade =
+            {CascadeType.MERGE,
+                    CascadeType.PERSIST})
+    private Set<OAuthRole> grantedRoles =
             new HashSet<>();
+
 
     @OneToMany(cascade =
             {CascadeType.MERGE,
@@ -36,13 +48,15 @@ public class OAuthServerApplication extends OAuthApplication{
             new HashSet<>();
 
 
+    @Column(name = "api_authorization_url",
+            nullable = false,
+            unique = true)
+    private URL apiAuthzUrl;
 
-    /**
-     * default scopes that will be
-     * requested on demanding oauth authorization.
-     */
-    @OneToOne
-    private OAuthScopeGroup requestedScopeByDefault;
+    @Column(name = "api_token_url",
+            nullable = false,
+            unique = true)
+    private URL apiTokenUrl;
 
 
     /**
@@ -50,69 +64,154 @@ public class OAuthServerApplication extends OAuthApplication{
      * @param name  of the application.
      * @param homePage home page url of the application.
      * @param callback oauth callback url.
+     * @param apiAuthzUrl api url to send authorization request
+     * @param apiTokenUrl api url to get access token
+     * @param applicationKey clientId and clientSecret
      */
-    public OAuthServerApplication(final String name,
-                                  final URL homePage,
-                                  final URL callback,
-                                  final OAuthApplicationKey applicationKey) {
+    public OAuthServerApplication(
+            final String name,
+            final URL homePage,
+            final URI callback,
+            final URL apiAuthzUrl,
+            final URL apiTokenUrl,
+            final OAuthApplicationKey applicationKey) {
         super(name, homePage, callback);
+        this.apiAuthzUrl = apiAuthzUrl;
+        this.apiTokenUrl = apiTokenUrl;
         this.applicationKey = applicationKey;
+
     }
 
     public OAuthServerApplication() {
     }
 
-    @Override
-    public OAuthAuthorization addAuthorization(
-            final Credential credential,
-            final Set<String> requestedRoles) throws InvalidScopeException {
-        Set<OAuthScope>  requestedScopes = new HashSet<>();
-        for (String role : requestedRoles){
-            requestedScopes.add(getAssociatedScope(role));
-        }
-        OAuthClientAuthorization authorization =
-                new OAuthClientAuthorization(this,
-                        credential,
-                        requestedScopes);
-        this.authorizations.add(authorization);
-        return authorization;
+    public URL getApiAuthzUrl() {
+        return apiAuthzUrl;
     }
 
-
-    public Set<OAuthScope> getAllowedScopes() {
-        return allowedScopes;
+    public void setApiAuthzUrl(URL apiAuthzUrl) {
+        this.apiAuthzUrl = apiAuthzUrl;
     }
 
-    private OAuthScope getAssociatedScope(
-            final String role)
-            throws InvalidScopeException {
-        for (OAuthScope scope: this.allowedScopes){
-            if (scope.getRole().getKey().equals(role)){
-                return scope;
+    public URL getApiTokenUrl() {
+        return apiTokenUrl;
+    }
+
+    public void setApiTokenUrl(URL apiTokenUrl) {
+        this.apiTokenUrl = apiTokenUrl;
+    }
+
+    public void setAuthorizations(
+            final Set<OAuthClientAuthorization> authorizations) {
+        this.authorizations = authorizations;
+    }
+
+    public Set<OAuthScopeClient> getAllowedScopes() {
+        return clientAuthorizedScopes;
+    }
+
+    public Set<OAuthScopeClient> getClientAuthorizedScopes() {
+        return clientAuthorizedScopes;
+    }
+
+    public void setClientAuthorizedScopes(
+            final Set<OAuthScopeClient> clientAuthorizedScopes) {
+        this.clientAuthorizedScopes = clientAuthorizedScopes;
+    }
+
+    /**
+     * Method to add authorized scope
+     * @param scopeClient scope to add
+     * @return the added OAuthScopeClient
+     */
+    public OAuthScopeClient addClientAuthorizedScope(
+            final OAuthScopeClient scopeClient){
+        scopeClient.setApplication(this);
+        this.clientAuthorizedScopes.add(scopeClient);
+        return scopeClient;
+    }
+
+    public Set<OAuthScopeClient> getDefaultClientScopes(){
+        Set<OAuthScopeClient> scopeClients = new HashSet<>();
+        for (OAuthScopeClient scope :  this.clientAuthorizedScopes){
+            if (scope.getAskByDefault()){
+                scopeClients.add(scope);
             }
         }
-        throw new InvalidScopeException(role);
+        return scopeClients;
     }
 
-    public OAuthScopeGroup getRequestedScopeByDefault() {
-        return requestedScopeByDefault;
+    public String getDefaultScopesCommaSeparated() {
+        StringBuffer stringBuffer = new StringBuffer();
+        Iterator<OAuthScopeClient> clientScopeIterator = getDefaultClientScopes().iterator();
+        while (clientScopeIterator.hasNext()) {
+            if (clientScopeIterator.hasNext()) {
+                stringBuffer.append(
+                        clientScopeIterator.
+                                next().getScope().
+                                getKey()).append(',');
+            } else {
+                stringBuffer.append(
+                        clientScopeIterator.
+                                next().getScope().
+                                getKey());
+
+            }
+        }
+        return stringBuffer.toString();
+
     }
 
-    public void setRequestedScopeByDefault(
-            final OAuthScopeGroup requestedScopeByDefault) {
-        this.requestedScopeByDefault = requestedScopeByDefault;
+    public Set<OAuthRole> getGrantedRoles() {
+        return grantedRoles;
     }
 
-    public void setAllowedScopes(
-            final Set<OAuthScope> allowedScopes) {
-        this.allowedScopes = allowedScopes;
+
+
+    public void setGrantedRoles(Set<OAuthRole> defaultGrantedRoles) {
+        this.grantedRoles.addAll(defaultGrantedRoles);
+    }
+
+
+    public void addGrantedRole(final OAuthRole role){
+        this.grantedRoles.add(role);
+    }
+
+    @Override
+    public OAuthAuthorization addAuthorization(
+            final OAuthCredential credential,
+            final Set<OAuthScopeClient> requestedRoles)
+            throws InvalidScopeException {
+        if (this.clientAuthorizedScopes.containsAll(requestedRoles)){
+            OAuthClientAuthorization authorization =
+                    new OAuthClientAuthorization(this,credential,
+                            requestedRoles );
+            this.authorizations.add(authorization);
+            return authorization;
+        } else {
+            requestedRoles.removeAll(this.clientAuthorizedScopes);
+            Iterator<OAuthScopeClient> unAuthorized =
+                    requestedRoles.iterator();
+            String unAuthorizedString= "";
+            while (unAuthorized.hasNext()){
+                if (unAuthorized.hasNext()){
+                    unAuthorizedString  =
+                            unAuthorizedString +
+                                    unAuthorized.next().
+                                            getScope().getKey() +  ", ";
+                }   else {
+                    unAuthorizedString  = unAuthorizedString +
+                            unAuthorized.next().getScope().getKey();
+                }
+            }
+
+            throw new InvalidScopeException(unAuthorizedString);
+        }
+
     }
 
     public Set<OAuthClientAuthorization> getAuthorizations() {
         return authorizations;
     }
 
-    public void setAuthorizations(Set<OAuthClientAuthorization> authorizations) {
-        this.authorizations = authorizations;
-    }
 }

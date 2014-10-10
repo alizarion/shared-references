@@ -1,17 +1,11 @@
 package com.alizarion.reference.security.entities.oauth.server;
 
-import com.alizarion.reference.security.entities.Credential;
-import com.alizarion.reference.security.entities.CredentialRole;
-import com.alizarion.reference.security.entities.oauth.OAuthApplication;
-import com.alizarion.reference.security.entities.oauth.OAuthApplicationKey;
-import com.alizarion.reference.security.entities.oauth.OAuthAuthorization;
+import com.alizarion.reference.security.entities.oauth.*;
 import com.alizarion.reference.security.exception.oauth.InvalidScopeException;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,17 +17,35 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "security_oauth_client_application")
-public class OAuthClientApplication extends OAuthApplication {
+public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
 
     private static final long serialVersionUID = 3181235030223846729L;
 
-    @OneToMany(cascade = {CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REMOVE})
+
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinTable(name = "security_oauth_client_application_server_scope",
+            joinColumns =
+            @JoinColumn(name = "client_application_id",
+                    referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "server_scope_id",
+                    referencedColumnName = "id"))
+    private Set<OAuthScopeServer> allowedServerScopes = new
+            HashSet<>();
+
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.MERGE,
+                    CascadeType.PERSIST,
+                    CascadeType.REMOVE})
+    @JoinTable(name = "security_oauth_client_app_server_auth",
+            joinColumns = @JoinColumn(name = "app_id",referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "auth_id",referencedColumnName = "id"))
     private Set<OAuthServerAuthorization> authorizations = new HashSet<>();
 
 
-    public OAuthClientApplication() {
+    protected OAuthClientApplication() {
     }
 
 
@@ -45,63 +57,62 @@ public class OAuthClientApplication extends OAuthApplication {
      */
     public OAuthClientApplication(final String name,
                                   final URL homePage,
-                                  final URL callback) {
+                                  final URI callback) {
         super(name, homePage, callback);
     }
 
-
-
     @Override
     public OAuthAuthorization addAuthorization(
-            final Credential credential,
-            final Set<String> scopes)
+            final OAuthCredential credential,
+            final Set<OAuthScopeServer> scopes)
             throws InvalidScopeException {
-        OAuthServerAuthorization authorization =
-                new OAuthServerAuthorization(this,
-                        extractCredentialRole(scopes,
-                                credential));
-        this.authorizations.add(authorization);
-        return authorization;
+
+        if (this.allowedServerScopes.containsAll(scopes)){
+            for (OAuthScopeServer scopeServer :  scopes){
+                if (!credential
+                        .getOAuthRoles()
+                        .contains(scopeServer.getRole())){
+                    throw new InvalidScopeException("user does not have " +
+                            scopeServer.getRole().getRoleId());
+                }
+            }
+
+            OAuthServerAuthorization authorization =
+                    new OAuthServerAuthorization(this,
+                            credential,
+                            scopes);
+            this.authorizations.add(authorization);
+            return authorization;
+
+        }   else {
+            scopes.removeAll(this.allowedServerScopes);
+            Iterator<OAuthScopeServer> unAuthorized =
+                    allowedServerScopes.iterator();
+            String unAuthorizedString= "";
+            while (unAuthorized.hasNext()){
+                if (unAuthorized.hasNext()){
+                    unAuthorizedString  = unAuthorizedString +
+                            unAuthorized.next().getScope().getKey() +  ", ";
+                }   else {
+                    unAuthorizedString  = unAuthorizedString +
+                            unAuthorized.next().getScope().getKey();
+                }
+            }
+
+            throw new InvalidScopeException(unAuthorizedString);
+
+        }
+
     }
 
-    @SuppressWarnings(value = "all")
-    private Set<CredentialRole> extractCredentialRole(
-            final Set<String> scopes,
-            Credential credential)
+    public OAuthScopeServer  getServerScopeByKey(final String key)
             throws InvalidScopeException {
-        Set<CredentialRole> roles = new HashSet<>();
-        if (this.defaultRoles.getKeys().containsAll(scopes)){
-            for (String scope :  scopes){
-                for (CredentialRole credentialRole :
-                        credential.getCredentialRoles()){
-                    if (credentialRole.getRole().
-                            getRoleKey().
-                            getKey().
-                            equals(scope)){
-                        roles.add(credentialRole);
-                    }
-                }
+        for (OAuthScopeServer scopeServer :this.allowedServerScopes ){
+            if (scopeServer.getScope().getKey().equals(key)){
+                return scopeServer;
             }
-        }  else {
-            scopes.removeAll(this.defaultRoles.getKeys());
-            StringBuffer stringBuffer = new StringBuffer();
-            Iterator<String> keyIterator = scopes.iterator();
-            while (keyIterator.hasNext()){
-
-                if (keyIterator.hasNext()) {
-                    stringBuffer.
-                            append(keyIterator.
-                                    next()).append(',');
-                } else {
-                    stringBuffer.
-                            append(keyIterator.
-                                    next());
-                }
-            }
-            throw new InvalidScopeException(
-                    stringBuffer.toString());
         }
-        return roles;
+        return null;
     }
 
     public Set<OAuthServerAuthorization> getAuthorizations() {
@@ -117,6 +128,20 @@ public class OAuthClientApplication extends OAuthApplication {
                 UUID.randomUUID().toString(),
                 SecurityHelper.
                         getRandomAlphaNumericString(300));
+    }
+
+    public Set<OAuthScopeServer> getAllowedServerScopes() {
+        return allowedServerScopes;
+    }
+
+    public void setAllowedServerScopes(
+            final Set<OAuthScopeServer> allowedServerScopes) {
+        this.allowedServerScopes.addAll(allowedServerScopes);
+    }
+
+    public void addAllowedServerScope(
+            final OAuthScopeServer serverScope){
+        this.allowedServerScopes.add(serverScope);
     }
 
     @Override

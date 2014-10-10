@@ -8,11 +8,12 @@ public enum LogOnType {
     /**
      * Service any service using oauth
      */
-    S("service"),
+    S("SERVICE"),
+
     /**
      *  Password login.
      */
-    P("password");
+    P("PASSWORD");
 
     private String key;
 

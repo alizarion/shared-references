@@ -5,7 +5,9 @@ import com.alizarion.reference.security.entities.Token;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -13,31 +15,32 @@ import java.util.Set;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class OAuthAuthorization implements Serializable {
+public abstract class OAuthAuthorization<T extends OAuthScope> implements Serializable {
 
     private static final long serialVersionUID = 1615612298298934691L;
 
 
     @Id
     @TableGenerator(
-            name = "security_oauth_client_authorization_SEQ",
+            name = "security_oauth_authorization_SEQ",
             table = "sequence",
             pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT")
     @GeneratedValue(
-            generator ="security_oauth_client_authorization_SEQ",
+            generator ="security_oauth_authorization_SEQ",
             strategy = GenerationType.TABLE)
     private Long id;
 
     @ManyToOne(optional = false)
     protected OAuthApplication authApplication;
 
-    @ManyToOne(optional = false)
-    protected Credential credential;
+    @ManyToOne
+    protected OAuthCredential credential;
 
     @OneToMany(cascade = {CascadeType.REMOVE,
             CascadeType.PERSIST,
             CascadeType.MERGE},
+            mappedBy = "authorization",
             fetch = FetchType.EAGER)
     protected Set<OAuthAccessToken> accessTokens = new HashSet<>();
 
@@ -68,7 +71,7 @@ public abstract class OAuthAuthorization implements Serializable {
         return refreshToken;
     }
 
-    public Credential getCredential() {
+    public OAuthCredential getCredential() {
         return credential;
     }
 
@@ -84,6 +87,11 @@ public abstract class OAuthAuthorization implements Serializable {
         return id;
     }
 
+    public abstract Set<T> getScopes();
+
+    public abstract List<T> getScopesAsList();
+
+    public abstract Set<String> getScopeKeys();
 
     public void setRefreshToken(Token refreshToken) {
         this.refreshToken = refreshToken;
@@ -104,6 +112,30 @@ public abstract class OAuthAuthorization implements Serializable {
         return accessTokens;
     }
 
+    public OAuthAccessToken getMostLifeTimeAccessToken() {
+        OAuthAccessToken accessToken = null;
+
+        for (OAuthAccessToken token : this.accessTokens) {
+            if (accessToken == null) {
+                if (new Date()
+                        .before(token
+                                .getBearer()
+                                .getExpireDate())) {
+                    accessToken = token;
+                }
+            } else {
+                if (accessToken
+                        .getBearer()
+                        .getExpireDate()
+                        .before(token
+                                .getBearer()
+                                .getExpireDate())) {
+                    accessToken = token;
+                }
+            }
+        }
+        return accessToken;
+    }
 
     @Override
     public String toString() {

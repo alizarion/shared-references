@@ -1,8 +1,8 @@
 package com.alizarion.reference.security.tools;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
@@ -20,21 +20,6 @@ public class SecurityHelper {
     }
 
     public static String getSHA1Value(String value){
-        String result = value;
-        if(value != null) {
-            MessageDigest md ;
-            try {
-                md = MessageDigest.getInstance("SHA-1"); //or "MD5"
-                md.update(value.getBytes());
-                BigInteger hash = new BigInteger(1, md.digest());
-                result = hash.toString(16);
-                while(result.length() < 32) {
-                    result = "0" + result;
-                }
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
+       return DigestUtils.sha1Hex(value);
     }
 }

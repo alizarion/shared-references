@@ -14,7 +14,8 @@ public class RoleGroupKey  implements Serializable{
 
     private static final long serialVersionUID = -8386781628720988820L;
     @Column(name = "group_id",
-            nullable = false)
+            nullable = false,
+            unique = true)
     private String group;
 
 
@@ -28,7 +29,7 @@ public class RoleGroupKey  implements Serializable{
 
     public RoleGroupKey() {
 
-      }
+    }
 
     public RoleGroupKey(final String group,
                         final String description) {

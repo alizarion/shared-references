@@ -29,10 +29,20 @@ public class OAuthAccessToken implements Serializable {
 
     public static final String FIND_BY_TOKEN = "OAuthAccessToken.FIND_BY_TOKEN";
 
-    @EmbeddedId
+    @Id
+    @TableGenerator(name = "security_oauth_access_token_SEQ",
+            table = "sequence",
+            pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT")
+    @GeneratedValue(strategy = GenerationType.TABLE,
+            generator = "security_oauth_access_token_SEQ")
+    private Long id;
+
+    @Embedded
     private Token bearer;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "oauth_authorization_id")
     private OAuthAuthorization authorization;
 
     public OAuthAccessToken() {
@@ -45,6 +55,9 @@ public class OAuthAccessToken implements Serializable {
         this.bearer =  token;
     }
 
+    public Long getId() {
+        return id;
+    }
 
     public Token getBearer() {
         return bearer;

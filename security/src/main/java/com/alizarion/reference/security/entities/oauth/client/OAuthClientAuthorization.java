@@ -1,21 +1,20 @@
 package com.alizarion.reference.security.entities.oauth.client;
 
-import com.alizarion.reference.security.entities.Credential;
 import com.alizarion.reference.security.entities.Token;
-import com.alizarion.reference.security.entities.oauth.OAuthAccessToken;
-import com.alizarion.reference.security.entities.oauth.OAuthApplication;
-import com.alizarion.reference.security.entities.oauth.OAuthAuthorization;
+import com.alizarion.reference.security.entities.oauth.*;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(name = "security_oauth_server_authorization")
+@Table(name = "security_oauth_client_authorization")
 @NamedQueries({@NamedQuery(name = OAuthClientAuthorization.FIND_BY_STATE,
         query = "select ca from OAuthClientAuthorization " +
                 "ca where ca.state.value = :state"),
@@ -24,7 +23,7 @@ import java.util.Set;
                         "ca.credential.id = :credentialId and " +
                         "(ca.refreshToken.expireDate is null" +
                         " or ca.refreshToken.expireDate > :today)")})
-public class OAuthClientAuthorization extends OAuthAuthorization {
+public class OAuthClientAuthorization extends OAuthAuthorization<OAuthScopeClient> {
 
     private static final long serialVersionUID = -5782746473189901608L;
 
@@ -36,7 +35,14 @@ public class OAuthClientAuthorization extends OAuthAuthorization {
 
 
     @ManyToMany
-    private Set<OAuthScope> scopes = new HashSet<>();
+    @JoinTable(name = "security_oauth_client_authorization_oauth_scope_client",
+            joinColumns =
+            @JoinColumn(name ="oauth_server_authorization_id",
+                    referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "security_oauth_scope_client",
+                    referencedColumnName = "id"))
+    private Set<OAuthScopeClient> scopes = new HashSet<>();
 
     @Embedded
     @AttributeOverrides({
@@ -51,7 +57,7 @@ public class OAuthClientAuthorization extends OAuthAuthorization {
 
 
     public OAuthClientAuthorization(final OAuthApplication authApplication,
-                                    Credential credential) {
+                                    OAuthCredential credential) {
         super(authApplication);
         this.state = new Token(300,
                 SecurityHelper.
@@ -60,8 +66,8 @@ public class OAuthClientAuthorization extends OAuthAuthorization {
     }
 
     public OAuthClientAuthorization(final OAuthApplication authApplication,
-                                    final Credential credential,
-                                    final Set<OAuthScope> scopes) {
+                                    final OAuthCredential credential,
+                                    final Set<OAuthScopeClient> scopes) {
         super(authApplication);
         this.state = new Token(300,
                 SecurityHelper.
@@ -73,10 +79,23 @@ public class OAuthClientAuthorization extends OAuthAuthorization {
     public OAuthClientAuthorization() {
     }
 
-    public Set<OAuthScope> getScopes() {
+    public Set<OAuthScopeClient> getScopes() {
         return scopes;
     }
 
+    @Override
+    public List<OAuthScopeClient> getScopesAsList() {
+        return new ArrayList<>(this.scopes);
+    }
+
+    @Override
+    public Set<String> getScopeKeys() {
+        Set<String> scopeKeys = new HashSet<>();
+        for (OAuthScopeClient scopeClient :  this.scopes){
+            scopeKeys.add(scopeClient.getScope().getKey()) ;
+        }
+        return scopeKeys;
+    }
 
     @Override
     public void revoke() {
@@ -95,4 +114,11 @@ public class OAuthClientAuthorization extends OAuthAuthorization {
         return accessToken;
     }
 
+    public Token getState() {
+        return state;
+    }
+
+    public void setState(Token state) {
+        this.state = state;
+    }
 }

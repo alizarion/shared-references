@@ -28,7 +28,7 @@ public  class Token implements Serializable {
     private Date expireDate;
 
 
-    public Token() {
+    protected Token() {
     }
 
     /**
@@ -46,10 +46,10 @@ public  class Token implements Serializable {
     }
 
     public Token(final String generatedToken) {
-           this.creationDate =  new Date();
-           this.value = generatedToken;
+        this.creationDate =  new Date();
+        this.value = generatedToken;
 
-       }
+    }
 
     public void addTime(final long duration){
         this.expireDate.setTime(this.expireDate.
@@ -57,7 +57,13 @@ public  class Token implements Serializable {
     }
 
     public boolean isValidToken(){
-        return (new Date()).after(this.expireDate);
+
+
+        if (this.expireDate == null){
+            return true;
+        }  else {
+            return (new Date()).after(this.expireDate);
+        }
     }
 
     public Date getCreationDate() {
@@ -80,11 +86,15 @@ public  class Token implements Serializable {
         this.expireDate = new Date();
     }
 
-    public long expireIn(){
+    public Long expireIn(){
         long creation =  this.creationDate.getTime();
-        long expire =  this.expireDate.getTime();
-        long diff =  expire - creation;
-        return diff/1000;
+        if ( this.expireDate == null){
+            return null;
+        }   else {
+            long expire = this.expireDate.getTime();
+            long diff = expire - creation;
+            return diff / 1000;
+        }
     }
 
     @Override
@@ -96,8 +106,6 @@ public  class Token implements Serializable {
         return !(creationDate != null ?
                 !creationDate.equals(that.creationDate) :
                 that.creationDate != null) &&
-                !(expireDate != null ? !expireDate.equals(that.expireDate) :
-                        that.expireDate != null) &&
                 !(value != null ? !value.equals(that.value) :
                         that.value != null);
 
@@ -109,8 +117,6 @@ public  class Token implements Serializable {
                 creationDate.hashCode() : 0;
         result = 31 * result + (value != null ?
                 value.hashCode() : 0);
-        result = 31 * result + (expireDate != null ?
-                expireDate.hashCode() : 0);
         return result;
     }
 

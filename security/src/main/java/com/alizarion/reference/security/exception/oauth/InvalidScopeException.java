@@ -8,8 +8,7 @@ public class InvalidScopeException extends OAuthException {
 
     private static final long serialVersionUID = -8520542982691087267L;
 
-    public static final String MSG = "Invalid scope" +
-            " parameter in initial Authorization ";
+    public static final String MSG = "Invalid scope ";
 
     public InvalidScopeException(String msg) {
         super(MSG + msg);

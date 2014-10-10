@@ -1,21 +1,23 @@
 package com.alizarion.reference.security.entities.oauth.server;
 
-import com.alizarion.reference.security.entities.CredentialRole;
 import com.alizarion.reference.security.entities.Token;
 import com.alizarion.reference.security.entities.oauth.OAuthAccessToken;
 import com.alizarion.reference.security.entities.oauth.OAuthApplication;
 import com.alizarion.reference.security.entities.oauth.OAuthAuthorization;
+import com.alizarion.reference.security.entities.oauth.OAuthCredential;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author selim@openlinux.fr.
  */
 @Entity
-@Table(name = "security_oauth_client_authorization")
+@Table(name = "security_oauth_server_authorization")
 @NamedQueries({@NamedQuery(
         name = OAuthServerAuthorization.FIND_BY_AUTH_CODE,
         query = "select sAuth from OAuthServerAuthorization " +
@@ -24,7 +26,7 @@ import java.util.Set;
                 name = OAuthServerAuthorization.FIND_BY_REFRESH_TOKEN,
                 query = "select sAuth from OAuthServerAuthorization sAuth" +
                         " where sAuth.refreshToken.value = :refreshToken")})
-public class OAuthServerAuthorization extends OAuthAuthorization {
+public class OAuthServerAuthorization extends OAuthAuthorization<OAuthScopeServer> {
 
     private static final long serialVersionUID = 6324216375307560864L;
 
@@ -35,19 +37,27 @@ public class OAuthServerAuthorization extends OAuthAuthorization {
             "OAuthServerAuthorization.FIND_BY_REFRESH_TOKEN";
 
     @ManyToMany
-    private Set<CredentialRole> scopes = new HashSet<>();
+    @JoinTable(name = "security_oauth_server_authorization_scopes",
+            joinColumns =
+            @JoinColumn(name = "server_authorization_id",
+                    referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "server_scope_id",
+                    referencedColumnName = "id")
+    )
+    private Set<OAuthScopeServer> scopes = new HashSet<>();
 
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "creationDate",
                     column = @Column(name = "code_creation_date"
-                            ,nullable = false)),
+                            ,nullable = true)),
             @AttributeOverride(name = "value",
                     column = @Column(name = "code_value",
-                            nullable = false)),
+                            nullable = true)),
             @AttributeOverride(name = "expireDate",
                     column = @Column(name = "code_expire_date",
-                            nullable = false))
+                            nullable = true))
     })
     private Token authCode;
 
@@ -56,24 +66,42 @@ public class OAuthServerAuthorization extends OAuthAuthorization {
     }
 
     public OAuthServerAuthorization(final OAuthApplication authApplication,
-                                    final Set<CredentialRole> roles) {
+                                    final OAuthCredential credential,
+                                    final Set<OAuthScopeServer> scopes) {
+
+        this.credential =  credential;
+        this.authApplication = authApplication;
+        this.scopes.addAll(scopes);
+
+    }
+
+    public void generateCode(){
         this.authCode = new Token(300,
                 SecurityHelper.
                         getRandomAlphaNumericString(150));
-        this.scopes = roles;
-        this.authApplication = authApplication;
+    }
 
+    @Override
+    public Set<OAuthScopeServer> getScopes() {
+        return this.scopes;
+    }
+
+    @Override
+    public List<OAuthScopeServer> getScopesAsList() {
+        return new ArrayList<>(this.scopes);
     }
 
 
-    public Set<CredentialRole> getScopes() {
-        return scopes;
+    @Override
+    public Set<String> getScopeKeys()  {
+        Set<String> scopeKeys = new HashSet<>();
+        for (OAuthScopeServer scopeServer :  this.scopes){
+            scopeKeys.add(scopeServer.getScope().getKey());
+        }
+        return scopeKeys;
     }
 
-
-
-
-    public OAuthAccessToken getNewAccessToken(
+    public OAuthAccessToken addAccessToken(
             final long duration){
         this.revokeAccess();
         OAuthAccessToken accessToken =
@@ -87,9 +115,9 @@ public class OAuthServerAuthorization extends OAuthAuthorization {
     }
 
     public Token generateRefreshToken(final Long duration){
-            this.refreshToken = new Token(
-                    duration,
-                    SecurityHelper.getRandomAlphaNumericString(300));
+        this.refreshToken = new Token(
+                duration,
+                SecurityHelper.getRandomAlphaNumericString(300));
 
         return this.refreshToken;
     }
@@ -101,6 +129,8 @@ public class OAuthServerAuthorization extends OAuthAuthorization {
 
     }
 
+
+
     public Token getAuthCode() {
         return authCode;
     }
@@ -108,7 +138,6 @@ public class OAuthServerAuthorization extends OAuthAuthorization {
     @Override
     public String toString() {
         return "OAuthClientAuthorization{" +
-                "scopes=" + scopes +
                 ", authCode=" + authCode +
                 '}';
     }
