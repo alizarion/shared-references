@@ -1,11 +1,8 @@
 package com.alizarion.reference.resource.entities;
 
-import com.alizarion.reference.staticparams.StaticParam;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.ResourceBundle;
 
 /**
  * @author selim@openlinux.fr.
@@ -22,6 +19,8 @@ public class PersistentResource implements Serializable {
     public final static String GET_PERSISTENT_RESOURCE_VALUE_BY_KEY =
             "GET_PERSISTENT_RESOURCE_VALUE_BY_KEY";
 
+    private static final long serialVersionUID = 4477468895307761998L;
+
     @Id
     @TableGenerator(name="persistent_resources_SEQ",
             table="sequence",
@@ -34,7 +33,7 @@ public class PersistentResource implements Serializable {
     @Column(name = "category",unique = false,length = 128)
     private String category;
 
-    @Column(name = "key",length = 50,unique = false)
+    @Column(name = "unique_key",length = 50,unique = false)
     private String key;
 
     @Column(name = "value",length = 255,unique = false)

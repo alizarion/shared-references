@@ -6,6 +6,7 @@ import com.alizarion.reference.resource.exception.PersistentResourceNotFoundExce
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -46,7 +47,7 @@ public abstract class PersistentMBean implements Serializable {
                             setParameter("key", s).getSingleResult();
 
             return persistentEntry.getValue();
-        } catch (NoResultException e){
+        } catch (PersistenceException e){
             throw new PersistentResourceNotFoundException("No values for this key :" + s,e);
         }
     }
