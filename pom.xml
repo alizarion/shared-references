@@ -35,22 +35,35 @@
         <module>email</module>
         <module>email-services-ejb</module>
         <module>security-services-ejb</module>
-        <module>security-services-ws</module>
+        <module>security-web-api</module>
         <module>reference-showcase</module>
 
 
     </modules>
 
-
     <properties>
+        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered
+                       resources, i.e. build is platform dependent! -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- JBoss dependency versions -->
+        <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
+
+        <!-- other plugin versions -->
+        <version.compiler.plugin>3.1</version.compiler.plugin>
+        <version.war.plugin>2.1.1</version.war.plugin>
+
         <!-- maven-compiler-plugin -->
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.compiler.source>1.7</maven.compiler.source>
+
         <version.jboss.bom>8.1.0.Final</version.jboss.bom>
 
-
+        <version.oltu>1.0.0</version.oltu>
+        <version.prettyfaces>3.3.2</version.prettyfaces>
+        <version.apache.common.codec>1.9</version.apache.common.codec>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -72,6 +85,57 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <!-- digest -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${version.apache.common.codec}</version>
+        </dependency>
+
+        <!-- OLTU implementation of OAuth-->
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
+            <version>${version.oltu}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
+            <version>${version.oltu}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.common</artifactId>
+            <version>${version.oltu}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>
+            <version>${version.oltu}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.commons</groupId>
+            <artifactId>org.apache.oltu.commons.json</artifactId>
+            <version>${version.oltu}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- url naming-->
+        <dependency>
+            <groupId>com.ocpsoft</groupId>
+            <artifactId>prettyfaces-jsf2</artifactId>
+            <version>${version.prettyfaces}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- unit test  -->
         <dependency>
