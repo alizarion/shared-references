@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                    http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+    <!-- productionParam -->
+    <persistence-unit name="security-services-rs-pu" transaction-type="JTA">
+        <!-- productionParam -->
+        <jta-data-source>java:/OAuthDS</jta-data-source>
+
+        <!-- maven resourource filtering will update this value and set the good version-->
+        <jar-file>lib/security-${jpa.security.entities.version}.jar</jar-file>
+        <jar-file>lib/resource-${jpa.resource.entities.version}.jar</jar-file>
+
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.max_fetch_depth" value="1"/>
+            <property name="hibernate.jdbc.batch_size" value="32" />
+            <property name="hibernate.archive.autodetection" value="class, hbm"/>
+            <!-- uncomment this to delegate hibernate to create the database-->
+            <!--property name="hibernate.hbm2ddl.auto" value="update"/-->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
+            <property name="hibernate.default_batch_fetch_size" value="16" />
+            <!--property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true"/-->
+        </properties>
+    </persistence-unit>
+</persistence>

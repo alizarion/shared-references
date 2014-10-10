@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//FR" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+<f:view locale="fr">
+    <h:head lang="en">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+        <style type="text/css">
+            body{padding-top:20px;}
+        </style>
+
+    </h:head>
+    <h:body>
+        <f:metadata>
+            <f:viewParam name="scope" required="false" value="#{scope}"/>
+            <f:viewParam name="client_id" required="true" value="#{clientId}"/>
+            <f:viewParam name="response_type" required="true" value="#{responseType}"/>
+            <f:viewParam name="redirect_uri" required="true" value="#{redirectURI}"/>
+            <f:viewParam name="state" required="false" value="#{state}"/>
+            <f:viewParam name="duration" required="false" value="#{duration}"/>
+
+            <f:event type="preRenderView" listener="#{authorizeCtrl.validate}"/>
+        </f:metadata>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <h:outputText value="Hello #{authorizeCtrl.authorization.credential.username}"/>
+                    <ul class="list-group">
+                        <ui:repeat value="#{authorizeCtrl.authorization.scopesAsList}" var="scope">
+                            <li class="list-group-item"><strong>#{scope.scope.name}</strong> #{scope.scope.description}</li>
+                        </ui:repeat>
+
+                    </ul>
+                    <div class="bs-callout bs-callout-warning">
+                        <p>the application #{authorizeCtrl.authorization.authApplication.name} will access to your data for <code>${fn:substringBefore((authorizeCtrl.authorizationDuration/86400), '.')} days </code>, you can revoke this authorization from your account panel  </p>
+                    </div>
+                    <h:form>
+                        <h:commandLink styleClass="btn btn-lg btn-success btn-block"
+                                       value="I Agree"
+                                       action="#{authorizeCtrl.addAuthorization}" >
+                            <f:param name="scope"  value="#{scope}"/>
+                            <f:param name="client_id"  value="#{clientId}"/>
+                            <f:param name="response_type"  value="#{responseType}"/>
+                            <f:param name="redirect_uri"  value="#{redirectURI}"/>
+                            <f:param name="state"  value="#{state}"/>
+                            <f:param name="duration"  value="#{duration}"/>
+
+                        </h:commandLink>
+                    </h:form>
+
+                </div>
+            </div>
+        </div>
+    </h:body>
+</f:view>
+</html>

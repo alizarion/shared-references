@@ -1,0 +1,88 @@
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+    <security-role>
+        <description>OAuth connection allowed</description>
+        <role-name>oauth</role-name>
+    </security-role>
+
+
+
+
+
+    <servlet-mapping>
+        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <url-pattern>/api/oauth2/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- Map these files with JSF -->
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/f/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+
+    <security-constraint>
+        <display-name>authentication required</display-name>
+        <web-resource-collection>
+            <web-resource-name>user forms</web-resource-name>
+            <description>only register users can access to the api</description>
+            <url-pattern>/oauth/*</url-pattern>
+        </web-resource-collection>
+
+        <auth-constraint>
+            <description>Only for authorised users</description>
+            <role-name>oauth</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>oauth-realm</realm-name>
+        <form-login-config>
+            <form-login-page>/login.html</form-login-page>
+            <form-error-page>/error-login.html</form-error-page>
+        </form-login-config>
+    </login-config>
+
+
+    <welcome-file-list>
+        <welcome-file>/index.html</welcome-file>
+    </welcome-file-list>
+
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Production</param-value>
+    </context-param>
+
+    <error-page>
+        <error-code>403</error-code>
+
+        <location>/error/403.html</location>
+    </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error/400.html</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error/500.html</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/login.html</location>
+    </error-page>
+
+</web-app>
