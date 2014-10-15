@@ -1,14 +1,14 @@
 package com.alizarion.reference.security.oauth.jsf;
 
 import com.alizarion.reference.security.doa.CredentialJpaDao;
-import com.alizarion.reference.security.entities.oauth.OAuthCredential;
-import com.alizarion.reference.security.entities.oauth.OAuthDuration;
-import com.alizarion.reference.security.entities.oauth.server.OAuthServerAuthorization;
-import com.alizarion.reference.security.entities.oauth.toolkit.OltuFactory;
 import com.alizarion.reference.security.exception.InvalidUsernameException;
-import com.alizarion.reference.security.exception.oauth.ClientIdNotFoundException;
-import com.alizarion.reference.security.exception.oauth.InvalidScopeException;
-import com.alizarion.reference.security.exception.oauth.OAuthException;
+import com.alizarion.reference.security.oauth.entities.OAuthCredential;
+import com.alizarion.reference.security.oauth.entities.OAuthDuration;
+import com.alizarion.reference.security.oauth.entities.server.OAuthServerAuthorization;
+import com.alizarion.reference.security.oauth.exception.ClientIdNotFoundException;
+import com.alizarion.reference.security.oauth.exception.InvalidScopeException;
+import com.alizarion.reference.security.oauth.exception.OAuthException;
+import com.alizarion.reference.security.oauth.toolkit.OltuFactory;
 import com.alizarion.reference.security.services.oauth.OAuthServerService;
 import com.alizarion.reference.security.services.resources.OAuthServerMBean;
 import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest;

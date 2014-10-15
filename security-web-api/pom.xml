@@ -38,6 +38,25 @@
     </developers>
 
     <dependencies>
+
+
+        <dependency>
+            <groupId>com.alizarion.reference.person</groupId>
+            <artifactId>person</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.location</groupId>
+            <artifactId>location</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.security.oauth</groupId>
+            <artifactId>oauth2</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
         <!-- oauth Oltu lib -->
         <dependency>
             <groupId>org.apache.oltu.oauth2</groupId>
@@ -65,7 +84,11 @@
             <version>${parent.version}</version>
 
         </dependency>
-
+        <dependency>
+            <groupId>com.alizarion.reference.security.oauth.toolkit</groupId>
+            <artifactId>oauth-toolkit</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.alizarion.reference.security.services</groupId>
             <artifactId>security-services-ejb</artifactId>

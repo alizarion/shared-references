@@ -13,6 +13,10 @@
         <!-- maven resourource filtering will update this value and set the good version-->
         <jar-file>lib/security-${jpa.security.entities.version}.jar</jar-file>
         <jar-file>lib/resource-${jpa.resource.entities.version}.jar</jar-file>
+        <jar-file>lib/oauth2-${jpa.resource.entities.version}.jar</jar-file>
+        <jar-file>lib/location-${parent.version}.jar</jar-file>
+        <jar-file>lib/person-${parent.version}.jar</jar-file>
+
 
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>

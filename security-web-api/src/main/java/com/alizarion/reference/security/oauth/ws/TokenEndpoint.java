@@ -1,10 +1,11 @@
 package com.alizarion.reference.security.oauth.ws;
 
-import com.alizarion.reference.security.entities.oauth.OAuthAccessToken;
-import com.alizarion.reference.security.entities.oauth.server.OAuthClientApplication;
-import com.alizarion.reference.security.entities.oauth.toolkit.OltuFactory;
+
 import com.alizarion.reference.security.exception.TokenExpiredException;
-import com.alizarion.reference.security.exception.oauth.*;
+import com.alizarion.reference.security.oauth.entities.OAuthAccessToken;
+import com.alizarion.reference.security.oauth.entities.server.OAuthClientApplication;
+import com.alizarion.reference.security.oauth.exception.*;
+import com.alizarion.reference.security.oauth.toolkit.OltuFactory;
 import com.alizarion.reference.security.services.oauth.OAuthServerService;
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
