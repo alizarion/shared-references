@@ -41,12 +41,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.alizarion.reference.security</groupId>
-            <artifactId>security</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
+
 
         <dependency>
             <groupId>com.alizarion.reference.dao</groupId>
