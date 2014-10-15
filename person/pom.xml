@@ -41,11 +41,7 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.alizarion.reference.security</groupId>
-            <artifactId>security</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
         <!-- included module -->
         <dependency>
             <groupId>com.alizarion.reference.exception</groupId>

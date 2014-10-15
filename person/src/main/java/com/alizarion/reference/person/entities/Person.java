@@ -49,7 +49,7 @@ public  class Person implements Serializable {
         return primaryElectronicAddress;
     }
 
-    protected void setPrimaryElectronicAddress(
+    public void setPrimaryElectronicAddress(
             final ElectronicAddress primaryElectronicAddress) {
         this.primaryElectronicAddress = primaryElectronicAddress;
     }
