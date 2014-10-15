@@ -37,20 +37,20 @@
         <dependency>
             <groupId>com.alizarion.reference.static-params</groupId>
             <artifactId>static-params</artifactId>
-            <version>${project.version}</version>
+            <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.alizarion.reference.exception</groupId>
             <artifactId>exceptions</artifactId>
-            <version>${project.version}</version>
+            <version>${parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.alizarion.reference.dao</groupId>
             <artifactId>generic-dao</artifactId>
-            <version>${project.version}</version>
+            <version>${parent.version}</version>
         </dependency>
     </dependencies>
 
