@@ -1,5 +1,6 @@
 package com.alizarion.reference.security.entities;
 
+import com.alizarion.reference.security.oauth.entities.Token;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
 import javax.persistence.*;

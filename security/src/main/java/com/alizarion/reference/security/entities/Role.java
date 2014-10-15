@@ -1,6 +1,7 @@
 package com.alizarion.reference.security.entities;
 
-import com.alizarion.reference.security.entities.oauth.OAuthRole;
+
+import com.alizarion.reference.security.oauth.entities.OAuthRole;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -49,6 +50,10 @@ public class Role implements OAuthRole {
         this.group = group;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public RoleKey getRoleKey() {
         return roleKey;
     }
@@ -79,9 +84,10 @@ public class Role implements OAuthRole {
 
         Role role = (Role) o;
 
-        if (roleKey != null ? !roleKey.equals(role.roleKey) : role.roleKey != null) return false;
+        return !(roleKey != null ?
+                !roleKey.equals(role.roleKey) :
+                role.roleKey != null);
 
-        return true;
     }
 
     @Override

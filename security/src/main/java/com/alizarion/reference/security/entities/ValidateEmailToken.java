@@ -1,7 +1,7 @@
-package com.alizarion.reference.person.entities;
+package com.alizarion.reference.security.entities;
 
 import com.alizarion.reference.location.entities.ElectronicAddress;
-import com.alizarion.reference.security.entities.Token;
+import com.alizarion.reference.person.entities.Person;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
 import javax.persistence.*;
@@ -28,12 +28,14 @@ public class ValidateEmailToken implements Serializable {
     public static final String TYPE="Validate-email-token";
 
     @Embedded
-    private Token validationToken;
+    private SecurityToken validationToken;
 
     @OneToOne(optional = false)
+    @JoinColumn(name = "email_id")
     private ElectronicAddress electronicAddress;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "person_id")
     private Person person;
 
     private static final long serialVersionUID = -5115069743327104540L;
@@ -41,7 +43,7 @@ public class ValidateEmailToken implements Serializable {
     public ValidateEmailToken(final ElectronicAddress electronicAddress,
                               final Person person,
                               final long duration) {
-        this.validationToken =  new Token(duration,
+        this.validationToken =  new SecurityToken(duration,
                 SecurityHelper.getRandomAlphaNumericString(130));
         this.electronicAddress = electronicAddress;
         this.person =  person;
@@ -74,7 +76,7 @@ public class ValidateEmailToken implements Serializable {
         return person;
     }
 
-    public Token getValidationToken() {
+    public SecurityToken getValidationToken() {
         return validationToken;
     }
 

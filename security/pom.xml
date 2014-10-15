@@ -20,6 +20,11 @@
 
     <properties>
         <security.final.name>${project.build.finalName}</security.final.name>
+        <!-- need to find a better way -->
+        <oauth.entities.class.path>${parent.basedir}/oauth2/target/classes/</oauth.entities.class.path>
+        <person.entities.class.path>${parent.basedir}/person/target/classes/</person.entities.class.path>
+        <location.entities.class.path>${parent.basedir}/location/target/classes/</location.entities.class.path>
+
     </properties>
 
     <developers>
@@ -35,11 +40,32 @@
     <dependencies>
 
         <dependency>
-                   <groupId>com.alizarion.reference.resource</groupId>
-                   <artifactId>resource</artifactId>
-                   <version>${project.version}</version>
-                   <scope>test</scope>
-               </dependency>
+            <groupId>com.alizarion.reference.security.oauth</groupId>
+            <artifactId>oauth2</artifactId>
+            <version>${parent.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.location</groupId>
+            <artifactId>location</artifactId>
+            <version>${parent.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.person</groupId>
+            <artifactId>person</artifactId>
+            <version>${parent.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.resource</groupId>
+            <artifactId>resource</artifactId>
+            <version>${parent.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -47,13 +73,13 @@
         <dependency>
             <groupId>com.alizarion.reference.static-params</groupId>
             <artifactId>static-params</artifactId>
-            <version>${project.version}</version>
+            <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.alizarion.reference.exception</groupId>
             <artifactId>exceptions</artifactId>
-            <version>${project.version}</version>
+            <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>
 

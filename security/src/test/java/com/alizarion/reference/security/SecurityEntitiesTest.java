@@ -2,10 +2,11 @@ package com.alizarion.reference.security;
 
 import com.alizarion.reference.security.entities.Credential;
 import com.alizarion.reference.security.entities.Role;
-import com.alizarion.reference.security.entities.oauth.OAuthAccessToken;
-import com.alizarion.reference.security.entities.oauth.client.OAuthServerApplication;
-import com.alizarion.reference.security.entities.oauth.server.OAuthClientApplication;
-import com.alizarion.reference.security.exception.oauth.OAuthException;
+
+import com.alizarion.reference.security.oauth.entities.OAuthAccessToken;
+import com.alizarion.reference.security.oauth.entities.client.OAuthServerApplication;
+import com.alizarion.reference.security.oauth.entities.server.OAuthClientApplication;
+import com.alizarion.reference.security.oauth.exception.OAuthException;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runners.MethodSorters;
@@ -112,7 +113,7 @@ public class SecurityEntitiesTest {
      */
     @Test
     public void a_persist_clientApplication() throws MalformedURLException, URISyntaxException {
-        OAuthClientApplication  application =
+        OAuthClientApplication application =
                 SecurityTestFactory.
                         getOAuthClientApplication(this.serverRoles);
         em.merge(application) ;
@@ -125,7 +126,7 @@ public class SecurityEntitiesTest {
      */
     //@Test
     public void b_persist_serverApplication() throws MalformedURLException, URISyntaxException {
-        OAuthServerApplication  application =
+        OAuthServerApplication application =
                 SecurityTestFactory.
                         getOAuthServerApplication(this.clientRoles);
         em.merge(application) ;

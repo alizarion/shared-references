@@ -1,14 +1,17 @@
 package com.alizarion.reference.security;
 
 import com.alizarion.reference.security.entities.*;
-import com.alizarion.reference.security.entities.oauth.OAuthApplicationKey;
-import com.alizarion.reference.security.entities.oauth.OAuthRole;
-import com.alizarion.reference.security.entities.oauth.client.OAuthScopeClient;
-import com.alizarion.reference.security.entities.oauth.client.OAuthScopeClientGroup;
-import com.alizarion.reference.security.entities.oauth.client.OAuthServerApplication;
-import com.alizarion.reference.security.entities.oauth.server.OAuthClientApplication;
-import com.alizarion.reference.security.entities.oauth.server.OAuthScopeServer;
-import com.alizarion.reference.security.entities.oauth.server.OAuthScopeServerGroup;
+
+import com.alizarion.reference.security.oauth.entities.OAuthApplicationKey;
+import com.alizarion.reference.security.oauth.entities.OAuthRole;
+import com.alizarion.reference.security.oauth.entities.ScopeGroupKey;
+import com.alizarion.reference.security.oauth.entities.ScopeKey;
+import com.alizarion.reference.security.oauth.entities.client.OAuthScopeClient;
+import com.alizarion.reference.security.oauth.entities.client.OAuthScopeClientGroup;
+import com.alizarion.reference.security.oauth.entities.client.OAuthServerApplication;
+import com.alizarion.reference.security.oauth.entities.server.OAuthClientApplication;
+import com.alizarion.reference.security.oauth.entities.server.OAuthScopeServer;
+import com.alizarion.reference.security.oauth.entities.server.OAuthScopeServerGroup;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -25,6 +28,10 @@ public class SecurityTestFactory  {
         return new RoleKey(disc+" role key",disc+"-key","ma rolekey " +disc);
     }
 
+
+    public static ScopeKey getScopeKeys(String disc){
+        return new ScopeKey(disc+" scope key",disc+"-key","ma scopekey " +disc);
+    }
     public static Role getRole(String disc){
         return new Role(getRoleKeys(disc));
     }
@@ -33,19 +40,19 @@ public class SecurityTestFactory  {
             String scopeDisc,
             Role role){
         return new OAuthScopeServer(
-                getRoleKeys(scopeDisc),
+                getScopeKeys(scopeDisc),
                 role);
     }
 
 
     public static OAuthScopeClient getClientScopes(String scopeDisc ){
         return new OAuthScopeClient(
-                getRoleKeys(scopeDisc));
+                getScopeKeys(scopeDisc));
     }
 
     public static OAuthScopeServerGroup getServerScopeGroup(
             String groupDisc,Set<OAuthScopeServer> scopeServers){
-        return new OAuthScopeServerGroup(new RoleGroupKey(
+        return new OAuthScopeServerGroup(new ScopeGroupKey(
                 groupDisc+"-group-server-scope-group",
                 "all  "+groupDisc+" server scopes"),
                 scopeServers);
@@ -53,7 +60,7 @@ public class SecurityTestFactory  {
 
 
     public static OAuthScopeClientGroup getClientScopeGroup(String groupDisc,Set<OAuthScopeClient> scopeClients ){
-        return new OAuthScopeClientGroup(new RoleGroupKey(
+        return new OAuthScopeClientGroup(new ScopeGroupKey(
                 groupDisc+"-group-client-scope-group",
                 "all  "+groupDisc+" client scopes"),scopeClients);
     }

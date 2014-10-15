@@ -15,8 +15,7 @@ public class SecurityHelper {
 
 
     public static String getRandomAlphaNumericString(Integer bitsLength){
-        SecureRandom random =  new SecureRandom();
-        return new BigInteger(bitsLength,random).toString(32);
+        return new BigInteger(bitsLength,new SecureRandom()).toString(32);
     }
 
     public static String getSHA1Value(String value){

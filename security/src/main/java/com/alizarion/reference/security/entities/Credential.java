@@ -1,12 +1,14 @@
 package com.alizarion.reference.security.entities;
 
-import com.alizarion.reference.security.entities.oauth.OAuthCredential;
-import com.alizarion.reference.security.entities.oauth.OAuthRole;
+import com.alizarion.reference.security.oauth.entities.OAuthCredential;
+import com.alizarion.reference.security.oauth.entities.OAuthRole;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class contain credentials information for user login.
