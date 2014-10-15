@@ -1,6 +1,6 @@
 package com.alizarion.reference.security.services.oauth;
 
-import com.alizarion.reference.security.doa.OAuthJpaDao;
+import com.alizarion.reference.security.oauth.dao.OAuthJpaDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OAuthClientServiceTest {
+
     @Mock(name = "authDao")
     OAuthJpaDao authDao;
 

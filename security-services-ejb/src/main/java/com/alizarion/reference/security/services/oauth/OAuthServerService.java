@@ -1,14 +1,15 @@
 package com.alizarion.reference.security.services.oauth;
 
-import com.alizarion.reference.security.doa.OAuthJpaDao;
-import com.alizarion.reference.security.entities.oauth.OAuthAccessToken;
-import com.alizarion.reference.security.entities.oauth.OAuthCredential;
-import com.alizarion.reference.security.entities.oauth.OAuthDuration;
-import com.alizarion.reference.security.entities.oauth.server.OAuthClientApplication;
-import com.alizarion.reference.security.entities.oauth.server.OAuthScopeServer;
-import com.alizarion.reference.security.entities.oauth.server.OAuthServerAuthorization;
+
 import com.alizarion.reference.security.exception.TokenExpiredException;
-import com.alizarion.reference.security.exception.oauth.*;
+import com.alizarion.reference.security.oauth.dao.OAuthJpaDao;
+import com.alizarion.reference.security.oauth.entities.OAuthAccessToken;
+import com.alizarion.reference.security.oauth.entities.OAuthCredential;
+import com.alizarion.reference.security.oauth.entities.OAuthDuration;
+import com.alizarion.reference.security.oauth.entities.server.OAuthClientApplication;
+import com.alizarion.reference.security.oauth.entities.server.OAuthScopeServer;
+import com.alizarion.reference.security.oauth.entities.server.OAuthServerAuthorization;
+import com.alizarion.reference.security.oauth.exception.*;
 import com.alizarion.reference.security.services.resources.OAuthServerMBean;
 
 import javax.annotation.PostConstruct;
@@ -17,16 +18,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.net.URISyntaxException;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Class providing OAuth 2.0 server services.
  * @author selim@openlinux.fr.
- * @see com.alizarion.reference.security.entities.oauth.server.OAuthClientApplication
- * @see com.alizarion.reference.security.entities.oauth.server.OAuthServerAuthorization
- * @see com.alizarion.reference.security.entities.oauth.OAuthAccessToken
- * @see com.alizarion.reference.security.doa.OAuthJpaDao
+ * @see com.alizarion.reference.security.oauth.entities.server.OAuthClientApplication
+ * @see com.alizarion.reference.security.oauth.entities.server.OAuthServerAuthorization
+ * @see com.alizarion.reference.security.oauth.entities.OAuthAccessToken
+ * @see com.alizarion.reference.security.oauth.dao.OAuthJpaDao
  */
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -69,19 +69,29 @@ public class OAuthServerService implements Serializable {
             final OAuthCredential oAuthCredential)
             throws InvalidScopeException,
             ClientIdNotFoundException{
+        //check if  exist
+        OAuthServerAuthorization authorization =
+                this.authDao
+                        .findAliveServerAuthForCredential(
+                                Long.parseLong(
+                                        oAuthCredential.getId())
+                                ,clientId);
         OAuthClientApplication application =
                 this.authDao.
                         findOAuthClientApplicationByClientIdAndRedirectURI(
                                 clientId,
                                 redirectURI);
+        this.em.clear();
 
-        this.em.detach(application);
-        Set<OAuthScopeServer>  scopes = new HashSet<>();
-        for (String scope : requestedScopes ){
-            scopes.add(application
-                    .getServerScopeByKey(scope));
+        Set<OAuthScopeServer>  scopes = application
+                .getServerScopesByKeys(requestedScopes);
+        if (authorization != null){
+            authorization.setScopes(scopes);
+            authorization.revokeAccess();
+            authorization.generateCode();
+            return authorization;
         }
-        OAuthServerAuthorization authorization = (OAuthServerAuthorization)
+        authorization = (OAuthServerAuthorization)
                 application
                         .addAuthorization(oAuthCredential, scopes);
         if (responseType
@@ -122,7 +132,7 @@ public class OAuthServerService implements Serializable {
 
         OAuthServerAuthorization authorization =
                 this.authDao.findAliveServerAuthByToken(refreshToken);
-        if (!authorization.getRefreshToken().isValidToken()){
+        if (!authorization.getRefreshToken().isAlive()){
             throw new TokenExpiredException(refreshToken);
         }
         if (authorization.
@@ -144,11 +154,9 @@ public class OAuthServerService implements Serializable {
      */
     public OAuthServerAuthorization acceptAuthorization(
             final OAuthServerAuthorization authorization) {
-        if (authorization.getAuthCode() == null) {
-            authorization.addAccessToken(this
-                    .serverMBean
-                    .getAccessTokenDurationSecond());
-        }
+        authorization.addAccessToken(this
+                .serverMBean
+                .getAccessTokenDurationSecond());
         return this.em.merge(authorization);
     }
 
@@ -219,6 +227,18 @@ public class OAuthServerService implements Serializable {
         } else {
             throw new BadCredentialException(clientId);
 
+        }
+    }
+
+    public OAuthAccessToken  findAliveAccessToken(final String bearerToken)
+            throws InvalidAccessTokenException {
+        OAuthAccessToken accessToken =
+                this.authDao.findOAuthAccessByToken(bearerToken);
+
+        if (accessToken.getBearer().isAlive()){
+            return accessToken;
+        }  else {
+            throw new InvalidAccessTokenException(bearerToken);
         }
     }
 
