@@ -8,7 +8,7 @@ import com.alizarion.reference.emailing.tools.EmailHelper;
 import com.alizarion.reference.location.entities.ElectronicAddress;
 import com.alizarion.reference.person.entities.PhysicalPerson;
 import com.alizarion.reference.person.entities.Title;
-import com.alizarion.reference.person.entities.ValidateEmailToken;
+import com.alizarion.reference.security.entities.ValidateEmailToken;
 import com.alizarion.reference.security.SecurityTestFactory;
 import com.alizarion.reference.security.entities.ResetPasswordToken;
 import com.alizarion.reference.security.entities.Role;

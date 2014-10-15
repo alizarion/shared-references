@@ -35,12 +35,22 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.alizarion.reference.security.oauth</groupId>
+            <artifactId>oauth2</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <dependency>
             <groupId>com.alizarion.reference.static-params</groupId>
             <artifactId>static-params</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>ST4</artifactId>

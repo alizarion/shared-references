@@ -1,7 +1,7 @@
 package com.alizarion.reference.emailing.entities;
 
 
-import com.alizarion.reference.person.entities.ValidateEmailToken;
+import com.alizarion.reference.security.entities.ValidateEmailToken;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

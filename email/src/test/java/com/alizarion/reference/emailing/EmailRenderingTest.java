@@ -2,7 +2,7 @@ package com.alizarion.reference.emailing;
 
 import com.alizarion.reference.emailing.entities.Email;
 import com.alizarion.reference.emailing.helper.EmailTestHelper;
-import com.alizarion.reference.person.entities.ValidateEmailToken;
+import com.alizarion.reference.security.entities.ValidateEmailToken;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
