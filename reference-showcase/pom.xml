@@ -41,6 +41,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.alizarion.reference.security.oauth.toolkit</groupId>
+            <artifactId>oauth-toolkit</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
         <!-- biz library -->
 
         <dependency>
@@ -54,6 +60,8 @@
             <artifactId>security</artifactId>
             <version>${parent.version}</version>
         </dependency>
+
+
 
         <dependency>
             <groupId>com.alizarion.reference.social</groupId>
@@ -97,6 +105,7 @@
             <artifactId>jaxrs-api</artifactId>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
     <build>

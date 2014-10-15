@@ -18,9 +18,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
+
     <servlet-mapping>
         <servlet-name>javax.ws.rs.core.Application</servlet-name>
         <url-pattern>/rest/*</url-pattern>
+
     </servlet-mapping>
 
+    <context-param>
+        <param-name>resteasy.providers</param-name>
+        <param-value>com.alizarion.reference.security.oauth.toolkit.AuthenticateFilter</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>oauth-authorization-server</param-name>
+        <param-value>http://localhost:8080/oauth/api/oauth2/tokeninfo</param-value>
+    </context-param>
 </web-app>
