@@ -3,17 +3,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>reference</artifactId>
-        <groupId>com.alizarion.reference</groupId>
+        <groupId>com.alizarion.reference.security.oauth</groupId>
+        <artifactId>oauth</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.alizarion.reference.security.oauth</groupId>
+    <groupId>com.alizarion.reference.security.oauth.oauth2</groupId>
     <artifactId>oauth2</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>OAuth Client/server.</name>
+    <name>OAuth Client/server entities.</name>
     <description>
         OAuth Client/server implementation with jpa persistence and http request toolkit.
     </description>
@@ -30,17 +30,18 @@
 
     <dependencies>
 
+
         <dependency>
             <groupId>com.alizarion.reference.exception</groupId>
             <artifactId>exceptions</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.alizarion.reference.dao</groupId>
             <artifactId>generic-dao</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
     </dependencies>
