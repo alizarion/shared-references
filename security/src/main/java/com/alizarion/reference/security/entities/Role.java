@@ -1,7 +1,7 @@
 package com.alizarion.reference.security.entities;
 
 
-import com.alizarion.reference.security.oauth.entities.OAuthRole;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthRole;
 
 import javax.persistence.*;
 import java.util.HashSet;

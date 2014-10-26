@@ -1,7 +1,7 @@
 package com.alizarion.reference.security.entities;
 
-import com.alizarion.reference.security.oauth.entities.OAuthCredential;
-import com.alizarion.reference.security.oauth.entities.OAuthRole;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthCredential;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthRole;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
 import javax.persistence.*;
@@ -16,9 +16,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "security_credential")
-@NamedQueries(@NamedQuery(name = Credential.FIND_BY_USERNAME_NAMED_QUERY,
-        query = "select c from Credential c where c.userName = :username "))
-public class Credential implements OAuthCredential<OAuthRole>,Serializable {
+public class Credential implements OAuthCredential<OAuthRole,Long>,Serializable {
 
     private static final long serialVersionUID = 8712203414431845759L;
 
@@ -30,12 +28,12 @@ public class Credential implements OAuthCredential<OAuthRole>,Serializable {
             valueColumnName="SEQ_COUNT")
     @GeneratedValue(strategy= GenerationType.TABLE,
             generator="security_credential_SEQ")
-    @Column
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "user_name",
             unique = true)
-    private String userName;
+    private String username;
 
     /**
      * SHA1 user password
@@ -90,7 +88,7 @@ public class Credential implements OAuthCredential<OAuthRole>,Serializable {
     public Credential(final String userName,
                       final Set<Role>
                               roles) {
-        this.userName = userName;
+        this.username = userName;
         this.state = CredentialState.P;
         this.logon =  LogOnType.P;
         this.creationDate = new Date();
@@ -103,6 +101,19 @@ public class Credential implements OAuthCredential<OAuthRole>,Serializable {
     public Credential() {
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public String getIdToString() {
+        return this.id.toString();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public LogOnType getLogon() {
         return logon;
     }
@@ -111,13 +122,7 @@ public class Credential implements OAuthCredential<OAuthRole>,Serializable {
         this.logon = logon;
     }
 
-    public String getId() {
-        return id.toString();
-    }
 
-    public String getStringId() {
-        return id.toString();
-    }
 
     @Override
     public OAuthCredential init(Set<String> scopes) {
@@ -132,7 +137,7 @@ public class Credential implements OAuthCredential<OAuthRole>,Serializable {
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.username;
     }
 
     @Override
@@ -163,9 +168,6 @@ public class Credential implements OAuthCredential<OAuthRole>,Serializable {
     }
 
 
-    public String getUserName() {
-        return userName;
-    }
 
 
     public Set<CredentialRole> getCredentialRoles() {
@@ -184,8 +186,8 @@ public class Credential implements OAuthCredential<OAuthRole>,Serializable {
         return roles;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public void setPassword(final String password){
@@ -225,16 +227,16 @@ public class Credential implements OAuthCredential<OAuthRole>,Serializable {
                 !password.equals(that.password) :
                 that.password != null) &&
                 state == that.state &&
-                !(userName != null ?
-                        !userName.equals(that.userName) :
-                        that.userName != null);
+                !(username != null ?
+                        !username.equals(that.username) :
+                        that.username != null);
 
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (userName != null ? userName.hashCode() : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);

@@ -2,16 +2,16 @@ package com.alizarion.reference.security;
 
 import com.alizarion.reference.security.entities.*;
 
-import com.alizarion.reference.security.oauth.entities.OAuthApplicationKey;
-import com.alizarion.reference.security.oauth.entities.OAuthRole;
-import com.alizarion.reference.security.oauth.entities.ScopeGroupKey;
-import com.alizarion.reference.security.oauth.entities.ScopeKey;
-import com.alizarion.reference.security.oauth.entities.client.OAuthScopeClient;
-import com.alizarion.reference.security.oauth.entities.client.OAuthScopeClientGroup;
-import com.alizarion.reference.security.oauth.entities.client.OAuthServerApplication;
-import com.alizarion.reference.security.oauth.entities.server.OAuthClientApplication;
-import com.alizarion.reference.security.oauth.entities.server.OAuthScopeServer;
-import com.alizarion.reference.security.oauth.entities.server.OAuthScopeServerGroup;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthApplicationKey;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthRole;
+import com.alizarion.reference.security.oauth.oauth2.entities.ScopeGroupKey;
+import com.alizarion.reference.security.oauth.oauth2.entities.ScopeKey;
+import com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthScopeClient;
+import com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthScopeClientGroup;
+import com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthServerApplication;
+import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthClientApplication;
+import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthScopeServer;
+import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthScopeServerGroup;
 
 import java.net.MalformedURLException;
 import java.net.URI;

@@ -3,10 +3,10 @@ package com.alizarion.reference.security;
 import com.alizarion.reference.security.entities.Credential;
 import com.alizarion.reference.security.entities.Role;
 
-import com.alizarion.reference.security.oauth.entities.OAuthAccessToken;
-import com.alizarion.reference.security.oauth.entities.client.OAuthServerApplication;
-import com.alizarion.reference.security.oauth.entities.server.OAuthClientApplication;
-import com.alizarion.reference.security.oauth.exception.OAuthException;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAccessToken;
+import com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthServerApplication;
+import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthClientApplication;
+import com.alizarion.reference.security.oauth.oauth2.exception.OAuthException;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runners.MethodSorters;
@@ -27,7 +27,6 @@ import java.util.Set;
  * @author selim@openlinux.fr.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-
 public class SecurityEntitiesTest {
 
     EntityManagerFactory emf;
