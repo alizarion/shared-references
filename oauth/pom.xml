@@ -1,0 +1,91 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>reference</artifactId>
+        <groupId>com.alizarion.reference</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.alizarion.reference.security.oauth</groupId>
+    <artifactId>oauth</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>OAuth Implementation parent project.</name>
+    <description>
+        Parent of all oauth implementation packages.
+    </description>
+    <modules>
+        <module>oauth-toolkit</module>
+        <module>oauth2</module>
+        <module>oauth2-authorization-web</module>
+        <module>oauth2-service-ejb</module>
+    </modules>
+
+
+    <developers>
+        <developer>
+            <id>selim.bensenouci</id>
+            <email>selim.bensenouci@gmail.com</email>
+            <name>Selim Bensenouci</name>
+            <organization>Alizarion</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+        <!-- OLTU implementation of OAuth-->
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
+            <version>${version.oltu}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
+            <version>${version.oltu}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.common</artifactId>
+            <version>${version.oltu}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>
+            <version>${version.oltu}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.commons</groupId>
+            <artifactId>org.apache.oltu.commons.json</artifactId>
+            <version>${version.oltu}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.jwt</artifactId>
+            <version>${version.oltu}</version>
+
+        </dependency>
+
+
+        <!-- JSON (JWS javascript object notation web signature) for json web token lib-->
+
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>${version.oauth2-oidc-sdk}</version>
+        </dependency>
+    </dependencies>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/oauth/</developerConnection>
+        <url>https://github.com/alizarion/shared-references.git/oauth/</url>
+    </scm>
+</project>
