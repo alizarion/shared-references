@@ -28,15 +28,14 @@
         <module>static-params</module>
         <module>location</module>
         <module>person</module>
-        <module>resource-services-ejb</module>
+        <module>oauth</module>
+
         <module>file-management</module>
         <module>social</module>
         <module>security</module>
         <module>email</module>
         <module>email-services-ejb</module>
-        <module>security-services-ejb</module>
-        <module>security-web-api</module>
-        <module>reference-showcase</module>
+        <module>showcase</module>
 
 
     </modules>
@@ -59,9 +58,13 @@
 
         <version.jboss.bom>8.1.0.Final</version.jboss.bom>
 
-        <version.oltu>1.0.0</version.oltu>
         <version.prettyfaces>3.3.2</version.prettyfaces>
         <version.apache.common.codec>1.9</version.apache.common.codec>
+
+        <version.oltu>1.0.0</version.oltu>
+        <version.nimbus-jose-jwt>3.1.2</version.nimbus-jose-jwt>
+        <version.oauth2-oidc-sdk>4.4.1</version.oauth2-oidc-sdk>
+        <version.string.template>4.0.7</version.string.template>
     </properties>
 
     <dependencyManagement>
@@ -86,6 +89,14 @@
 
     <dependencies>
 
+        <!-- template rendering -->
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>ST4</artifactId>
+            <version>4.0.7</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- digest -->
         <dependency>
             <groupId>commons-codec</groupId>
@@ -93,41 +104,8 @@
             <version>${version.apache.common.codec}</version>
         </dependency>
 
-        <!-- OLTU implementation of OAuth-->
-        <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
-            <version>${version.oltu}</version>
-            <scope>provided</scope>
-        </dependency>
 
-        <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.client</artifactId>
-            <version>${version.oltu}</version>
-            <scope>provided</scope>
-        </dependency>
 
-        <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.common</artifactId>
-            <version>${version.oltu}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>
-            <version>${version.oltu}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.oltu.commons</groupId>
-            <artifactId>org.apache.oltu.commons.json</artifactId>
-            <version>${version.oltu}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- url naming-->
         <dependency>
@@ -169,6 +147,21 @@
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- tomcat7 dependencies -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>1.17.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-core</artifactId>
+            <version>4.7.0</version>
             <scope>provided</scope>
         </dependency>
 
