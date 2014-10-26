@@ -1,18 +1,18 @@
-package com.alizarion.reference.security.services.oauth;
+package com.alizarion.reference.security.oauth.services.oauth;
 
 
 
-import com.alizarion.reference.security.oauth.dao.OAuthJpaDao;
-import com.alizarion.reference.security.oauth.entities.OAuthAccessToken;
-import com.alizarion.reference.security.oauth.entities.OAuthCredential;
-import com.alizarion.reference.security.oauth.entities.Token;
-import com.alizarion.reference.security.oauth.entities.client.OAuthClientAuthorization;
-import com.alizarion.reference.security.oauth.entities.client.OAuthScopeClient;
-import com.alizarion.reference.security.oauth.entities.client.OAuthServerApplication;
-import com.alizarion.reference.security.oauth.exception.ClientIdNotFoundException;
-import com.alizarion.reference.security.oauth.exception.InvalidRefreshTokenException;
-import com.alizarion.reference.security.oauth.exception.InvalidScopeException;
-import com.alizarion.reference.security.oauth.exception.StateNotFoundException;
+import com.alizarion.reference.security.oauth.oauth2.dao.OAuthJpaDao;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAccessToken;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthCredential;
+import com.alizarion.reference.security.oauth.oauth2.entities.Token;
+import com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthClientAuthorization;
+import com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthScopeClient;
+import com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthServerApplication;
+import com.alizarion.reference.security.oauth.oauth2.exception.ClientIdNotFoundException;
+import com.alizarion.reference.security.oauth.oauth2.exception.InvalidRefreshTokenException;
+import com.alizarion.reference.security.oauth.oauth2.exception.InvalidScopeException;
+import com.alizarion.reference.security.oauth.oauth2.exception.StateNotFoundException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;

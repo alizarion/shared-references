@@ -1,6 +1,6 @@
-package com.alizarion.reference.security.services.oauth;
+package com.alizarion.reference.security.oauth.services.oauth;
 
-import com.alizarion.reference.security.oauth.dao.OAuthJpaDao;
+import com.alizarion.reference.security.oauth.oauth2.dao.OAuthJpaDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

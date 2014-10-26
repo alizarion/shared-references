@@ -1,32 +1,44 @@
-package com.alizarion.reference.security.services.oauth;
+package com.alizarion.reference.security.oauth.services.oauth;
 
 
-import com.alizarion.reference.security.exception.TokenExpiredException;
-import com.alizarion.reference.security.oauth.dao.OAuthJpaDao;
-import com.alizarion.reference.security.oauth.entities.OAuthAccessToken;
-import com.alizarion.reference.security.oauth.entities.OAuthCredential;
-import com.alizarion.reference.security.oauth.entities.OAuthDuration;
-import com.alizarion.reference.security.oauth.entities.server.OAuthClientApplication;
-import com.alizarion.reference.security.oauth.entities.server.OAuthScopeServer;
-import com.alizarion.reference.security.oauth.entities.server.OAuthServerAuthorization;
-import com.alizarion.reference.security.oauth.exception.*;
-import com.alizarion.reference.security.services.resources.OAuthServerMBean;
+import com.alizarion.reference.security.oauth.oauth2.dao.OAuthJpaDao;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAccessToken;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthCredential;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthDuration;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthResponseType;
+import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthClientApplication;
+import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthScopeServer;
+import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthServerAuthorization;
+import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthSignatureKeyPair;
+import com.alizarion.reference.security.oauth.oauth2.exception.*;
+import com.alizarion.reference.security.oauth.services.resources.OAuthServerMBean;
+import org.apache.log4j.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Class providing OAuth 2.0 server services.
  * @author selim@openlinux.fr.
- * @see com.alizarion.reference.security.oauth.entities.server.OAuthClientApplication
- * @see com.alizarion.reference.security.oauth.entities.server.OAuthServerAuthorization
- * @see com.alizarion.reference.security.oauth.entities.OAuthAccessToken
- * @see com.alizarion.reference.security.oauth.dao.OAuthJpaDao
+ * @see OAuthClientApplication
+ * @see OAuthServerAuthorization
+ * @see OAuthAccessToken
+ * @see OAuthJpaDao
  */
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -35,6 +47,8 @@ public class OAuthServerService implements Serializable {
 
     private static final long serialVersionUID = 2039876823561689686L;
 
+    private final static Logger LOG =  Logger.getLogger(OAuthServerService.class);
+
     @PersistenceContext
     EntityManager em;
 
@@ -42,6 +56,12 @@ public class OAuthServerService implements Serializable {
 
     @EJB
     private OAuthServerMBean serverMBean;
+
+    @EJB
+    private CipherSecurityInitializer securityInitializer;
+
+    @Resource
+    private SessionContext context;
 
     @PostConstruct
     public void setUp(){
@@ -55,7 +75,7 @@ public class OAuthServerService implements Serializable {
      * @param redirectURI client_secret
      * @param requestedScopes list of scopes
      * @param responseType  required response type
-     * @param oAuthCredential  logged user
+     * @param credentialUsername  logged user
      * @return OAuth authorization biz object
      * @throws InvalidScopeException if one of the requested scope are unavailable
      * @throws ClientIdNotFoundException if bad clientid has been requested
@@ -64,17 +84,19 @@ public class OAuthServerService implements Serializable {
             final String clientId,
             final String redirectURI,
             final Set<String> requestedScopes,
-            final String responseType,
+            final OAuthResponseType responseType,
             final String duration,
-            final OAuthCredential oAuthCredential)
+            final String credentialUsername)
             throws InvalidScopeException,
-            ClientIdNotFoundException{
+            ClientIdNotFoundException,
+            BadCredentialException {
         //check if  exist
+        OAuthCredential oAuthCredential = this.authDao
+                .findOAuthCredentialByUsername(credentialUsername) ;
         OAuthServerAuthorization authorization =
                 this.authDao
                         .findAliveServerAuthForCredential(
-                                Long.parseLong(
-                                        oAuthCredential.getId())
+                                oAuthCredential.getIdToString()
                                 ,clientId);
         OAuthClientApplication application =
                 this.authDao.
@@ -87,26 +109,39 @@ public class OAuthServerService implements Serializable {
                 .getServerScopesByKeys(requestedScopes);
         if (authorization != null){
             authorization.setScopes(scopes);
-            authorization.revokeAccess();
             authorization.generateCode();
-            return authorization;
+
+        }  else {
+            authorization = (OAuthServerAuthorization)
+                    application
+                            .addAuthorization(oAuthCredential, scopes);
         }
-        authorization = (OAuthServerAuthorization)
-                application
-                        .addAuthorization(oAuthCredential, scopes);
+
         if (responseType
-                .equals("code")){
+                .equals(OAuthResponseType.C)){
             authorization.generateCode();
+        } else if(responseType.equals(OAuthResponseType.T)){
+            authorization.addAccessToken(this
+                    .serverMBean
+                    .getAccessTokenDurationSecond());
         }
-        if (OAuthDuration.P.equals(duration)){
+
+        if (OAuthDuration.P.equals(duration) &&
+                !authorization.isPermanent()){
             authorization.generateRefreshToken(
                     this.serverMBean.
                             getRefreshTokenDurationSecond());
+        } else if (OAuthDuration.T.equals(duration) &&
+                authorization.isPermanent()){
+            authorization.getRefreshToken().revoke();
+        }
+
+        if (authorization.isPromptRequired()){
+            authorization.revokeAccess();
         }
         return authorization;
 
     }
-
 
     private OAuthServerAuthorization validateCode(final String code,
                                                   final String clientId)
@@ -122,7 +157,7 @@ public class OAuthServerService implements Serializable {
                 equals(clientId)){
             throw new BadCredentialException(clientId);
         }
-        return  this.authDao.findAliveServerAuthByCode(code);
+        return authorization;
     }
 
     private OAuthServerAuthorization validateRefreshToken(final String refreshToken,
@@ -154,9 +189,6 @@ public class OAuthServerService implements Serializable {
      */
     public OAuthServerAuthorization acceptAuthorization(
             final OAuthServerAuthorization authorization) {
-        authorization.addAccessToken(this
-                .serverMBean
-                .getAccessTokenDurationSecond());
         return this.em.merge(authorization);
     }
 
@@ -213,7 +245,7 @@ public class OAuthServerService implements Serializable {
         return accessToken;
     }
 
-    public OAuthClientApplication  authenticateClientRequest
+    public OAuthClientApplication authenticateClientRequest
             (final String clientId,
              final String secret)
             throws BadCredentialException,
@@ -230,7 +262,7 @@ public class OAuthServerService implements Serializable {
         }
     }
 
-    public OAuthAccessToken  findAliveAccessToken(final String bearerToken)
+    public OAuthAccessToken findAliveAccessToken(final String bearerToken)
             throws InvalidAccessTokenException {
         OAuthAccessToken accessToken =
                 this.authDao.findOAuthAccessByToken(bearerToken);
@@ -266,6 +298,7 @@ public class OAuthServerService implements Serializable {
             ClientIdNotFoundException,
             InvalidScopeException {
 
+
         OAuthCredential credential = this.authDao
                 .findOAuthCredentialByUsername(username);
         if (!credential.isCorrectPassword(password)){
@@ -276,11 +309,65 @@ public class OAuthServerService implements Serializable {
                 application.getApplicationKey().getClientId()
                 , application.getRedirectURI().toString(),
                 requestedScopes,
-                "token",
+                OAuthResponseType.T,
                 OAuthDuration.P.toString(),
-                credential);
+                credential.getUsername());
         acceptAuthorization(authorization);
         return authorization.addAccessToken(this.serverMBean
                 .getAccessTokenDurationSecond());
+    }
+
+    public List<OAuthSignatureKeyPair> getOrderedAliveCerts() throws OAuthOpenIDSignatureException {
+        List<OAuthSignatureKeyPair> alive = new ArrayList<>(this.authDao.findAliveCert());
+        if (alive.isEmpty()){
+            try {
+                OAuthSignatureKeyPair signatureKeyPair =  new OAuthSignatureKeyPair(
+                        this.securityInitializer.getAESKey(),
+                        CipherSecurityInitializer.CRYPT_ALG,
+                        CipherSecurityInitializer.SIGN_ALG,
+                        this.serverMBean.getKeyPairDurationSecond());
+                signatureKeyPair = em.merge(signatureKeyPair);
+                this.context.getTimerService().createTimer(
+                        signatureKeyPair.getHalfLife(),signatureKeyPair.getKid());
+                alive.add(signatureKeyPair);
+            } catch (GeneralSecurityException e) {
+                throw new  OAuthOpenIDSignatureException("cannot create sign keys :", e);
+            }
+        }
+        Collections.sort(alive);
+        return alive;
+    }
+
+
+    /**
+     * Timer that create a new oauth cert every half life time of the previous.
+     * @param timer Timer
+     * @throws OAuthOpenIDSignatureException
+     * @throws IllegalBlockSizeException
+     * @throws InvalidKeyException
+     * @throws BadPaddingException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchPaddingException
+     */
+    @Timeout
+    public void timeOutHandler(Timer timer) throws
+            OAuthOpenIDSignatureException,
+            IllegalBlockSizeException,
+            InvalidKeyException,
+            BadPaddingException,
+            NoSuchAlgorithmException,
+            NoSuchPaddingException {
+
+        LOG.info("Cert HalfLife generate a new one " +
+                timer.getInfo());
+        OAuthSignatureKeyPair signatureKeyPair =  new OAuthSignatureKeyPair(
+                this.securityInitializer.getAESKey(),
+                CipherSecurityInitializer.CRYPT_ALG,
+                CipherSecurityInitializer.SIGN_ALG,
+                this.serverMBean.getKeyPairDurationSecond());
+        signatureKeyPair = em.merge(signatureKeyPair);
+        this.context.getTimerService().createTimer(
+                signatureKeyPair.getHalfLife(),
+                signatureKeyPair.getKid());
     }
 }
