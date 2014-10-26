@@ -6,16 +6,16 @@
              version="2.0">
 
     <!-- productionParam -->
-    <persistence-unit name="security-services-rs-pu" transaction-type="JTA">
+    <persistence-unit name="security-services-pu" transaction-type="JTA">
         <!-- productionParam -->
         <jta-data-source>java:/OAuthDS</jta-data-source>
 
-        <!-- maven resourource filtering will update this value and set the good version-->
-        <jar-file>lib/security-${jpa.security.entities.version}.jar</jar-file>
-        <jar-file>lib/resource-${jpa.resource.entities.version}.jar</jar-file>
-        <jar-file>lib/oauth2-${jpa.resource.entities.version}.jar</jar-file>
-        <jar-file>lib/location-${parent.version}.jar</jar-file>
-        <jar-file>lib/person-${parent.version}.jar</jar-file>
+        <!-- maven resource filtering will update this value and set the good version-->
+        <jar-file>security-${jpa.security.entities.version}.jar</jar-file>
+        <jar-file>resource-${jpa.resource.entities.version}.jar</jar-file>
+        <jar-file>oauth2-${jpa.resource.entities.version}.jar</jar-file>
+        <jar-file>location-${parent.version}.jar</jar-file>
+        <jar-file>person-${parent.version}.jar</jar-file>
 
 
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
@@ -24,7 +24,10 @@
             <property name="hibernate.jdbc.batch_size" value="32" />
             <property name="hibernate.archive.autodetection" value="class, hbm"/>
             <!-- uncomment this to delegate hibernate to create the database-->
-            <!--property name="hibernate.hbm2ddl.auto" value="update"/-->
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <!-- uncomment to load initial data -->
+
+            <property name="hibernate.hbm2ddl.import_files" value="/META-INF/sql/data.sql"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
             <property name="hibernate.default_batch_fetch_size" value="16" />
             <!--property name="hibernate.show_sql" value="true" />
