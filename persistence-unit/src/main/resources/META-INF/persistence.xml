@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                    http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
 
-    <persistence-unit name="PERSISTENCE_UNIT" transaction-type="RESOURCE_LOCAL">
-        <!-- to auto detect entity outside the test packages-->
-        <jar-file>${project.build.outputDirectory}</jar-file>
-        <!--exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <!-- productionParam -->
+    <persistence-unit name="security-services-pu" transaction-type="JTA">
+        <!-- productionParam -->
+        <jta-data-source>java:/OAuthDS</jta-data-source>
 
-        <properties>
-            <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:unit-testing-jpa"/>
-            <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
-            <property name="hibernate.connection.username" value="sa"/>
-            <property name="hibernate.connection.password" value=""/>
-            <property name="hibernate.archive.autodetection" value="class, hbm"/>
+        <!-- maven resource filtering will update this value and set the good version-->
+        <jar-file>security-${jpa.security.entities.version}.jar</jar-file>
+        <jar-file>resource-${jpa.resource.entities.version}.jar</jar-file>
+        <jar-file>oauth2-${jpa.resource.entities.version}.jar</jar-file>
+        <jar-file>location-${parent.version}.jar</jar-file>
+        <jar-file>person-${parent.version}.jar</jar-file>
 
-        </properties-->
+
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.max_fetch_depth" value="1"/>
@@ -31,7 +33,5 @@
             <!--property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true"/-->
         </properties>
-
     </persistence-unit>
-
 </persistence>

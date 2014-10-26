@@ -1,0 +1,29 @@
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+                http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+                 version="2.0">
+
+    <entity class="com.alizarion.reference.security.oauth.oauth2.entities.OAuthAuthorization">
+        <attributes>
+            <many-to-one name="credential" target-entity="com.alizarion.reference.security.entities.Credential">
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <entity class="com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthScopeServer">
+        <attributes>
+            <many-to-one name="role" target-entity="com.alizarion.reference.security.entities.Role">
+                <join-column name="oauth_role_id" ></join-column>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <entity class="com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthServerApplication">
+        <attributes>
+            <many-to-many name="grantedRoles" target-entity="com.alizarion.reference.security.entities.Role">
+            </many-to-many>
+        </attributes>
+    </entity>
+
+</entity-mappings>
