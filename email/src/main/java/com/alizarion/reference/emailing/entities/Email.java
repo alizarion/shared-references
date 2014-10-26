@@ -11,9 +11,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.*;
 import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
@@ -170,16 +168,16 @@ public abstract class Email implements Serializable {
         this.locale = locale;
     }
 
-    public String getFrom() {
-        return from;
+    public InternetAddress getFrom() throws AddressException {
+        return new InternetAddress(this.from);
     }
 
     public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setFrom(InternetAddress from) {
+        this.from = from.toString();
     }
 
     public String getTo() {
