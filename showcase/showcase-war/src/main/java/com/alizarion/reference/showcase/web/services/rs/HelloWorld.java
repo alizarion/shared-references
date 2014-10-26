@@ -1,4 +1,4 @@
-package com.alizarion.reference.showcase.services.rs;
+package com.alizarion.reference.showcase.web.services.rs;
 
 import com.alizarion.reference.person.entities.PhysicalPerson;
 import com.alizarion.reference.person.entities.Title;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.SecurityContext;
  * @author selim@openlinux.fr.
  */
 @Path("/person")
-@RolesAllowed("scope0-key")
+@RolesAllowed("profile")
 public class HelloWorld {
 
 
@@ -23,7 +23,7 @@ public class HelloWorld {
 
     @GET
     @Path("/")
-    @RolesAllowed("scope0-key")
+    @RolesAllowed("profile")
     @Produces({ "application/json","application/xml" })
     public PhysicalPerson getPerson() {
         //SecurityAssociation

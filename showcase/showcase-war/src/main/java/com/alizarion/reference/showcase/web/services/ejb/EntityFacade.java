@@ -1,4 +1,4 @@
-package com.alizarion.reference.showcase.services.ejb;
+package com.alizarion.reference.showcase.web.services.ejb;
 
 import java.io.Serializable;
 

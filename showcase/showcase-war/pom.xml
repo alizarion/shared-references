@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>reference</artifactId>
-        <groupId>com.alizarion.reference</groupId>
+        <artifactId>showcase</artifactId>
+        <groupId>com.alizarion.reference.showcase</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.alizarion.reference.showcase</groupId>
-    <artifactId>reference-showcase</artifactId>
+    <groupId>com.alizarion.reference.showcase.web</groupId>
+    <artifactId>showcase-war</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -42,7 +42,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.alizarion.reference.security.oauth.toolkit</groupId>
+            <groupId>com.alizarion.reference.security.oauth.oauth2.toolkit</groupId>
             <artifactId>oauth-toolkit</artifactId>
             <version>${parent.version}</version>
         </dependency>

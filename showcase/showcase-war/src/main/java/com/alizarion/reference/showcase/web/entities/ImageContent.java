@@ -1,4 +1,4 @@
-package com.alizarion.reference.showcase.entities;
+package com.alizarion.reference.showcase.web.entities;
 
 import com.alizarion.reference.filemanagement.entities.ImageManagedFile;
 import com.alizarion.reference.social.entities.notification.Notification;

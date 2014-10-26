@@ -1,4 +1,4 @@
-package com.alizarion.reference.showcase.entities;
+package com.alizarion.reference.showcase.web.entities;
 
 import com.alizarion.reference.person.entities.PhysicalPerson;
 import com.alizarion.reference.security.entities.Credential;
