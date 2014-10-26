@@ -21,7 +21,7 @@
             <f:viewParam name="response_type" required="true" value="#{responseType}"/>
             <f:viewParam name="redirect_uri" required="true" value="#{redirectURI}"/>
             <f:viewParam name="state" required="false" value="#{state}"/>
-            <f:viewParam name="duration" required="false" value="#{duration}"/>
+            <f:viewParam name="access_type" required="false" value="#{access_type}"/>
 
             <f:event type="preRenderView" listener="#{authorizeCtrl.validate}"/>
         </f:metadata>
@@ -36,18 +36,18 @@
 
                     </ul>
                     <div class="bs-callout bs-callout-warning">
-                        <p>the application #{authorizeCtrl.authorization.authApplication.name} will access to your data for <code>${fn:substringBefore((authorizeCtrl.authorizationDuration/86400), '.')} days </code>, you can revoke this authorization from your account panel  </p>
+                        <p>the application #{authorizeCtrl.authorization.authApplication.name} will access to your data for <code>${authorizeCtrl.authorization.refreshToken != null ? 'indefinitely': fn:substringBefore((authorizeCtrl.authorizationDuration/3600), '.').concat(authorizeCtrl.authorizationDuration/3600 > 1 ? ' hours' : ' hour') }  </code>, you can revoke this authorization from your account panel  </p>
                     </div>
                     <h:form>
                         <h:commandLink styleClass="btn btn-lg btn-success btn-block"
                                        value="I Agree"
-                                       action="#{authorizeCtrl.addAuthorization}" >
+                                       action="#{authorizeCtrl.doAcceptAndGrant()}" >
                             <f:param name="scope"  value="#{scope}"/>
                             <f:param name="client_id"  value="#{clientId}"/>
                             <f:param name="response_type"  value="#{responseType}"/>
                             <f:param name="redirect_uri"  value="#{redirectURI}"/>
                             <f:param name="state"  value="#{state}"/>
-                            <f:param name="duration"  value="#{duration}"/>
+                            <f:param name="access_type"  value="#{access_type}"/>
 
                         </h:commandLink>
                     </h:form>

@@ -4,7 +4,7 @@
                http://ocpsoft.com/xml/ns/prettyfaces/ocpsoft-pretty-faces-3.3.2.xsd">
 
     <url-mapping id="auth">
-        <pattern value="/oauth/auth"/>
+        <pattern value="/oauth2/auth"/>
         <view-id value="/oauth/grant-access-list.jsf"/>
     </url-mapping>
 
