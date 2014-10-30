@@ -21,7 +21,7 @@ token, identifications et certs JWK permettant de valider les signature openID.
 
 voici pour exemple, la configuration actuel 
 
-```javascript
+```json
 {
  "issuer": "localhost",
  "authorization_endpoint": "https://localhost/oauth2/auth",
