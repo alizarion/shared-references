@@ -14,15 +14,15 @@
 
 
         <properties>
-            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
-            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/test" />
-            <property name="hibernate.default_schema" value="test"/>
-            <property name = "hibernate.show_sql" value = "false" />
+            <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:unit-testing-jpa"/>
+            <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.default_schema" value="PUBLIC"/>
 
-            <property name="hibernate.connection.username" value="root" />
-            <property name="hibernate.connection.password" value="" />
-            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.connection.username" value="sa"/>
+            <property name="hibernate.connection.password" value=""/>
+            <property name = "hibernate.show_sql" value = "true" />
         </properties>
 
 
