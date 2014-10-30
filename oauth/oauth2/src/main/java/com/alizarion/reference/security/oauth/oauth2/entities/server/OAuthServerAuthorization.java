@@ -160,7 +160,9 @@ public class OAuthServerAuthorization extends OAuthAuthorization<OAuthScopeServe
 
     public void revoke(){
         this.promptRequired =  true;
-        this.refreshToken.revoke();
+        if (this.refreshToken != null){
+            this.refreshToken.revoke();
+        }
         this.authCode.revoke();
         this.revokeAccess();
 

@@ -83,6 +83,11 @@ public class OAuthAccessToken implements Serializable {
 
     }
 
+    public void revoke(){
+        this.bearer.revoke();
+        this.authorization.revoke();
+    }
+
     @Override
     public int hashCode() {
         int result = bearer != null ? bearer.hashCode() : 0;

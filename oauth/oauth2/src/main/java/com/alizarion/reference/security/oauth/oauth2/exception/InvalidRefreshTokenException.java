@@ -3,7 +3,7 @@ package com.alizarion.reference.security.oauth.oauth2.exception;
 /**
  * @author selim@openlinux.fr.
  */
-public class InvalidRefreshTokenException extends OAuthException {
+public class InvalidRefreshTokenException extends InvalidTokenException {
 
 
     private static final long serialVersionUID = -1103819154146952527L;
