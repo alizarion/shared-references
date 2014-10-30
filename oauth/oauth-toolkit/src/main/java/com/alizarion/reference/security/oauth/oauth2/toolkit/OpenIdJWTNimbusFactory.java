@@ -1,5 +1,6 @@
 package com.alizarion.reference.security.oauth.oauth2.toolkit;
 
+import com.alizarion.reference.exception.NotImplementedException;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAccessToken;
 import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthSignatureKeyPair;
 import com.alizarion.reference.security.oauth.oauth2.exception.OAuthOpenIDSignatureException;
@@ -19,8 +20,11 @@ import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.openid.connect.sdk.claims.AccessTokenHash;
+import com.nimbusds.openid.connect.sdk.claims.Gender;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +41,88 @@ public  class OpenIdJWTNimbusFactory {
 
 
     public static class Server {
+        public static String getUserInfo(final OAuthAccessToken accessToken) throws URISyntaxException {
+            UserInfo userInfo =
+                    new UserInfo(new Subject(
+                            accessToken
+                                    .getAuthorization()
+                                    .getCredential()
+                                    .getIdToString()));
+            if (accessToken.getAuthorization().getScopeKeys().contains("profile") ||
+                    accessToken.getAuthorization().getScopeKeys().contains("email")){
+                userInfo.setEmail(accessToken
+                        .getAuthorization()
+                        .getCredential()
+                        .getEmail());
+                userInfo.setEmailVerified(accessToken
+                        .getAuthorization()
+                        .getCredential()
+                        .isEmailVerified());
+
+            }
+            if (accessToken.getAuthorization().getScopeKeys().contains("profile")){
+                try {
+                    userInfo.setGender(new Gender(accessToken
+                            .getAuthorization()
+                            .getCredential()
+                            .getGender()));
+                } catch (NotImplementedException ignored) {
+                }
+                try {
+                    userInfo.setGivenName(accessToken
+                            .getAuthorization()
+                            .getCredential()
+                            .getGivenName());
+                } catch (NotImplementedException ignored) {
+                }
+                try {
+                    userInfo.setFamilyName(accessToken
+                            .getAuthorization()
+                            .getCredential()
+                            .getFamilyName());
+                } catch (NotImplementedException ignored) {
+                }
+                try {
+                    userInfo.setName(accessToken
+                            .getAuthorization()
+                            .getCredential()
+                            .getName());
+                } catch (NotImplementedException ignored) {
+                }
+                try {
+                    userInfo.setProfile(accessToken
+                            .getAuthorization()
+                            .getCredential()
+                            .getProfile().toURI());
+                } catch (NotImplementedException ignored) {
+                }
+                try {
+                    userInfo.setPicture(accessToken
+                            .getAuthorization()
+                            .getCredential()
+                            .getPicture().toURI());
+                } catch (NotImplementedException ignored) {
+                }
+                try {
+                    userInfo.setPicture(accessToken
+                            .getAuthorization()
+                            .getCredential()
+                            .getPicture().toURI());
+                } catch (NotImplementedException ignored) {
+                }
+                try {
+                    userInfo.setWebsite(accessToken
+                            .getAuthorization()
+                            .getCredential()
+                            .getWebSite().toURI());
+                } catch (NotImplementedException ignored) {
+                }
+
+            }
+
+            return userInfo.toJSONObject().toJSONString();
+        }
+
 
         public static String getSignedIDToken(final OAuthAccessToken accessToken,
                                               final Key aesKey,
@@ -102,6 +188,7 @@ public  class OpenIdJWTNimbusFactory {
             return jwkSet.toString();
         }
     }
+
 
 
 
