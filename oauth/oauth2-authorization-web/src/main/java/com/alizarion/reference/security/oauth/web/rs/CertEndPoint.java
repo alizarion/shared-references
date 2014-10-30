@@ -37,7 +37,7 @@ public class CertEndPoint implements Serializable {
                     .build();
         } catch (OAuthOpenIDSignatureException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Oup do not tell anyone !").build();
+                    .entity("Oups do not tell anyone !").build();
         }
 
 

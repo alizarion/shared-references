@@ -184,7 +184,7 @@ public class TokenEndpoint {
         return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
     }
 
-    private Response unhandledErrorTokenResponse() throws OAuthSystemException {
+    public static Response unhandledErrorTokenResponse() throws OAuthSystemException {
         OAuthResponse response = OAuthASResponse
                 .errorResponse(HttpServletResponse.SC_BAD_REQUEST)
                 .setError(OAuthError.CodeResponse.SERVER_ERROR)

@@ -28,6 +28,7 @@ public class OpenIDProviderConfServlet extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        //TODO context path and port
         response.getWriter().write(getConfiguration(request.getServerName()));
     }
 
