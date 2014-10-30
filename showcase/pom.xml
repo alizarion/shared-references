@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>reference</artifactId>
+        <groupId>com.alizarion.reference</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.alizarion.reference.showcase</groupId>
+    <artifactId>showcase</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Showcase parent.</name>
+    <description>
+        Showcase of module implementation ...
+    </description>
+
+    <developers>
+        <developer>
+            <id>selim.bensenouci</id>
+            <email>selim.bensenouci@gmail.com</email>
+            <name>Selim Bensenouci</name>
+            <organization>Alizarion</organization>
+        </developer>
+
+    </developers>
+
+    <modules>
+        <module>showcase-persistence</module>
+        <module>showcase-ear</module>
+        <module>showcase-war</module>
+    </modules>
+
+    <dependencies>
+
+
+    </dependencies>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/alizarion/shared-references.git/showcase/</developerConnection>
+        <url>https://github.com/alizarion/shared-references.git/showcase/</url>
+    </scm>
+</project>
