@@ -6,19 +6,22 @@ package com.alizarion.reference.person.entities;
  */
 public enum Title {
 
-    MR("Mr"),
-    MISS("Miss"),
-    MRS("Mrs"),
-    MS("Ms");
+    MR("Mr","male"),
+    MISS("Miss","female"),
+    MRS("Mrs","male"),
+    MS("Ms","female");
 
     private String title;
+    private String gender;
+
 
     /**
      * Default title constructor
      * @param title
      */
-    Title(final String title) {
+    Title(final String title,final String gender) {
         this.title = title;
+        this.gender = gender;
     }
 
     /**
@@ -28,6 +31,16 @@ public enum Title {
      */
     public String getTitleKey(){
         return this.title.toUpperCase();
+    }
+
+
+    /**
+     * Method to get the title key that will be
+     * used for internationalization
+     * @return titleKey param
+     */
+    public String getGenderKey(){
+        return this.gender.toLowerCase();
     }
 
 }

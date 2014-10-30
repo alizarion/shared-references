@@ -1,6 +1,7 @@
 package com.alizarion.reference.person.entities;
 
 import javax.persistence.*;
+import java.util.Locale;
 
 /**
  * @author selim@openlinux.fr.
@@ -22,6 +23,17 @@ public class PhysicalPerson extends Person {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "title",length = 5)
     private Title title;
+
+    @Column(name = "locale")
+    private String locale;
+
+    public Locale getLocale() {
+        return new Locale(locale);
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale.toString();
+    }
 
     public String getFirstName() {
         return firstName;
