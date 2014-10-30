@@ -22,11 +22,11 @@ public abstract class Address {
     @Column
     private Long id;
 
-    @Column(name = "audited")
-    private Boolean audited;
+    @Column(name = "verified")
+    private Boolean verified;
 
     public Address() {
-        this.audited = false;
+        this.verified = false;
     }
 
     public Long getId() {
@@ -34,12 +34,12 @@ public abstract class Address {
     }
 
 
-    public Boolean getAudited() {
-        return audited;
+    public Boolean getVerified() {
+        return verified;
     }
 
-    public void setAudited(Boolean audited) {
-        this.audited = audited;
+    public void setVerified(Boolean audited) {
+        this.verified = audited;
     }
 
     @Override

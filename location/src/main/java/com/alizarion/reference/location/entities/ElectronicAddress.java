@@ -1,5 +1,7 @@
 package com.alizarion.reference.location.entities;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -47,6 +49,9 @@ public class ElectronicAddress extends Address implements Serializable {
         return emailAddress;
     }
 
+    public InternetAddress getInternetAddress() throws AddressException {
+          return new InternetAddress(emailAddress);
+      }
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
