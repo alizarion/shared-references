@@ -21,7 +21,7 @@ token, identifications et certs JWK permettant de valider les signature openID.
 
 voici pour exemple, la configuration actuel   
 
-http://localhost:8080/oauth2-authorization-web/.well-known/openid-configuration
+[http://localhost:8080/oauth2-authorization-web/.well-known/openid-configuration]
 
 ```json
 {
