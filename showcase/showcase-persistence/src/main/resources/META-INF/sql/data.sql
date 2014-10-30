@@ -1,4 +1,7 @@
-INSERT INTO `security_credential` (`id`, `credential_creation_date`, `logon`, `password`, `state`, `user_name`) VALUES (1, '2014-10-16 14:24:34', 'P', '0b9c2625dc21ef05f6ad4ddf47c5f203837aa32c', 'A', 'username');
+INSERT INTO `location_address` (`type`, `id`, `verified`) VALUES ('email', 1, 00000001);
+INSERT INTO `location_email_address` (`email_address`, `email_address_id`) VALUES ('selim@openlinux.fr', 1);
+INSERT INTO `person_person` (`DTYPE`, `id`, `first_name`, `last_name`, `locale`, `title`, `primaryElectronicAddress_email_address_id`, `primaryPhoneAddress_phone_address_id`, `primaryPhysicalAddress_geographical_address_id`) VALUES ('physical', 1, 'Selim', 'Bensenouci', 'FR', 'MR', 1, NULL, NULL);
+INSERT INTO `security_credential` (`id`, `credential_creation_date`, `logon`, `password`, `state`, `user_name`, `person_id`) VALUES (1, '2014-10-16 14:24:34', 'P', '0b9c2625dc21ef05f6ad4ddf47c5f203837aa32c', 'A', 'username', 1);
 INSERT INTO `security_roles` (`id`, `role_creation_date`, `description`, `unique_key`, `role_name`) VALUES (1, '2014-10-16 14:24:34', 'allow user to produce openid indentification', 'openid', 'my app openid role'), (2, '2014-10-16 14:24:34', 'allow user to access to profile data', 'profile', 'my app profile role'), (3, '2014-10-16 14:24:34', 'allow user to access email data', 'email', 'my app email role'),(4, '2014-10-16 14:24:34', 'allow user to produce oauth authorizations', 'oauth', 'my app oauth role');
 INSERT INTO `security_oauth_client_application` (`id`, `client_id`, `client_secret`, `home_page_url`, `name`, `redirect_uri`, `trusted_client`) VALUES (1, 'clientId', 'clientSecret', 'http://myproject.com', 'myproject', 'http://localhost:8180/redirect', 00000000);
 commit;
