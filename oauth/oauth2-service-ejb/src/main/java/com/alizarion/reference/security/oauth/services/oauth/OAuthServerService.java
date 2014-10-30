@@ -2,10 +2,7 @@ package com.alizarion.reference.security.oauth.services.oauth;
 
 
 import com.alizarion.reference.security.oauth.oauth2.dao.OAuthJpaDao;
-import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAccessToken;
-import com.alizarion.reference.security.oauth.oauth2.entities.OAuthCredential;
-import com.alizarion.reference.security.oauth.oauth2.entities.OAuthDuration;
-import com.alizarion.reference.security.oauth.oauth2.entities.OAuthResponseType;
+import com.alizarion.reference.security.oauth.oauth2.entities.*;
 import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthClientApplication;
 import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthScopeServer;
 import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthServerAuthorization;
@@ -369,5 +366,23 @@ public class OAuthServerService implements Serializable {
         this.context.getTimerService().createTimer(
                 signatureKeyPair.getHalfLife(),
                 signatureKeyPair.getKid());
+    }
+
+    public void revokeToken(final String token) throws InvalidTokenException {
+        try {
+            OAuthAccessToken  accessToken =
+                    findAliveAccessToken(token);
+            accessToken.revoke();
+            this.em.merge(accessToken);
+        } catch (InvalidAccessTokenException e) {
+            try {
+                OAuthAuthorization authorization =
+                        this.authDao.findAliveServerAuthByToken(token);
+                authorization.revoke();
+                this.em.merge(authorization);
+            } catch (InvalidRefreshTokenException e1) {
+                throw  new InvalidTokenException("invalid token");
+            }
+        }
     }
 }
