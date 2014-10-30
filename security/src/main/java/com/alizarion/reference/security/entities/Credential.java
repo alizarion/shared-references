@@ -1,13 +1,19 @@
 package com.alizarion.reference.security.entities;
 
+import com.alizarion.reference.exception.NotImplementedException;
+import com.alizarion.reference.person.entities.PhysicalPerson;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthCredential;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthRole;
 import com.alizarion.reference.security.tools.SecurityHelper;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -72,6 +78,11 @@ public class Credential implements OAuthCredential<OAuthRole,Long>,Serializable 
     private Set<CredentialRole> credentialRoles =
             new HashSet<>();
 
+    @OneToOne
+    @JoinColumn(name = "person_id")
+    private PhysicalPerson person;
+
+
 
     public Credential(final Set<Role>
                               roles) {
@@ -122,7 +133,13 @@ public class Credential implements OAuthCredential<OAuthRole,Long>,Serializable 
         this.logon = logon;
     }
 
+    public PhysicalPerson getPerson() {
+        return person;
+    }
 
+    public void setPerson(PhysicalPerson person) {
+        this.person = person;
+    }
 
     @Override
     public OAuthCredential init(Set<String> scopes) {
@@ -167,7 +184,66 @@ public class Credential implements OAuthCredential<OAuthRole,Long>,Serializable 
         return false;
     }
 
+    @Override
+    public InternetAddress getEmail() {
+        try {
+            return this.person.getPrimaryElectronicAddress().getInternetAddress();
+        } catch (AddressException e) {
+            return null;
+        }
+    }
 
+    @Override
+    public Boolean isEmailVerified() {
+        return this.person
+                .getPrimaryElectronicAddress()
+                .getVerified();
+    }
+
+    @Override
+    public Locale getLocale() {
+        return this.person.getLocale();
+    }
+
+    @Override
+    public String getName() throws NotImplementedException {
+        return this.person.getFirstName() + " " +  this.person.getLastName();
+    }
+
+    @Override
+    public String getGender() throws NotImplementedException {
+        return this.person.getTitle().getGenderKey();
+    }
+
+    @Override
+    public String getFamilyName() throws NotImplementedException {
+        return this.person.getLastName();
+    }
+
+    @Override
+    public String getGivenName() throws NotImplementedException {
+        return this.person.getFirstName();
+    }
+
+    @Override
+    public String getNickname() throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public URL getPicture() throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public URL getWebSite() throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public URL getProfile() throws NotImplementedException {
+        throw new NotImplementedException();
+    }
 
 
     public Set<CredentialRole> getCredentialRoles() {
