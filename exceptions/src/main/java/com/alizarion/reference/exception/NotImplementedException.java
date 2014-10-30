@@ -10,6 +10,10 @@ public class NotImplementedException extends ApplicationException {
 
     private static final String MSG = "Not implemented functionality : ";
 
+    public NotImplementedException() {
+        super(MSG);
+    }
+
     public NotImplementedException(String msg) {
         super(MSG + msg);
     }
