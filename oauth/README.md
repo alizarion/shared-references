@@ -53,7 +53,7 @@ All you need to build this project is Java 7.0 (Java SDK 1.7) or better, Maven 3
 
 The application this project produces is designed to be run on JBoss WildFly.
 
-Configuration
+Integration
 ==============
 
 /!\ if some points are not clear, you can always consult the [ShowCase](https://github.com/alizarion/shared-references/tree/master/showcase) for further information.   
@@ -102,12 +102,10 @@ the project already contain EJB JAR package and webapp WAR, so it MUST be deploy
 2. Application Server (JBoss wildfly)
 -------------------------------------
 
-2.1 oauth Realm:   
-
 The authorization sequence begins when client application redirects a browser to your authorization server URL;    the URL includes query parameters that indicate the type of access being requested.OAuth handles the user    authentication, session selection, and user consent, this part are managed by oauth-authorization-web war app,   
 and must be able to connect your users.   
 
-you MUST create realm named ```xml oauth-realm```  on your application server.   
+you MUST create realm named ```oauth-realm```  on your application server.   
 
 example on wildfy with mysql:   
 
@@ -124,6 +122,26 @@ example on wildfy with mysql:
                     </authentication>
                 </security-domain>
 ```
+
+3. Configuration
+----------------
+
+###3.1 keystore   
+
+keypair used to sign OpenID JWS token are stored in database, for safety reason the private keys is encrypted with AES before persist.
+
+keystore.jck file contain the secret key used to encrypt the private key, by default it will be store in /tmp.
+
+you can overwrite this value by set `key-store-folder` property in `persistent_resources` table.
+````sql
+INSERT INTO `persistent_resources` (`id`, `category`, `unique_key`, `last_update`, `value`)
+VALUES
+	(-2, 'com.alizarion.reference.security.oauth.services.oauth.server', 'key-store-folder', '2014-10-16 14:24:34', '/opt/data/');
+
+```
+
+### 3.2 tokens lifetime   
+
 
 
 
