@@ -130,7 +130,7 @@ example on wildfy with mysql:
 
 keypair used to sign OpenID JWS token are stored in database, for safety reason the private keys is encrypted with AES before persist.
 
-keystore.jck file contain the secret key used to encrypt the private key, by default it will be store in /tmp.
+keystore.jck file contain the secret key used to encrypt the private key, by default it will be store in `/tmp`.
 
 you can overwrite this value by set `key-store-folder` property in `persistent_resources` table.
 ````sql
@@ -142,6 +142,25 @@ VALUES
 
 ### 3.2 tokens lifetime   
 
+OAuth access token and refresh token have default lifetime(in second) value,   
+
+* access token : 3600
+* refresh token : 15552000
+
+you can also overwrite this value by insert in table  `persistent_resources` your own values.   
+
+example:
+
+```sql
+INSERT INTO `persistent_resources` (`id`, `category`, `unique_key`, `last_update`, `value`)
+VALUES
+	(-3, 'com.alizarion.reference.security.oauth.services.oauth.server', 'refresh-token-duration-second', '2014-10-16 14:24:34', '15552000');
+	
+INSERT INTO `persistent_resources` (`id`, `category`, `unique_key`, `last_update`, `value`)
+VALUES
+	(-1, 'com.alizarion.reference.security.oauth.services.oauth.server', 'access-token-duration-second', '2014-10-16 14:24:34', '3600');
+
+```
 
 
 
