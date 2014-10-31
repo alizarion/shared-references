@@ -1,5 +1,5 @@
-OAuth
-=====
+OAuth2 implementation (wildfly)
+==============================
 
 Auteur : Selim Bensenouci
 
@@ -107,7 +107,7 @@ the project already contain EJB JAR package and webapp WAR, so it MUST be deploy
 The authorization sequence begins when client application redirects a browser to your authorization server URL;    the URL includes query parameters that indicate the type of access being requested.OAuth handles the user    authentication, session selection, and user consent, this part are managed by oauth-authorization-web war app,   
 and must be able to connect your users.   
 
-you MUST create realm named `xml oauth-realm`  on your application server.   
+you MUST create realm named ```xml oauth-realm```  on your application server.   
 
 example on wildfy with mysql:   
 
