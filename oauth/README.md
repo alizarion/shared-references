@@ -58,6 +58,9 @@ Configuration
 
 /!\ if some points are not clear, you can always consult the [ShowCase](https://github.com/alizarion/shared-references/tree/master/showcase) for further information.   
 
+1. Project Configuration
+------------------------
+
 for the sake of modularity, the project has two interfaces (`OAuthCredential`,`OAuthRole`) that you MUST implement    to connect OAuth to your own app persisted credentials struture, and to prevent maven cyclic dependency the JPA     relationship for the target entity MUST be declared in orm.xml.    
 
 ```xml
@@ -96,16 +99,32 @@ your persistence unit must also reference oauth entities, to do, we strongly adv
 
 the project already contain EJB JAR package and webapp WAR, so it MUST be deployed in a EAR package which can    also contain your application.
 
-
-
-
-
-
-
-
-
-1. Application Server (JBoss wildfly)
+2. Application Server (JBoss wildfly)
 -------------------------------------
+
+2.1 oauth Realm:   
+
+The authorization sequence begins when client application redirects a browser to your authorization server URL;    the URL includes query parameters that indicate the type of access being requested.OAuth handles the user    authentication, session selection, and user consent, this part are managed by oauth-authorization-web war app,   
+and must be able to connect your users.   
+
+you MUST create realm named `xml oauth-realm`  on your application server.   
+
+example on wildfy with mysql:   
+
+```xml
+<security-domain name="oauth-realm">
+                    <authentication>
+                        <login-module code="org.jboss.security.auth.spi.DatabaseServerLoginModule" flag="required">
+                            <module-option name="dsJndiName" value="java:/OAuthDS"/>
+                            <module-option name="principalsQuery" value="SELECT security_credential.password FROM security_credential WHERE security_credential.user_name = ? and security_credential.state = 'A' and security_credential.logon = 'P'"/>
+                            <module-option name="rolesQuery" value="select security_roles.unique_key, 'Roles' from security_roles left join security_credential_roles on security_roles.id = security_credential_roles.role_id left join security_credential on security_credential_roles.credential_id = security_credential.id  where security_credential.user_name = ?"/>
+                            <module-option name="hashAlgorithm" value="SHA"/>
+                            <module-option name="hashEncoding" value="hex"/>
+                        </login-module>
+                    </authentication>
+                </security-domain>
+```
+
 
 
 
