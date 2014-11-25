@@ -27,7 +27,7 @@ Here is an example of such a document; the field names are those specified in Op
  "issuer": "localhost",
  "authorization_endpoint": "https://localhost/oauth2/auth",
  "token_endpoint": "https://localhost/oauth2/token",
- "userinfo_endpoint": "https://localhost/plus/v1/people/me/openIdConnect",
+ "userinfo_endpoint": "https://localhost/oauth2/openIdConnect",
  "revocation_endpoint": "https://localhost/o/oauth2/revoke",
  "jwks_uri": "https://localhost/oauth2/certs",
  "response_types_supported": [
