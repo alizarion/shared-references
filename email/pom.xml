@@ -32,6 +32,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.alizarion.reference.dao</groupId>
+            <artifactId>generic-dao</artifactId>
+            <version>${parent.version}</version>
+
+        </dependency>
+        <dependency>
             <groupId>com.alizarion.reference.security.oauth.oauth2</groupId>
             <artifactId>oauth2</artifactId>
             <version>${parent.version}</version>

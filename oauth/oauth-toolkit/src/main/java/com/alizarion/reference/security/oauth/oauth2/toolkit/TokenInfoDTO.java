@@ -27,10 +27,13 @@ public class TokenInfoDTO implements Serializable {
     @XmlElement(name = "scope")
     private Set<String> scope;
 
+    @XmlElement(name = "user_id")
+    private String userId;
+
     public TokenInfoDTO() {
 
 
-      }
+    }
 
     @SuppressWarnings("unchecked")
     public TokenInfoDTO(OAuthAccessToken accessToken) {
@@ -41,7 +44,7 @@ public class TokenInfoDTO implements Serializable {
                 getClientId();
 
         this.expireIn = accessToken.getBearer().expireIn().toString();
-
+        this.userId = accessToken.getAuthorization().getCredential().getId().toString();
         this.scope = accessToken.getAuthorization().getScopeKeys();
 
     }
@@ -60,6 +63,10 @@ public class TokenInfoDTO implements Serializable {
 
     public void setExpireIn(String expireIn) {
         this.expireIn = expireIn;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public Set<String> getScope() {

@@ -16,6 +16,8 @@ import java.util.Set;
 @Table(name = "test_user")
 public class UserTest extends Observer  {
 
+    private static final long serialVersionUID = 3828785258188798326L;
+
     @OneToOne(cascade = CascadeType.ALL)
     private ProfileTest userProfile;
 
@@ -26,11 +28,12 @@ public class UserTest extends Observer  {
     private String lastName;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private Set<Comment> comments = new
-            HashSet<>();
+    private Set<Comment<UserTest>> comments  = new HashSet<>();
 
     private UserTest() {
     }
+
+
 
     public UserTest(
             String firstName,
@@ -39,7 +42,7 @@ public class UserTest extends Observer  {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userProfile = new ProfileTest(this);
-        this.setSubject(userProfile);
+        //this.setSubject(userProfile);
 
     }
 
@@ -47,11 +50,11 @@ public class UserTest extends Observer  {
         this.comments.add(new Comment(this,content));
     }
 
-    public Set<Comment> getComments() {
+    public Set<Comment<UserTest>> getComments() {
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(Set<Comment<UserTest>> comments) {
         this.comments = comments;
     }
 
@@ -128,5 +131,10 @@ public class UserTest extends Observer  {
                 ", lastName='" + lastName + '\'' +
                 ", comments=" + comments.size() + " { " +  commentss + " } "+
                 '}';
+    }
+
+    @Override
+    public String getQualifier() {
+        return this.firstName + ", " + this.lastName;
     }
 }

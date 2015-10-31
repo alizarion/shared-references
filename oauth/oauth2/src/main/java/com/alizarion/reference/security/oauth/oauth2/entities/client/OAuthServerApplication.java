@@ -62,7 +62,7 @@ public class OAuthServerApplication extends OAuthApplication<OAuthScopeClient> {
      * list of all authorization linked with this client.
      */
     @OneToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE,
                     CascadeType.PERSIST,
                     CascadeType.REMOVE})

@@ -30,8 +30,18 @@
         <param-value>com.alizarion.reference.security.oauth.oauth2.toolkit.AuthenticateFilter</param-value>
     </context-param>
 
+
+    <filter>
+        <filter-name>Access Control Allow Origin</filter-name>
+        <filter-class>com.alizarion.reference.showcase.web.services.filter.AccessControlAllowOriginFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Access Control Allow Origin</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <context-param>
         <param-name>oauth-authorization-server</param-name>
-        <param-value>http://localhost:8080/oauth2-authorization-web/api/oauth2/tokeninfo</param-value>
+        <param-value>http://localhost:8080/oauth2-authorization-web/oauth2/tokeninfo</param-value>
     </context-param>
 </web-app>

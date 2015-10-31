@@ -76,6 +76,11 @@ public class PhoneAddress extends Address  implements Serializable{
     }
 
     @Override
+       public String getType() {
+           return TYPE;
+       }
+
+    @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (number != null ? number.hashCode() : 0);

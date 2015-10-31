@@ -4,6 +4,7 @@ import com.alizarion.reference.exception.ApplicationError;
 import com.alizarion.reference.resource.exception.PersistentResourceNotFoundException;
 import com.alizarion.reference.resource.mbean.PersistentMBean;
 
+import javax.ejb.Stateless;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -11,6 +12,7 @@ import java.net.URISyntaxException;
  * Managed file params, root folder, temp folder .
  * @author selim@openlinux.fr.
  */
+@Stateless
 public class FileManagementMBean extends PersistentMBean {
 
     private static final long serialVersionUID = -8298079648347720667L;

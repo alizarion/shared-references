@@ -25,6 +25,11 @@ public class User extends Observer {
 
     @OneToOne
     private PhysicalPerson physicalPerson;
+
+    @Override
+    public String getQualifier() {
+        return credential.getUsername();
+    }
 }
 
 

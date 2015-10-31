@@ -29,10 +29,14 @@ public class EmailHelper {
     }
 
     public static URI getStringTemplatePartPath(Email email,String part){
-        return new File(email.getTemplateRoot().toString()+
+        /*return new File(email.getTemplateRoot().toString()+
                 File.separator + email.getType() +
                 File.separator + part + "_" +
-                email.getLocale().getLanguage() + ".stg").toURI();
+                email.getLocale().getLanguage().toUpperCase() + ".stg").toURI();*/
+        return new File(email.getTemplateRoot().toString()+
+                       File.separator + email.getType() +
+                       File.separator +
+                       email.getLocale().getLanguage().toUpperCase() + ".stg").toURI();
     }
 
 }

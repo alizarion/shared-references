@@ -3,26 +3,28 @@ package com.alizarion.reference.email.services;
 import com.alizarion.reference.emailing.entities.Email;
 import com.alizarion.reference.emailing.exception.EmailException;
 import com.alizarion.reference.emailing.exception.SendingEmailException;
+import com.alizarion.reference.emailing.provider.EmailProvider;
 
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.EJB;
-import javax.ejb.MessageDriven;
+import javax.ejb.*;
 import javax.jms.*;
 
 /**
  * @author selim@openlinux.fr.
  */
-@MessageDriven(name = "EmailSendingQueue", activationConfig = {
-        @ActivationConfigProperty(propertyName = "destinationLookup",
-                propertyValue = "queue/EmailSendingQueue"),
-        @ActivationConfigProperty(propertyName = "destinationType",
-                propertyValue = "javax.jms.Queue"),
-        @ActivationConfigProperty(propertyName = "acknowledgeMode",
-                propertyValue = "Auto-acknowledge") })
-public class MDBEmailQueue implements MessageListener {
+@MessageDriven(name = "EmailSendingMDB", activationConfig = {
+        @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "jms/queue/EMAILSENDINGQueue"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+        @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
+        @ActivationConfigProperty(propertyName = "DLQMaxResent", propertyValue = "0")
+})
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+public class MDBEmailQueue implements MessageListener{
 
-    @EJB
-    private EmailProviderService emailService;
+    private static final long serialVersionUID = 1910345343612365629L;
+
+
+    @EJB(beanName = "EmailProviderService")
+    private EmailProvider emailService;
 
     @Override
     public void onMessage(Message message) {

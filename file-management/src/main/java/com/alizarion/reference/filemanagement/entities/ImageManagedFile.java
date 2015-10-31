@@ -10,18 +10,15 @@ import javax.persistence.*;
  */
 @Entity
 @DiscriminatorValue(value = ImageManagedFile.TYPE)
-public class ImageManagedFile extends ManagedFile implements ManagedFileVisitable {
+public class ImageManagedFile extends ManagedFile<ImageFileMetaData> implements ManagedFileVisitable {
 
     private static final long serialVersionUID = -7416614602874082506L;
 
     public final static String TYPE = "IMAGE";
 
-
-
-
     public ImageManagedFile() {
         super();
-        super.setMetaData(new ImageFileMetaData());
+        super.setMetaData(new ImageFileMetaData(this));
     }
 
 

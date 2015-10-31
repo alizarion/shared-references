@@ -13,9 +13,15 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "security_roles")
+@NamedQueries({
+        @NamedQuery(name = Role.FIND_BY_KEY,query = "select role from" +
+                " Role role where role.roleKey.key = :roleKey ")
+})
 public class Role implements OAuthRole {
 
     private static final long serialVersionUID = 3487799026854810752L;
+
+    public static final String FIND_BY_KEY = "FIND_BY_KEY";
 
     @Id
     @TableGenerator(name="security_roles_SEQ",

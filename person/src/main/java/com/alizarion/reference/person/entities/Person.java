@@ -29,29 +29,33 @@ public  class Person implements Serializable {
     @Column
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
+    @JoinColumn(name = "primary_email_id")
     private ElectronicAddress primaryElectronicAddress;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @JoinColumn(name = "primary_phone_id")
     private PhoneAddress primaryPhoneAddress;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @JoinColumn(name = "primary_address_id")
     private PhysicalAddress primaryPhysicalAddress;
 
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private Set<Address> secondaryAddresses = new HashSet<>();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public ElectronicAddress getPrimaryElectronicAddress() {
-        return primaryElectronicAddress;
+        return this.primaryElectronicAddress;
     }
 
     public void setPrimaryElectronicAddress(
             final ElectronicAddress primaryElectronicAddress) {
         this.primaryElectronicAddress = primaryElectronicAddress;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public PhoneAddress getPrimaryPhoneAddress() {

@@ -2,7 +2,6 @@ package com.alizarion.reference.security.oauth.web.rs;
 
 
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAccessToken;
-import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthClientApplication;
 import com.alizarion.reference.security.oauth.oauth2.exception.*;
 import com.alizarion.reference.security.oauth.oauth2.toolkit.OltuFactory;
 import com.alizarion.reference.security.oauth.oauth2.toolkit.OpenIdJWTNimbusFactory;
@@ -59,53 +58,56 @@ public class TokenEndpoint {
             OAuthAccessToken accessToken = null;
             try {
                 //first we check if the client has pass the correct secret
-                OAuthClientApplication application=
-                        this.oauthService.authenticateClientRequest(
-                                oauthRequest.getClientId(),
-                                oauthRequest.getClientSecret());
-                // do checking for different grant types
-                if (oauthRequest
-                        .getParam(OAuth.OAUTH_GRANT_TYPE)
-                        .equals(GrantType.AUTHORIZATION_CODE.toString())) {
-                    try {
-                        accessToken =
-                                this.oauthService
-                                        .getNewAccessTokenByOAuthCode(
-                                                oauthRequest
-                                                        .getCode(),
-                                                oauthRequest.getClientId());
+                if((oauthRequest.getParam(OAuth.OAUTH_GRANT_TYPE)
+                        .equals(GrantType.PASSWORD.toString()))){
 
-                    } catch (InvalidAuthCodeException e) {
-                        return buildBadAuthCodeResponse();
-                    }
-
-
-                } else if (oauthRequest
-                        .getParam(OAuth.OAUTH_GRANT_TYPE)
-                        .equals(GrantType.PASSWORD.toString())) {
-                    if (application.getTrustedClient()){
-                        accessToken = this.oauthService
-                                .getAccessTokenByPassword(
-                                        oauthRequest.getUsername(),
-                                        oauthRequest.getPassword(),
-                                        oauthRequest.getScopes(),
-                                        application);
-                    }  else {
-                        return buildBadAuthCodeResponse();
-                    }
-
-
-                } else if (oauthRequest
-                        .getParam(OAuth.OAUTH_GRANT_TYPE)
-                        .equals(GrantType.REFRESH_TOKEN.toString())) {
                     accessToken = this.oauthService
-                            .getNewAccessTokenByOAuthRefreshToken(
-                                    oauthRequest.getRefreshToken(),
+                            .getAccessTokenByPassword(
+                                    oauthRequest.getUsername(),
+                                    oauthRequest.getPassword(),
+                                    oauthRequest.getScopes(),
                                     oauthRequest.getClientId());
 
 
-                }
+                }    else {
 
+                    // check client_id and secret
+                    this.oauthService.authenticateClientRequest(
+                            oauthRequest.getClientId(),
+                            oauthRequest.getClientSecret());
+                    // do checking for different grant types
+                    if (oauthRequest
+                            .getParam(OAuth.OAUTH_GRANT_TYPE)
+                            .equals(GrantType.AUTHORIZATION_CODE.toString())) {
+
+                        try {
+                            accessToken =
+                                    this.oauthService
+                                            .getNewAccessTokenByOAuthCode(
+                                                    oauthRequest
+                                                            .getCode(),
+                                                    oauthRequest.getClientId());
+
+                        } catch (InvalidAuthCodeException e) {
+                            return buildBadAuthCodeResponse();
+                        }
+
+
+
+
+
+
+                    } else if (oauthRequest
+                            .getParam(OAuth.OAUTH_GRANT_TYPE)
+                            .equals(GrantType.REFRESH_TOKEN.toString())) {
+                        accessToken = this.oauthService
+                                .getNewAccessTokenByOAuthRefreshToken(
+                                        oauthRequest.getRefreshToken(),
+                                        oauthRequest.getClientId());
+
+
+                    }
+                }
                 if (accessToken == null){
                     return unhandledErrorTokenResponse();
                 }  else {

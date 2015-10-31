@@ -13,7 +13,7 @@ import java.net.URL;
  */
 @Entity
 @Table(name = "location_web_address")
-@DiscriminatorValue(value = "web")
+@DiscriminatorValue(value = WebAddress.TYPE)
 @PrimaryKeyJoinColumn(name = "web_address_id")
 @NamedQuery(name = WebAddress.FIND_BY_PART,
         query = "select wa from WebAddress wa" +
@@ -21,6 +21,8 @@ import java.net.URL;
 public class WebAddress extends Address implements Serializable {
 
     private static final long serialVersionUID = 5070561554249537740L;
+
+    public final static String TYPE = "web";
 
     public final static String FIND_BY_PART =
             "WebAddress.FIND_BY_PART";
@@ -35,6 +37,11 @@ public class WebAddress extends Address implements Serializable {
     private String sourceURI;
 
     public WebAddress() {
+    }
+
+    @Override
+    public String getType() {
+        return TYPE;
     }
 
     public WebAddress(String url) throws

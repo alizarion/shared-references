@@ -7,7 +7,6 @@ import java.io.Serializable;
 /**
  * @author selim@openlinux.fr.
  */
-
 @Entity
 @Table(name = "security_oauth_access_token")
 @NamedQueries({@NamedQuery(name =
@@ -85,7 +84,7 @@ public class OAuthAccessToken implements Serializable {
 
     public void revoke(){
         this.bearer.revoke();
-        this.authorization.revoke();
+       // this.authorization.revoke();
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runners.MethodSorters;
 
+import javax.mail.internet.AddressException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -65,7 +66,7 @@ public class SecurityEntitiesTest {
             ExpectedException.none();
 
     @Before
-    public void init(){
+    public void init() throws AddressException {
         emf = Persistence.createEntityManagerFactory("SecurityTestPU");
         em = emf.createEntityManager();
         this.trx = em.getTransaction() ;

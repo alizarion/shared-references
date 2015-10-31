@@ -6,6 +6,8 @@ import com.alizarion.reference.security.oauth.oauth2.entities.OAuthApplicationKe
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAuthorization;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthCredential;
 import com.alizarion.reference.security.oauth.oauth2.exception.InvalidScopeException;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.net.URI;
@@ -31,7 +33,7 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
      * Server allowed scopes to be requested.
      */
     @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "security_oauth_client_application_server_scope",
             joinColumns =
             @JoinColumn(name = "client_application_id",
@@ -46,13 +48,14 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
      * list of all authorization linked with this client.
      */
     @OneToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE,
                     CascadeType.PERSIST,
                     CascadeType.REMOVE})
     @JoinTable(name = "security_oauth_client_app_server_auth",
-            joinColumns = @JoinColumn(name = "app_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "auth_id",referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "app_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "auth_id", referencedColumnName = "id"))
+    @LazyCollection(LazyCollectionOption.EXTRA)
     private Set<OAuthServerAuthorization> authorizations = new HashSet<>();
 
     /**
@@ -63,16 +66,14 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
     private Boolean trustedClient;
 
 
-
-
-
     protected OAuthClientApplication() {
     }
 
 
     /**
      * Default constructor to define declared client application.
-     * @param name of the client application.
+     *
+     * @param name     of the client application.
      * @param homePage home page of the client web site.
      * @param callback callback url.
      */
@@ -80,14 +81,15 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
                                   final URL homePage,
                                   final URI callback) {
         super(name, homePage, callback);
-        this.trustedClient =  false;
+        this.trustedClient = false;
     }
 
 
     /**
      * Method to add an new authorization to the client.
-     * @param credential  linked identity with this authorization.
-     * @param scopes requested server scopes for this authorization.
+     *
+     * @param credential linked identity with this authorization.
+     * @param scopes     requested server scopes for this authorization.
      * @return result authorization.
      * @throws InvalidScopeException if one of the scopes are not listed in allowedServerScopes.
      */
@@ -97,11 +99,11 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
             final Set<OAuthScopeServer> scopes)
             throws InvalidScopeException {
 
-        if (this.allowedServerScopes.containsAll(scopes)){
-            for (OAuthScopeServer scopeServer :  scopes){
+        if (this.allowedServerScopes.containsAll(scopes)) {
+            for (OAuthScopeServer scopeServer : scopes) {
                 if (!credential
                         .getOAuthRoles()
-                        .contains(scopeServer.getRole())){
+                        .contains(scopeServer.getRole())) {
                     throw new InvalidScopeException("user does not have " +
                             scopeServer.getRole().getRoleId());
                 }
@@ -114,17 +116,17 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
             this.authorizations.add(authorization);
             return authorization;
 
-        }   else {
+        } else {
             scopes.removeAll(this.allowedServerScopes);
             Iterator<OAuthScopeServer> unAuthorized =
                     allowedServerScopes.iterator();
-            String unAuthorizedString= "";
-            while (unAuthorized.hasNext()){
-                if (unAuthorized.hasNext()){
-                    unAuthorizedString  = unAuthorizedString +
-                            unAuthorized.next().getScope().getKey() +  ", ";
-                }   else {
-                    unAuthorizedString  = unAuthorizedString +
+            String unAuthorizedString = "";
+            while (unAuthorized.hasNext()) {
+                if (unAuthorized.hasNext()) {
+                    unAuthorizedString = unAuthorizedString +
+                            unAuthorized.next().getScope().getKey() + ", ";
+                } else {
+                    unAuthorizedString = unAuthorizedString +
                             unAuthorized.next().getScope().getKey();
                 }
             }
@@ -137,34 +139,35 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
 
     /**
      * Method to get server scope by key.
+     *
      * @param key scope key
      * @return server scope
      * @throws InvalidScopeException if the requested scope
-     * key is not allowed by default for this client.
+     *                               key is not allowed by default for this client.
      */
-    public OAuthScopeServer  getServerScopeByKey(final String key)
+    public OAuthScopeServer getServerScopeByKey(final String key)
             throws InvalidScopeException {
-        for (OAuthScopeServer scopeServer :this.allowedServerScopes ){
-            if (scopeServer.getScope().getKey().equals(key)){
+        for (OAuthScopeServer scopeServer : this.allowedServerScopes) {
+            if (scopeServer.getScope().getKey().equals(key)) {
                 return scopeServer;
             }
         }
-        throw new  InvalidScopeException(key);
+        throw new InvalidScopeException(key);
     }
-
 
 
     /**
      * Method to get list of server scopes by list of scope keys.
+     *
      * @param scopesKeys list of scope keys
      * @return set of valid server scopes
-     * @throws InvalidScopeException  if the requested scope
-     * key is not allowed by default for this client.
+     * @throws InvalidScopeException if the requested scope
+     *                               key is not allowed by default for this client.
      */
     public Set<OAuthScopeServer> getServerScopesByKeys(
             final Set<String> scopesKeys) throws InvalidScopeException {
-        Set<OAuthScopeServer> scopes= new HashSet<>();
-        for (String scope: scopesKeys){
+        Set<OAuthScopeServer> scopes = new HashSet<>();
+        for (String scope : scopesKeys) {
             scopes.add(getServerScopeByKey(scope));
         }
         return scopes;
@@ -182,7 +185,7 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
         return trustedClient;
     }
 
-    public void generateApplicationKey(){
+    public void generateApplicationKey() {
         this.applicationKey = new OAuthApplicationKey(
                 UUID.randomUUID().toString(),
                 OAuthHelper.
@@ -191,6 +194,7 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
 
     /**
      * Method to get authorized client scopes.
+     *
      * @return set of authorized server scopes.
      */
     public Set<OAuthScopeServer> getAllowedServerScopes() {
@@ -203,7 +207,7 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
     }
 
     public void addAllowedServerScope(
-            final OAuthScopeServer serverScope){
+            final OAuthScopeServer serverScope) {
         this.allowedServerScopes.add(serverScope);
     }
 
@@ -225,27 +229,4 @@ public class OAuthClientApplication extends OAuthApplication<OAuthScopeServer> {
                 authorizations.hashCode() : 0;
     }
 
-    @Override
-    @SuppressWarnings(value = "all")
-    public String toString() {
-        Iterator<OAuthServerAuthorization> iterator =
-                this.authorizations.iterator();
-        StringBuffer stringBuffer =  new StringBuffer('{');
-        while (iterator.hasNext()){
-            if (iterator.hasNext()){
-                stringBuffer.
-                        append(iterator.
-                                toString()).append(',');
-            }   else {
-                stringBuffer.
-                        append(iterator.
-                                toString()).append('}');
-
-            }
-        }
-
-        return "OAuthClientApplication{" +
-                "authorizations=" + stringBuffer +
-                '}';
-    }
 }

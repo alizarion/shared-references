@@ -1,7 +1,17 @@
 package com.alizarion.reference.filemanagement.tools;
 
+import com.alizarion.reference.filemanagement.entities.ImageManagedFile;
+import com.alizarion.reference.filemanagement.entities.ManagedFileWriterVisitor;
+import com.alizarion.reference.filemanagement.entities.ManagedImageFileDataVisitor;
+import com.alizarion.reference.filemanagement.exception.ManagedImageFileDataVisitorException;
+
+import javax.persistence.EntityManager;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 /**
  * @author selim@openlinux.fr.
@@ -31,6 +41,42 @@ public class ImageFileHelper {
         graphics2D.drawImage(image, 0, 0, newWidth, newHeight, null);
 
         return newImage;
+    }
+
+    public static ImageManagedFile getAndManageImage(EntityManager em,
+                                                     URL url,
+                                                     final String configRootFolder) throws ManagedImageFileDataVisitorException {
+        ManagedImageFileDataVisitor fileDataVisitor =null;
+        ManagedFileWriterVisitor fileWriterVisitor = null;
+        try {
+            ImageManagedFile imageManagedFile = new ImageManagedFile();
+
+            InputStream urlStream = url.openStream();
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(urlStream));
+            fileDataVisitor =
+                    new ManagedImageFileDataVisitor(url);
+            imageManagedFile.accept(fileDataVisitor);
+
+            imageManagedFile = em.merge(imageManagedFile);
+
+            fileWriterVisitor =
+                    new ManagedFileWriterVisitor(
+                            url.openStream(),
+                            configRootFolder);
+
+            imageManagedFile.accept(fileWriterVisitor);
+            fileWriterVisitor.closeStream();
+            imageManagedFile = em.merge(imageManagedFile);
+            em.flush();
+            return imageManagedFile;
+        } catch (Exception e){
+
+            if (fileWriterVisitor != null){
+                fileWriterVisitor.closeStream();
+            }
+            throw  new ManagedImageFileDataVisitorException(e);
+        }
     }
 
 

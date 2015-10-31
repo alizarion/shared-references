@@ -18,14 +18,7 @@
         Credentials, Roles and OAuth workflows ...
     </description>
 
-    <properties>
-        <security.final.name>${project.build.finalName}</security.final.name>
-        <!-- need to find a better way -->
-        <oauth.entities.class.path>${parent.basedir}/oauth/oauth2/target/classes/</oauth.entities.class.path>
-        <person.entities.class.path>${parent.basedir}/person/target/classes/</person.entities.class.path>
-        <location.entities.class.path>${parent.basedir}/location/target/classes/</location.entities.class.path>
 
-    </properties>
 
     <developers>
         <developer>

@@ -1,10 +1,7 @@
 package com.alizarion.reference.location.dao;
 
 import com.alizarion.reference.dao.jpa.JpaDao;
-import com.alizarion.reference.location.entities.Address;
-import com.alizarion.reference.location.entities.ElectronicAddress;
-import com.alizarion.reference.location.entities.PhysicalAddress;
-import com.alizarion.reference.location.entities.WebAddress;
+import com.alizarion.reference.location.entities.*;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -87,6 +84,11 @@ public class AddressJpaDao extends JpaDao<Long,Address> {
                             "%" + part + "%").getResultList();
         }
         return webAddresses;
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    public List<Language> findAllManagedLanguages(){
+        return this.em.createNamedQuery(Language.FIND_ALL_MANAGED).getResultList();
     }
 
 

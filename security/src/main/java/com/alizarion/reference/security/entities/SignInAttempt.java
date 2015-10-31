@@ -48,6 +48,9 @@ public class SignInAttempt implements Serializable {
     @Column(name = "from_ip")
     private String internetAddress;
 
+    protected SignInAttempt() {
+    }
+
     public SignInAttempt(final String login,
                          final Date attemptingDate,
                          final Boolean success,

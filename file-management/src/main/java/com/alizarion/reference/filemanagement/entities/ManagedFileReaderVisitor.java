@@ -5,7 +5,7 @@ import com.alizarion.reference.filemanagement.tools.FileHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Simple file reader, can be used to read all kind of
@@ -18,7 +18,6 @@ public class ManagedFileReaderVisitor  implements ManagedFileVisitor {
 
     private File file;
 
-    private FileInputStream inputStream;
 
 
     public ManagedFileReaderVisitor() {
@@ -30,20 +29,16 @@ public class ManagedFileReaderVisitor  implements ManagedFileVisitor {
 
     @Override
     public File visit(ImageManagedFile imageManagedFile) throws ReadingManagedFileException {
-      return getFile(imageManagedFile);
+        return getFile(imageManagedFile);
     }
 
     @Override
     public File visit(SimpleManagedFile simpleManagedFile) throws ReadingManagedFileException {
-      return getFile(simpleManagedFile);
+        return getFile(simpleManagedFile);
     }
 
     public File getManagedFileAsFile(){
         return this.file;
-    }
-
-    public FileInputStream getInputStream(){
-        return this.inputStream;
     }
 
     /**
@@ -52,17 +47,27 @@ public class ManagedFileReaderVisitor  implements ManagedFileVisitor {
      * @return  true if file readed successfully.
      */
     private File getFile( ManagedFile managedFile) throws ReadingManagedFileException {
+        FileInputStream inputStream =null;
         try {
             this.file = new File(FileHelper.
                     getFileFullPath(managedFile,
                             this.rootFolder));
-            this.inputStream =
-                    new FileInputStream(this.file);
+
+            inputStream = new FileInputStream(this.file);
+            inputStream.close();
+
             return this.file;
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+             if (inputStream!= null){
+                 try {
+                     inputStream.close();
+                 } catch (IOException ignored) {
+                 }
+             }
             throw new ReadingManagedFileException("error during reading file  "+
                     FileHelper.getFileFullPath(managedFile,
                             this.rootFolder),e);
+
         }
     }
 }

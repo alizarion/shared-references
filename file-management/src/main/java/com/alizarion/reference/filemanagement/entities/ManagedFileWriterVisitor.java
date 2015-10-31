@@ -4,7 +4,6 @@ import com.alizarion.reference.filemanagement.exception.WritingManagedFileExcept
 import com.alizarion.reference.filemanagement.tools.FileHelper;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -48,6 +47,23 @@ public class ManagedFileWriterVisitor implements ManagedFileVisitor {
         return simpleManagedFilePathBasedWriter(simpleManagedFile);
     }
 
+    public InputStream getInputStream() {
+        return inputStream;
+    }
+
+    public void closeStream(){
+        if (this.inputStream !=null){
+            try {
+                this.inputStream.close();
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
     /**
      * Method to write all kind of managed file on file system.
      * @param managedFile managedfile to write
@@ -64,12 +80,11 @@ public class ManagedFileWriterVisitor implements ManagedFileVisitor {
                         + "Folder") ;
             }
         }
-        FileOutputStream out;
+
         try {
-            out = new FileOutputStream(fileToWrite);
 
 
-            FileHelper.writeFile(this.inputStream,out);
+            FileHelper.writeFile(this.inputStream,fileToWrite.getAbsolutePath());
             return null;
         } catch (IOException e) {
             throw new WritingManagedFileException(managedFile.toString(),e) ;

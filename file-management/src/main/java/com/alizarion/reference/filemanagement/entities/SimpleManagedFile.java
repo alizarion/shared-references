@@ -11,7 +11,7 @@ import javax.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue(value = SimpleManagedFile.TYPE)
-public class SimpleManagedFile extends ManagedFile implements ManagedFileVisitable  {
+public class SimpleManagedFile extends ManagedFile<GenericFileMetaData> implements ManagedFileVisitable  {
 
     public final static String TYPE =  "simple";
 

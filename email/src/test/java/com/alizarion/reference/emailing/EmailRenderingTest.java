@@ -10,6 +10,7 @@ import org.junit.rules.TemporaryFolder;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
+import javax.mail.internet.AddressException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -50,7 +51,7 @@ public class EmailRenderingTest {
     }
 
     @Test
-    public void test() {
+    public void test() throws AddressException {
         STGroupFile stGroupFile =  new STGroupFile(bodyHTML.getAbsolutePath(),'$','$');
         ST st =  stGroupFile.getInstanceOf("bodyHTML");
         ValidateEmailToken validateEmailToken = EmailTestHelper.getValidateEmailToken();

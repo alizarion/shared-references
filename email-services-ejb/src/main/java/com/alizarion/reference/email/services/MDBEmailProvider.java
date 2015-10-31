@@ -9,34 +9,46 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.*;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.Queue;
 
 /**
  * @author selim@openlinux.fr.
  */
-@JMSDestinationDefinition(
-        name = "java:/queue/EmailSendingQueue",
-        interfaceName = "javax.jms.Queue",
-        destinationName = "EmailSendingQueue"
+
+
+@JMSDestinationDefinitions(
+        value =  {
+                @JMSDestinationDefinition(
+                        name = "java:/jms/queue/EMAILSENDINGQueue",
+                        interfaceName = "javax.jms.Queue",
+                        destinationName = "EmailSendingMDB"
+                )
+        }
 )
 @Stateless
-public class MDBEmailProvider implements EmailProvider {
+public class MDBEmailProvider implements EmailProvider, Serializable {
+
+    private static final long serialVersionUID = 1910345034361673629L;
+
 
     @Inject
     private JMSContext context;
 
-    @Resource(lookup = "java:/queue/EmailSendingQueue")
+    @Resource(lookup = "java:/jms/queue/EMAILSENDINGQueue")
     private Queue queue;
 
     @Override
     public  Email sendMail(Email email) throws EmailException {
         try {
-            ObjectMessage objectMessage =  context.createObjectMessage();
-            objectMessage.setObject(email);
-            final Destination destination  = (Destination) queue;
-            context.createProducer().send(destination, objectMessage);
-        } catch (JMSException | ClassCastException e) {
+            //ObjectMessage objectMessage =  context.createObjectMessage();
+            //objectMessage.setObject(email);
+            //final Destination destination  = (Destination) queue;
+            context.createProducer().send((Destination) queue
+
+                                       , context.createObjectMessage(email));
+           // context.createProducer().send(destination, objectMessage);
+        } catch (ClassCastException e) {
             throw new SendingEmailException("Error on sending " +
                     "email to jms queue : " +
                     email.toString(),e);

@@ -32,9 +32,9 @@ public class GenericRegisterEmail extends Email {
 
     public GenericRegisterEmail(RegisterEmailBuilder builder) {
         super(builder.getFrom(),
-                builder.getTo(),
-                builder.getTemplateRoot(),
-                builder.getLocale());
+                       builder.getTo(),
+                       builder.getTemplateRoot(),
+                       builder.getLocale());
         this.emailToken = builder.getToken();
         super.setCc(builder.getCc());
         super.setCci(builder.getCci());
@@ -46,17 +46,15 @@ public class GenericRegisterEmail extends Email {
         subject.put("emailToken",this.emailToken);
         bodyHTML.put("emailToken",this.emailToken);
         bodyText.put("emailToken",this.emailToken);
-
         this.params.put(MAIL_SUBJECT_TEMPLATE,subject);
         this.params.put(MAIL_HTML_BODY_TEMPLATE,bodyHTML);
         this.params.put(MAIL_TEXT_BODY_TEMPLATE,bodyText);
+
+
     }
 
 
-    @Override
-    public Map<String, Map<String, Object>> getParams() {
-        return this.params;
-    }
+
 
 
     @Override

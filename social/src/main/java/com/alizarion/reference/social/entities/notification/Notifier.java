@@ -5,7 +5,9 @@ package com.alizarion.reference.social.entities.notification;
  * entity that have produce the notification, obsever, systemInformation or others
  * @author  selim@openlinux.fr on 29/07/14.
  */
-public interface Notifier {
+public abstract class Notifier {
 
-    public Long getId();
+    public abstract Long getId();
+
+    public abstract String getQualifier();
 }

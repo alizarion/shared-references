@@ -2,6 +2,9 @@ package com.alizarion.reference.security.oauth.oauth2.entities;
 
 
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -14,10 +17,17 @@ import java.util.Set;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@NamedQueries(
+        @NamedQuery(name = OAuthAuthorization.FIND_BEST_ACCESS_TOKEN,
+                query = "select at from OAuthAccessToken  " +
+                        "at where at.bearer.expireDate > " +
+                        ":today  and at.authorization.id = :authID " +
+                        "order by at.bearer.expireDate desc "))
 public abstract class OAuthAuthorization<T extends OAuthScope> implements Serializable {
 
     private static final long serialVersionUID = 1615612298298934691L;
 
+    public static final String FIND_BEST_ACCESS_TOKEN = "OAuthAuthorization.FIND_BEST_ACCESS_TOKEN";
 
     @Id
     @TableGenerator(
@@ -40,7 +50,8 @@ public abstract class OAuthAuthorization<T extends OAuthScope> implements Serial
             CascadeType.PERSIST,
             CascadeType.MERGE},
             mappedBy = "authorization",
-            fetch = FetchType.EAGER)
+            fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.EXTRA)
     protected Set<OAuthAccessToken> accessTokens = new HashSet<>();
 
     @Embedded
@@ -101,42 +112,29 @@ public abstract class OAuthAuthorization<T extends OAuthScope> implements Serial
 
     public abstract void revoke();
 
-    public void revokeAccess(){
-        for (OAuthAccessToken token : this.accessTokens){
-            if (token.getBearer().isAlive()){
-                token.getBearer().revoke();
-            }
-        }
-    }
-
 
     public Set<OAuthAccessToken> getAccessTokens() {
         return accessTokens;
     }
 
-    public OAuthAccessToken getMostLifeTimeAccessToken() {
-        OAuthAccessToken accessToken = null;
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof OAuthAuthorization)) return false;
 
-        for (OAuthAccessToken token : this.accessTokens) {
-            if (accessToken == null) {
-                if (new Date()
-                        .before(token
-                                .getBearer()
-                                .getExpireDate())) {
-                    accessToken = token;
-                }
-            } else {
-                if (accessToken
-                        .getBearer()
-                        .getExpireDate()
-                        .before(token
-                                .getBearer()
-                                .getExpireDate())) {
-                    accessToken = token;
-                }
-            }
-        }
-        return accessToken;
+        OAuthAuthorization that = (OAuthAuthorization) o;
+
+        return !(id != null ? !id.equals(that.id) : that.id != null)
+                && !(refreshToken != null ?
+                !refreshToken.equals(that.refreshToken) :
+                that.refreshToken != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (refreshToken != null ? refreshToken.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -144,7 +142,7 @@ public abstract class OAuthAuthorization<T extends OAuthScope> implements Serial
         return "OAuthAuthorization{" +
                 "id=" + id +
                 ", credential=" + credential +
-                ", accessTokens=" + accessTokens +
+                ", accessTokens=" + accessTokens.size() +
                 ", refreshToken=" + refreshToken +
                 '}';
     }

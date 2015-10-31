@@ -40,7 +40,7 @@ public class RevokeTokenEndPoint implements Serializable {
      */
     @POST
     @Produces("application/json")
-    public Response authorize(@Context HttpServletRequest request)
+    public Response revokeAll(@Context HttpServletRequest request)
             throws OAuthSystemException {
         try {
             oauthService.revokeToken(request.getParameter(TOKEN_PARAMETER_NAME));

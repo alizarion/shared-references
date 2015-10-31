@@ -3,6 +3,7 @@ package com.alizarion.reference.security.oauth.oauth2.dao;
 import com.alizarion.reference.dao.jpa.JpaDao;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAccessToken;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthApplication;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAuthorization;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthCredential;
 import com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthClientAuthorization;
 import com.alizarion.reference.security.oauth.oauth2.entities.client.OAuthServerApplication;
@@ -179,6 +180,7 @@ public class OAuthJpaDao extends JpaDao<Long,OAuthApplication> {
     public List<OAuthServerAuthorization> findAuthByCredentialAndClientId(final String credentialId,
                                                                           final String clientId)
     {
+
         return em.createNamedQuery(
                 OAuthServerAuthorization.FIND_ALIVE_CREDENTIAL_CLIENT_AUTH)
                 .setParameter("clientId",clientId)
@@ -188,15 +190,13 @@ public class OAuthJpaDao extends JpaDao<Long,OAuthApplication> {
     }
 
 
+
+
     public OAuthServerAuthorization findAliveServerAuthForCredential(final String credentialId,
                                                                      final String clientId) {
         List<OAuthServerAuthorization> results = findAuthByCredentialAndClientId(credentialId, clientId);
         if (!results.isEmpty()) {
-            for (OAuthServerAuthorization authorization : results) {
-                if (authorization.isAlive()) {
-                    return authorization;
-                }
-            }
+            return results.get(0);
         }
         return null;
     }
@@ -210,6 +210,19 @@ public class OAuthJpaDao extends JpaDao<Long,OAuthApplication> {
         if (authorization.getScopeKeys().containsAll(requestedScopes)){
             return authorization;
         } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public OAuthAccessToken findMostAvailableAccessToken(Long authID){
+        List<OAuthAccessToken>  accessTokens = this.em.createNamedQuery(OAuthAuthorization.FIND_BEST_ACCESS_TOKEN)
+                .setParameter("today",new Date(),TemporalType.TIMESTAMP)
+                .setParameter("authID",authID)
+                .getResultList();
+        if (!accessTokens.isEmpty()){
+            return accessTokens.get(0);
+        }  else {
             return null;
         }
     }
@@ -289,6 +302,24 @@ public class OAuthJpaDao extends JpaDao<Long,OAuthApplication> {
         }
     }
 
+
+    @SuppressWarnings("unchecked")
+    public OAuthCredential findOAuthCredentialByUsernameOrEmail(final String login)
+            throws BadCredentialException {
+        List<OAuthCredential> result = this.em.createQuery("" +
+                "select cred " +
+                "from com.alizarion.reference.security.oauth.oauth2.entities.OAuthCredential" +
+                " cred  where (cred.email.address = :login or cred.username = :login)")
+                .setParameter("login", login)
+                .getResultList();
+
+        if (result.isEmpty()){
+            throw new BadCredentialException(login);
+        }   else {
+            return result.get(0);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public Set<OAuthSignatureKeyPair> findAliveCert(){
         return new HashSet<OAuthSignatureKeyPair>(
@@ -297,7 +328,19 @@ public class OAuthJpaDao extends JpaDao<Long,OAuthApplication> {
                         new Date(),TemporalType.TIMESTAMP).getResultList());
     }
 
+    public OAuthAuthorization revokeAllAccess(OAuthAuthorization authorization){
 
+        List<OAuthAccessToken> aliveTokens = getAliveAccessToken((Long) authorization.getCredential().getId());
+        for(OAuthAccessToken accessToken : aliveTokens){
+            accessToken.revoke();
+        }
+        this.em.flush();
+        return authorization;
+    }
+
+    private Set<OAuthAccessToken> findAuthorizationAliveAccessTokens(Long id) {
+        return null;
+    }
 
 
 }

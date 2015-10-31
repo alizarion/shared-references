@@ -100,7 +100,7 @@ public class OAuthServerService implements Serializable {
                         findOAuthClientApplicationByClientIdAndRedirectURI(
                                 clientId,
                                 redirectURI);
-        this.em.clear();
+
 
         Set<OAuthScopeServer>  scopes = application
                 .getServerScopesByKeys(requestedScopes);
@@ -133,8 +133,9 @@ public class OAuthServerService implements Serializable {
             authorization.getRefreshToken().revoke();
         }
 
+        //nouvelle authorisations demandé, on revoke les anciennes pour un réaffichage des authoriz
         if (authorization.isPromptRequired()){
-            authorization.revokeAccess();
+            authorization  =(OAuthServerAuthorization) this.authDao.revokeAllAccess(authorization);
         }
         return authorization;
 
@@ -186,7 +187,10 @@ public class OAuthServerService implements Serializable {
      */
     public OAuthServerAuthorization acceptAuthorization(
             final OAuthServerAuthorization authorization) {
+
         return this.em.merge(authorization);
+
+
     }
 
 
@@ -209,7 +213,7 @@ public class OAuthServerService implements Serializable {
                 addAccessToken(serverMBean.
                         getAccessTokenDurationSecond());
         authorization.getAuthCode().revoke();
-        this.em.merge(authorization);
+        //this.em.merge(authorization);
         return accessToken;
     }
 
@@ -242,6 +246,7 @@ public class OAuthServerService implements Serializable {
         return accessToken;
     }
 
+
     public OAuthClientApplication authenticateClientRequest
             (final String clientId,
              final String secret)
@@ -258,6 +263,7 @@ public class OAuthServerService implements Serializable {
 
         }
     }
+
 
     public OAuthAccessToken findAliveAccessToken(final String bearerToken)
             throws InvalidAccessTokenException {
@@ -289,15 +295,22 @@ public class OAuthServerService implements Serializable {
             final String username,
             final String password,
             final Set<String> requestedScopes,
-            final OAuthClientApplication application)
+            final String  clientId)
             throws BadCredentialException,
             URISyntaxException,
             ClientIdNotFoundException,
             InvalidScopeException {
 
+        OAuthClientApplication  application = this.authDao
+                .findOAuthClientApplicationByClientId(clientId);
+
+        if (!application.getTrustedClient()){
+            throw new BadCredentialException(clientId);
+        }
 
         OAuthCredential credential = this.authDao
                 .findOAuthCredentialByUsername(username);
+
         if (!credential.isCorrectPassword(password)){
             throw new BadCredentialException(username);
         }
@@ -306,12 +319,13 @@ public class OAuthServerService implements Serializable {
                 application.getApplicationKey().getClientId()
                 , application.getRedirectURI().toString(),
                 requestedScopes,
-                OAuthResponseType.T,
+                OAuthResponseType.N,
                 OAuthDuration.P.toString(),
                 credential.getUsername());
-        acceptAuthorization(authorization);
+
+
         return authorization.addAccessToken(this.serverMBean
-                .getAccessTokenDurationSecond());
+                        .getAccessTokenDurationSecond());
     }
 
     public List<OAuthSignatureKeyPair> getOrderedAliveCerts() throws OAuthOpenIDSignatureException {
@@ -333,6 +347,10 @@ public class OAuthServerService implements Serializable {
         }
         Collections.sort(alive);
         return alive;
+    }
+
+    public OAuthAccessToken getMostAvalaibleAccessToken(OAuthAuthorization authorization){
+      return   this.authDao.findMostAvailableAccessToken(authorization.getId());
     }
 
 
@@ -357,7 +375,8 @@ public class OAuthServerService implements Serializable {
 
         LOG.info("Cert HalfLife generate a new one " +
                 timer.getInfo());
-        OAuthSignatureKeyPair signatureKeyPair =  new OAuthSignatureKeyPair(
+        OAuthSignatureKeyPair signatureKeyPair =
+                new OAuthSignatureKeyPair(
                 this.securityInitializer.getAESKey(),
                 CipherSecurityInitializer.CRYPT_ALG,
                 CipherSecurityInitializer.SIGN_ALG,
@@ -372,7 +391,10 @@ public class OAuthServerService implements Serializable {
         try {
             OAuthAccessToken  accessToken =
                     findAliveAccessToken(token);
+
             accessToken.revoke();
+            this.authDao.revokeAllAccess(accessToken.getAuthorization());
+            accessToken.getAuthorization().revoke();
             this.em.merge(accessToken);
         } catch (InvalidAccessTokenException e) {
             try {

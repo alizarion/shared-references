@@ -7,6 +7,8 @@ import com.alizarion.reference.resource.mbean.PersistentMBean;
 import javax.ejb.Stateless;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -16,6 +18,9 @@ import java.net.URISyntaxException;
  */
 @Stateless
 public class EmailMBean extends PersistentMBean {
+
+    @PersistenceContext
+    EntityManager em;
 
     public final static String CATEGORY =
             "com.alizarion.reference.emailing.properties";
@@ -60,7 +65,8 @@ public class EmailMBean extends PersistentMBean {
 
     }
 
-    public URI getMailTemplatesRootFolder() throws PersistentResourceNotFoundException {
+    public URI getMailTemplatesRootFolder()
+            throws PersistentResourceNotFoundException {
         try {
             return getValueAsURI(MAIL_TEMPLATES_ROOT_FOLDER);
         } catch (URISyntaxException e) {

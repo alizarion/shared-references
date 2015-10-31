@@ -30,17 +30,23 @@ import java.util.*;
 @Table(name = "email_email_log")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "mail_type")
+@NamedQueries({@NamedQuery(name = Email.COUNT_SENT_EMAIL,
+        query = "select count(email.id)  from Email email " +
+                "where email.sendDate >= :since ")
+})
 public abstract class Email implements Serializable {
 
     private static final long serialVersionUID = 6097443812365423254L;
 
+    public final static String COUNT_SENT_EMAIL = "COUNT_SENT_EMAIL";
+
     @Id
-    @TableGenerator(name = "mail_logger_SEQ",
+    @TableGenerator(name = "email_email_log_SEQ",
             pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT",
             table = "sequence")
     @GeneratedValue(strategy = GenerationType.TABLE,
-            generator = "mail_logger_SEQ")
+            generator = "email_email_log_SEQ")
     private Long id;
 
 
@@ -77,6 +83,9 @@ public abstract class Email implements Serializable {
     protected Email() {
     }
 
+
+
+
     /**
      * Email default constructor with required fields.
      * @param from email of the sender.
@@ -94,6 +103,8 @@ public abstract class Email implements Serializable {
         this.from = from;
         this.to = to;
 
+
+
     }
 
     public final static String MAIL_SUBJECT_TEMPLATE = "subject";
@@ -103,7 +114,9 @@ public abstract class Email implements Serializable {
     public final static String MAIL_HTML_BODY_TEMPLATE = "bodyHTML";
 
 
-    public abstract  Map<String, Map<String, Object>> getParams();
+    public   Map<String, Map<String, Object>> getParams(){
+        return this.params;
+    }
 
     /**
      * Method to get the email rendered subject.
@@ -214,6 +227,8 @@ public abstract class Email implements Serializable {
         this.type = type;
     }
 
+
+    @Transient
     /**
      * Method to get ready to send message.
      * @param session mail session used to get message.
@@ -241,18 +256,19 @@ public abstract class Email implements Serializable {
             mp.addBodyPart(htmlPart);
 
             long size = 0;
-            for (File file : getAttachments()){
-                size +=file.length();
-                if (size/1048576 > attachmentMaxSize){
-                    throw new EmailAttachmentSizeExceedException(
-                            "email attachment size" +
-                                    " exceed the allowed limit");
+            if(getAttachments()!=null) {
+                for (File file : getAttachments()) {
+                    size += file.length();
+                    if (size / 1048576 > attachmentMaxSize) {
+                        throw new EmailAttachmentSizeExceedException(
+                                "email attachment size" +
+                                        " exceed the allowed limit");
+                    }
+                    MimeBodyPart attachmentPart = new MimeBodyPart();
+                    attachmentPart.attachFile(file);
+                    mp.addBodyPart(attachmentPart);
                 }
-                MimeBodyPart attachmentPart = new MimeBodyPart();
-                attachmentPart.attachFile(file);
-                mp.addBodyPart(attachmentPart);
             }
-
             message.setContent(mp);
             message.setFrom(getFrom());
             message.addRecipients(Message.RecipientType.TO, getTo());

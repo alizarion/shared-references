@@ -42,6 +42,12 @@
             <artifactId>log4j</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.alizarion.reference.location</groupId>
+            <artifactId>location</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 
 
     </dependencies>

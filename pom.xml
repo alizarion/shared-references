@@ -29,7 +29,7 @@
         <module>location</module>
         <module>person</module>
         <module>oauth</module>
-
+        <module>resource-services-ejb</module>
         <module>file-management</module>
         <module>social</module>
         <module>security</module>
@@ -59,7 +59,13 @@
         <version.jboss.bom>8.1.0.Final</version.jboss.bom>
 
         <version.prettyfaces>3.3.2</version.prettyfaces>
-        <version.apache.common.codec>1.9</version.apache.common.codec>
+        <version.apache.common.codec>1.9</version.apache.common.codec>                <security.final.name>${project.build.finalName}</security.final.name>
+        <!-- need to find a better way -->
+        <oauth.entities.class.path>${basedir}/oauth/oauth2/target/classes/</oauth.entities.class.path>
+        <person.entities.class.path>${basedir}/person/target/classes/</person.entities.class.path>
+        <location.entities.class.path>${basedir}/location/target/classes/</location.entities.class.path>
+        <security.entities.class.path>${basedir}/security/target/classes/</security.entities.class.path>
+
 
         <version.oltu>1.0.0</version.oltu>
         <version.nimbus-jose-jwt>3.1.2</version.nimbus-jose-jwt>
@@ -88,6 +94,18 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.jclarion</groupId>
+            <artifactId>image4j</artifactId>
+            <version>0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.4.01</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- template rendering -->
         <dependency>
@@ -158,11 +176,26 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.openejb</groupId>
             <artifactId>openejb-core</artifactId>
             <version>4.7.0</version>
             <scope>provided</scope>
+        </dependency-->
+
+        <!-- JSR-303 (Bean Validation) Implementation -->
+        <!-- Provides portable constraints such as @Email -->
+        <!-- Hibernate Validator is shipped in JBoss WildFly -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- jpa unit test dependencies  -->
@@ -176,6 +209,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -220,8 +254,11 @@
         </dependency>
         <!-- jms MDB implemenation-->
         <dependency>
-            <groupId>org.jboss.spec.javax.jms</groupId>
-            <artifactId>jboss-jms-api_2.0_spec</artifactId>
+            <groupId>org.wildfly</groupId>
+            <artifactId>wildfly-jms-client-bom</artifactId>
+            <version>${version.jboss.bom}</version>
+            <type>pom</type>
+            <scope>provided</scope>
         </dependency>
 
         <!-- fileIO lib-->

@@ -1,6 +1,7 @@
 package com.alizarion.reference.security.oauth.web.jsf;
 
 import com.alizarion.reference.exception.NotImplementedException;
+import com.alizarion.reference.security.oauth.oauth2.entities.OAuthAccessToken;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthDuration;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthResponseType;
 import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthServerAuthorization;
@@ -172,6 +173,8 @@ public class AuthorizeCtrl implements Serializable {
                     .acceptAuthorization(
                             authorization);
 
+            OAuthAccessToken accessToken =  this.oauthService
+                    .getMostAvalaibleAccessToken(authorized);
             FacesContext.getCurrentInstance().
                     getExternalContext().
                     redirect(OltuFactory
@@ -179,6 +182,7 @@ public class AuthorizeCtrl implements Serializable {
                             .getOAuthAuthorizationResponse(
                                     this.responseType,
                                     authorized,
+                                    accessToken,
                                     (HttpServletRequest)
                                             this.context
                                                     .getExternalContext()

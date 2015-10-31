@@ -8,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import javax.mail.internet.AddressException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,7 +23,7 @@ public class GenericRegisterEmailTest  {
     GenericResetPasswordEmail resetPasswordEmail;
 
     @Before
-    public void setUp() throws URISyntaxException, EmailRenderingException, IOException {
+    public void setUp() throws URISyntaxException, EmailRenderingException, IOException, AddressException {
         this.registerEmail = EmailTestHelper.getGenericRegisterEmail(
                 new URI(temporaryFolder.getRoot().getAbsolutePath()));
         this.resetPasswordEmail =  EmailTestHelper.

@@ -30,6 +30,7 @@
     </developers>
 
     <dependencies>
+
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -46,6 +47,13 @@
         <dependency>
             <groupId>com.alizarion.reference.dao</groupId>
             <artifactId>generic-dao</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.alizarion.reference.exception</groupId>
+            <artifactId>exceptions</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -38,20 +38,27 @@ public class ElectronicAddress extends Address implements Serializable {
     @Column(name = "email_address",unique = true)
     private String emailAddress;
 
-    public ElectronicAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public ElectronicAddress(InternetAddress emailAddress) {
+        this.emailAddress = emailAddress.toString();
     }
 
     public ElectronicAddress() {
     }
 
+    @Override
+       public String getType() {
+           return TYPE;
+       }
+
     public String getEmailAddress() {
         return emailAddress;
     }
 
-    public InternetAddress getInternetAddress() throws AddressException {
-          return new InternetAddress(emailAddress);
-      }
+    public InternetAddress getInternetAddress()
+            throws AddressException {
+        return new InternetAddress(emailAddress);
+    }
+
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }

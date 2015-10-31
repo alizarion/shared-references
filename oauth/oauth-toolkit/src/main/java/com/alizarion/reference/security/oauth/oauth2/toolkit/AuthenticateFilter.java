@@ -49,9 +49,9 @@ public class AuthenticateFilter implements ContainerRequestFilter {
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Bearer ";
     private static final String TOKEN_VERIFICATION_PARAM = "access_token";
-    private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", 401, new Headers<>());
-    private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("Nobody can access this resource", 403, new Headers<>());
-    private static final ServerResponse SERVER_ERROR = new ServerResponse("INTERNAL SERVER ERROR", 500, new Headers<>());
+    private static final ServerResponse ACCESS_DENIED = new ServerResponse("{\"err\" : \"Access denied for this resource\",\"code\":401}", 401, new Headers<>());
+    private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("{\"err\" : \"Nobody can access this resource\",\"code\":403}", 403, new Headers<>());
+    private static final ServerResponse SERVER_ERROR = new ServerResponse("{\"err\" : \"NTERNAL SERVER ERROR\",\"code\":500}", 500, new Headers<>());
 
     @Context
     private ServletContext context;
@@ -75,6 +75,7 @@ public class AuthenticateFilter implements ContainerRequestFilter {
                     return;
                 }
 
+
                 //Get request headers
                 final MultivaluedMap<String, String> headers = requestContext.getHeaders();
 
@@ -97,8 +98,10 @@ public class AuthenticateFilter implements ContainerRequestFilter {
                         .request().get(TokenInfoDTO.class);
 
                 if (tokenInfo == null) {
-                    requestContext.abortWith(SERVER_ERROR);
+                    requestContext.abortWith(ACCESS_DENIED);
                     return;
+                } else {
+                    requestContext.setSecurityContext(new OAuthSecurityContext(tokenInfo));
                 }
 
                 //Verify user access
@@ -110,10 +113,11 @@ public class AuthenticateFilter implements ContainerRequestFilter {
                     if (!isUserAllowed(tokenInfo, rolesSet)) {
                         requestContext.abortWith(ACCESS_DENIED);
                     }
+
                 }
             }
         } catch (URISyntaxException |BadRequestException e) {
-            requestContext.abortWith(SERVER_ERROR);
+            requestContext.abortWith(ACCESS_DENIED);
 
         }
     }

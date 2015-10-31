@@ -1,5 +1,6 @@
 package com.alizarion.reference.security;
 
+import com.alizarion.reference.location.entities.ElectronicAddress;
 import com.alizarion.reference.security.entities.*;
 
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthApplicationKey;
@@ -13,6 +14,8 @@ import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthClient
 import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthScopeServer;
 import com.alizarion.reference.security.oauth.oauth2.entities.server.OAuthScopeServerGroup;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -70,9 +73,9 @@ public class SecurityTestFactory  {
         return new RoleGroup(new RoleGroupKey(groupDisc+"-app-roles-group","logged users"),roles);
     }
 
-    public static Credential getPasswordRegistredCredential(String discriminator,Set<Role> roles){
-        Credential credential =  new Credential(discriminator + "username",roles);
-        credential.setPassword("toto");
+    public static Credential getPasswordRegistredCredential(String discriminator,Set<Role> roles) throws AddressException {
+        Credential credential =  new Credential(discriminator + "username","toto"
+                ,new ElectronicAddress(new InternetAddress("toto@toto.fr")), roles);
         return credential;
     }
 

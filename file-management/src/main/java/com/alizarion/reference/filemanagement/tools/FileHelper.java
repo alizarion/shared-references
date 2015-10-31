@@ -54,21 +54,34 @@ public class FileHelper {
     }
 
     public static Boolean writeFile(InputStream inputStream ,
-                                    FileOutputStream fileOutputStream)
-            throws IOException {
+                                    String path) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(path);
+        try {
+            int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int a;
+            while (true) {
 
-        int BUFFER_SIZE = 8192;
-        byte[] buffer = new byte[BUFFER_SIZE];
-        int a;
-        while (true) {
-            a = inputStream.read(buffer);
-            if (a < 0)
-                break;
-            fileOutputStream.write(buffer, 0, a);
-            fileOutputStream.flush();
+                a = inputStream.read(buffer);
+
+                if (a < 0)
+                    break;
+                fileOutputStream.write(buffer, 0, a);
+                fileOutputStream.flush();
+            }
+            fileOutputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            if (inputStream != null){
+                inputStream.close();
+
+            }
+            if (fileOutputStream != null){
+                fileOutputStream.close();
+
+            }
+
         }
-        fileOutputStream.close();
-        inputStream.close();
         return true;
     }
 }

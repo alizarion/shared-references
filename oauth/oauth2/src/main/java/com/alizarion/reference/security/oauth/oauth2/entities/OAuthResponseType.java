@@ -14,6 +14,8 @@ public enum OAuthResponseType {
     T("token")
 
     ,
+    //authorization request proceded from tokenEndPoint ex : grant_type password
+    N("none"),
 
     I("id_token");
 

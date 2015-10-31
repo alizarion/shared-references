@@ -85,7 +85,9 @@ public class CipherSecurityInitializer implements Serializable {
         if (this.keyStore ==null){
             try {
                 this.keyStore = KeyStore.getInstance("jceks");
-                getKeyStore().load(new FileInputStream(getKeyStoreURI().toString()), KEY_STORE_PASSWORD.toCharArray());
+                FileInputStream fileInputStream = new FileInputStream(getKeyStoreURI().toString());
+                getKeyStore().load(fileInputStream, KEY_STORE_PASSWORD.toCharArray());
+                fileInputStream.close();
             } catch (Exception e) {
                 this.keyStore.load(null,KEY_STORE_PASSWORD.toCharArray());
             }

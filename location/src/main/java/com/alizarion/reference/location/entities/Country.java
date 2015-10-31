@@ -29,7 +29,7 @@ public class Country implements Serializable {
 
 
     @Id
-    @Column(name = "country_id",length = 2)
+    @Column(name = "country_id")
     private String id;
 
     public Country() {

@@ -29,7 +29,7 @@ public abstract class PersistentMBean implements Serializable {
     private static final long serialVersionUID = -8901442021995218836L;
 
     @PersistenceContext
-    EntityManager em;
+    protected EntityManager em;
 
     public abstract String getCategory();
 

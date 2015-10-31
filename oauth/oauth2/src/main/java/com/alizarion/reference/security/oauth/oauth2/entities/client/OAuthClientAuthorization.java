@@ -109,12 +109,10 @@ public class OAuthClientAuthorization extends OAuthAuthorization<OAuthScopeClien
     public void revoke() {
         this.refreshToken.revoke();
         this.state.revoke();
-        revokeAccess();
     }
 
     public OAuthAccessToken addAccessToken(final long duration,
                                            final String tokenValue){
-        this.revokeAccess();
         OAuthAccessToken accessToken =
                 new OAuthAccessToken(
                         new Token(duration,tokenValue),this);

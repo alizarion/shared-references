@@ -1,6 +1,7 @@
 package com.alizarion.reference.security.entities;
 
 import com.alizarion.reference.exception.NotImplementedException;
+import com.alizarion.reference.location.entities.ElectronicAddress;
 import com.alizarion.reference.person.entities.PhysicalPerson;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthCredential;
 import com.alizarion.reference.security.oauth.oauth2.entities.OAuthRole;
@@ -78,12 +79,16 @@ public class Credential implements OAuthCredential<OAuthRole,Long>,Serializable 
     private Set<CredentialRole> credentialRoles =
             new HashSet<>();
 
-    @OneToOne
+    @OneToOne(cascade ={
+            CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.REFRESH,
+            CascadeType.DETACH})
     @JoinColumn(name = "person_id")
     private PhysicalPerson person;
 
 
-
+    @Deprecated
     public Credential(final Set<Role>
                               roles) {
         for (Role  role : roles){
@@ -97,11 +102,16 @@ public class Credential implements OAuthCredential<OAuthRole,Long>,Serializable 
 
 
     public Credential(final String userName,
+                      final String password,
+                      ElectronicAddress electronicAddress,
                       final Set<Role>
                               roles) {
         this.username = userName;
+        setPassword(password);
         this.state = CredentialState.P;
         this.logon =  LogOnType.P;
+        this.person = new PhysicalPerson();
+        this.person.setPrimaryElectronicAddress(electronicAddress);
         this.creationDate = new Date();
         for (Role  role : roles){
             this.credentialRoles.
@@ -164,6 +174,10 @@ public class Credential implements OAuthCredential<OAuthRole,Long>,Serializable 
             scopes.add(role.getRoleKey().getKey());
         }
         return scopes;
+    }
+
+    public void setEmail(final ElectronicAddress email){
+        this.person.setPrimaryElectronicAddress(email);
     }
 
     @Override
@@ -266,10 +280,13 @@ public class Credential implements OAuthCredential<OAuthRole,Long>,Serializable 
         this.username = userName;
     }
 
+    @Deprecated
     public void setPassword(final String password){
         this.password =
                 SecurityHelper.getSHA1Value(password);
     }
+
+
 
     public Boolean isCorrectPassword(String test){
         return this.password.equals(SecurityHelper.
@@ -295,26 +312,18 @@ public class Credential implements OAuthCredential<OAuthRole,Long>,Serializable 
 
         Credential that = (Credential) o;
 
-        return !(creationDate != null ?
-                !creationDate.equals(that.creationDate) :
-                that.creationDate != null) &&
-                !(id != null ? !id.equals(that.id) :
-                        that.id != null) && !(password != null ?
-                !password.equals(that.password) :
-                that.password != null) &&
-                state == that.state &&
-                !(username != null ?
-                        !username.equals(that.username) :
-                        that.username != null);
+        return !(creationDate != null ? !creationDate.equals(
+                that.creationDate) : that.creationDate != null)
+                && !(password != null ? !password.equals(that.password) :
+                that.password != null) && !(username != null ?
+                !username.equals(that.username) : that.username != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (username != null ? username.hashCode() : 0);
+        int result = username != null ? username.hashCode() : 0;
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
         return result;
     }

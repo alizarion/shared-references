@@ -136,6 +136,7 @@ public class OltuFactory {
         public static OAuthResponse getOAuthAuthorizationResponse(
                 final OAuthResponseType responseType,
                 final OAuthServerAuthorization authorization,
+                final OAuthAccessToken accessToken,
                 final HttpServletRequest request)
                 throws OAuthSystemException,
                 URISyntaxException {
@@ -145,9 +146,7 @@ public class OltuFactory {
                             HttpServletResponse.SC_FOUND);
 
             if (responseType.equals(OAuthResponseType.T)){
-                OAuthAccessToken accessToken =
-                        authorization
-                                .getMostLifeTimeAccessToken();
+
                 builder.setAccessToken(accessToken
                         .getBearer()
                         .getValue());

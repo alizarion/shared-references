@@ -33,6 +33,7 @@ public abstract class Address {
         return id;
     }
 
+    public abstract String getType();
 
     public Boolean getVerified() {
         return verified;

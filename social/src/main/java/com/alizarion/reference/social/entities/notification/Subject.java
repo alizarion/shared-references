@@ -2,6 +2,9 @@ package com.alizarion.reference.social.entities.notification;
 
 
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -16,9 +19,11 @@ import java.util.Set;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Subject implements Serializable {
+public abstract class Subject<T extends Observer> implements Serializable {
 
     private static final long serialVersionUID = 3572723366673303254L;
+
+
     @Id
     @TableGenerator(name="social_subject_SEQ", table="sequence",
             pkColumnName="SEQ_NAME", valueColumnName="SEQ_COUNT")
@@ -26,31 +31,39 @@ public abstract class Subject implements Serializable {
     @Column
     private Long id;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "subject",
-            cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    private Set<Observer> observers = new HashSet<>();
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "subject_owner")
-    private Observer subjectOwner;
+    @ManyToMany(targetEntity = Observer.class, fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+            mappedBy = "subjects")
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    private Set<T> observers = new HashSet<>();
+
+
 
     @Column(name = "creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
 
-    protected Subject() {
+    @Transient
+    private transient Integer observersCount;
 
-    }
-
-    public Subject(Observer observer) {
+    public Subject() {
 
         this.creationDate = new Date();
-        this.subjectOwner = observer;
     }
 
-    public void  addObserver(Observer observer){
+    public void removeAllObservers(){
+        this.observers.clear();
+    }
+
+    public void  addObserver(T observer){
         this.observers.add(observer);
+
+    }
+
+    public Integer getObserverCount(){
+        return this.observersCount;
     }
 
     public void removeObserver(Observer observer){
@@ -69,26 +82,29 @@ public abstract class Subject implements Serializable {
      */
     public abstract  void notifyOwner(Notification notification);
 
-    public Set<Observer> getObservers() {
+    public Set<T> getObservers() {
         return observers;
     }
 
-    public Observer getSubjectOwner() {
-        return subjectOwner;
-    }
 
     public abstract String getSubjectType();
 
-    public void setSubjectOwner(Observer subjectOwner) {
-        this.subjectOwner = subjectOwner;
-    }
 
-    public void setObservers(Set<Observer> observers) {
+    public void setObservers(Set<T> observers) {
         this.observers = observers;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    @PostLoad
+    public void onLoad(){
+        this.observersCount = this.observers.size();
     }
 
     @Override
@@ -99,22 +115,12 @@ public abstract class Subject implements Serializable {
 
         return !(creationDate != null ?
                 !creationDate.equals(subject.creationDate) :
-                subject.creationDate != null) &&
-                !(id != null ? !id.equals(subject.id) :
-                        subject.id != null) &&
-                !(subjectOwner != null ?
-                        !subjectOwner.equals(subject.subjectOwner) :
-                        subject.subjectOwner != null);
+                subject.creationDate != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (subjectOwner != null
-                ? subjectOwner.hashCode() : 0);
-        result = 31 * result + (creationDate != null
-                ? creationDate.hashCode() : 0);
-        return result;
+        return creationDate != null ? creationDate.hashCode() : 0;
     }
 }

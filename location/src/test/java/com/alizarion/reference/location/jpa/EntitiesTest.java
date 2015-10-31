@@ -1,10 +1,14 @@
 package com.alizarion.reference.location.jpa;
 
+import com.alizarion.reference.location.entities.ElectronicAddress;
+import com.alizarion.reference.location.entities.SimpleEntity;
 import com.alizarion.reference.location.entities.WebAddress;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -14,6 +18,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author selim@openlinux.fr.
@@ -57,7 +62,21 @@ public class EntitiesTest {
                             getResultList();
             assertFalse(webAddresses.isEmpty());
             trx.commit();
+    }
 
+
+    @Test
+    public void testEntityPersistenceCascade() throws AddressException {
+
+        SimpleEntity entity =  new SimpleEntity();
+
+        entity.setElectronicAddress(new ElectronicAddress(new InternetAddress("selim@openlinux.fr")));
+
+        EntityTransaction  trx = this.em.getTransaction();
+        trx.begin();
+        entity = this.em.merge(entity);
+        trx.commit();
+        assertNotNull(entity.getElectronicAddress().getId());
 
     }
 }

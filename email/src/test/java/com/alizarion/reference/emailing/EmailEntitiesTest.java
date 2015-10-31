@@ -1,21 +1,20 @@
 package com.alizarion.reference.emailing;
 
+import com.alizarion.reference.emailing.dao.EmailDao;
 import com.alizarion.reference.emailing.entities.Email;
 import com.alizarion.reference.emailing.entities.GenericRegisterEmail;
 import com.alizarion.reference.emailing.helper.EmailTestHelper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 
+import javax.mail.internet.AddressException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,38 +22,52 @@ import java.util.List;
  */
 public class EmailEntitiesTest {
 
-    EntityManagerFactory managerFactory ;
-    EntityManager entityManager;
+    private static EntityManagerFactory managerFactory ;
+    private static EntityManager entityManager;
 
     private Connection connection;
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-    @Before
-    public void before(){
+    @BeforeClass
+    public static void before(){
 
         managerFactory = Persistence.createEntityManagerFactory("emailingPU");
         entityManager =  managerFactory.createEntityManager();
     }
 
-    @After
-    public void after() throws SQLException {
+    @AfterClass
+    public static void after() throws SQLException {
         entityManager.close();
         managerFactory.close();
 
     }
 
     @Test
-    public void entityBiding(){
+    public void entityBiding() throws AddressException {
 
         EntityTransaction trx = entityManager.getTransaction();
         GenericRegisterEmail email = EmailTestHelper.getGenericRegisterEmail(temporaryFolder.getRoot().toURI());
         trx.begin();
+        email.setSendDate(new Date());
         entityManager.persist(email);
         entityManager.flush();
         trx.commit();
         List<Email> list =  entityManager.createQuery("select e from Email e").getResultList();
 
+    }
+
+    @Test
+    public void countEmails() throws AddressException {
+
+        EntityTransaction trx = entityManager.getTransaction();
+
+        EmailDao emailDao =  new EmailDao(entityManager);
+
+        trx.begin();
+        Integer count = emailDao.countSentEmailSince(new Date(new Date().getTime() - (3600 * 1000)));
+        trx.commit();
+        Assert.assertEquals((int)count,1);
     }
 
 

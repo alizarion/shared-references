@@ -25,14 +25,14 @@ import java.util.Set;
                         " where sAuth.refreshToken.value = :refreshToken"),
         @NamedQuery(
                 name = OAuthServerAuthorization.FIND_ALIVE_CREDENTIAL_CLIENT_AUTH,
-                query = "select sAuth from OAuthServerAuthorization sAuth join sAuth.accessTokens, in(sAuth.accessTokens) ats " +
+                query = "select sAuth from OAuthServerAuthorization sAuth " +
                         " where cast(sAuth.credential.id as string) = :credentialId " +
                         "and  sAuth.authApplication.applicationKey.clientId = :clientId " +
-                        "and (sAuth.refreshToken is not null" +
+                        "and ((sAuth.refreshToken is not null" +
                         " and (sAuth.refreshToken.expireDate is null or " +
                         "sAuth.refreshToken.expireDate > :today))  or " +
-                        "((select count(*) from ats as at where sAuth.id = " +
-                        "at.authorization.id and at.bearer.expireDate > :today)>0)")})
+                        "((select count(*) from OAuthAccessToken as at where sAuth.id = " +
+                        "at.authorization.id and at.bearer.expireDate > :today)>0))")})
 public class OAuthServerAuthorization extends OAuthAuthorization<OAuthScopeServer> {
 
     private static final long serialVersionUID = 6324216375307560864L;
@@ -89,7 +89,7 @@ public class OAuthServerAuthorization extends OAuthAuthorization<OAuthScopeServe
     public OAuthServerAuthorization(final OAuthClientApplication authApplication,
                                     final OAuthCredential credential,
                                     final Set<OAuthScopeServer> scopes) {
-         this.promptRequired =  true;
+        this.promptRequired =  true;
         this.credential =  credential;
         this.authApplication = authApplication;
         this.scopes.addAll(scopes);
@@ -139,7 +139,6 @@ public class OAuthServerAuthorization extends OAuthAuthorization<OAuthScopeServe
 
     public OAuthAccessToken addAccessToken(
             final long duration){
-        this.revokeAccess();
         OAuthAccessToken accessToken =
                 new OAuthAccessToken(
                         new Token(
@@ -163,26 +162,11 @@ public class OAuthServerAuthorization extends OAuthAuthorization<OAuthScopeServe
         if (this.refreshToken != null){
             this.refreshToken.revoke();
         }
-        this.authCode.revoke();
-        this.revokeAccess();
-
-    }
-
-
-    public boolean isAlive() {
-        if (this.refreshToken != null) {
-            return this.refreshToken.isAlive();
-        } else {
-            for (OAuthAccessToken accessToken : this.accessTokens) {
-                if (accessToken.getBearer().isAlive()) {
-                    return true;
-                }
-            }
-            return false;
+        if(this.authCode!=null){
+            this.authCode.revoke();
         }
+
     }
-
-
 
     public Token getAuthCode() {
         return authCode;

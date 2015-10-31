@@ -17,6 +17,11 @@ public class ImageFileMetaData extends ManagedFileMetaData {
     protected ImageFileMetaData() {
     }
 
+    protected ImageFileMetaData(ManagedFile managedFile) {
+        this.setManagedFile(managedFile);
+        }
+
+
     public ImageFileMetaData(final Integer width,
                              final Integer height) {
         this.width = width;
@@ -56,7 +61,15 @@ public class ImageFileMetaData extends ManagedFileMetaData {
     }
 
     public String getFormat() {
-        return format;
+            return format;
+        }
+
+    public String getMimeType(){
+        if (this.format != null){
+            return "image/"+this.format.toLowerCase();
+        }  else {
+            return null;
+        }
     }
 
     public void setFormat(final String format) {

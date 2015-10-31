@@ -13,7 +13,7 @@ import javax.ws.rs.core.SecurityContext;
 /**
  * @author selim@openlinux.fr.
  */
-@Path("/person")
+@Path("/user")
 @RolesAllowed("profile")
 public class HelloWorld {
 

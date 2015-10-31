@@ -13,6 +13,8 @@ import com.alizarion.reference.security.SecurityTestFactory;
 import com.alizarion.reference.security.entities.ResetPasswordToken;
 import com.alizarion.reference.security.entities.Role;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -27,31 +29,31 @@ import java.util.Map;
  */
 public  class EmailTestHelper {
 
-    public static PhysicalPerson getPhysicalPersonWithAddress(){
+    public static PhysicalPerson getPhysicalPersonWithAddress() throws AddressException {
         return (PhysicalPerson) getValidateEmailToken().
                 updatePersonWithAddress();
     }
 
-    public static ValidateEmailToken getValidateEmailToken(){
+    public static ValidateEmailToken getValidateEmailToken() throws AddressException {
         PhysicalPerson person = new PhysicalPerson();
         person.setFirstName("Bensenouci");
         person.setLastName("Selim");
         person.setTitle(Title.MR);
         ElectronicAddress electronicAddress =
-                new ElectronicAddress("selim@openlinux.fr");
+                new ElectronicAddress(new InternetAddress("selim@openlinux.fr"));
 
         return new ValidateEmailToken(electronicAddress,person,7000L);
 
     }
 
-    public static GenericRegisterEmail getGenericRegisterEmail(URI uri){
+    public static GenericRegisterEmail getGenericRegisterEmail(URI uri) throws AddressException {
         return (GenericRegisterEmail) new
                 GenericRegisterEmail.RegisterEmailBuilder(
                 "selim@openlinux.fr",getValidateEmailToken(),
                 uri, Locale.getDefault()).builder();
     }
 
-    public static GenericResetPasswordEmail getGenericResetPasswordEmail(URI uri){
+    public static GenericResetPasswordEmail getGenericResetPasswordEmail(URI uri) throws AddressException {
 
         return  (GenericResetPasswordEmail) new  GenericResetPasswordEmail.
                 GenericResetPasswordEmailBuilder("selim@openlinux.fr",

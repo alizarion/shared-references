@@ -19,7 +19,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "social_comment")
-public class Comment extends Subject implements Serializable{
+public   class Comment<T extends Observer> extends Subject<T> implements Serializable{
 
 
     private static final long serialVersionUID = -1225445014114020990L;
@@ -41,6 +41,10 @@ public class Comment extends Subject implements Serializable{
             cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     private Set<Comment> answers = new HashSet<>();
 
+    @ManyToOne(targetEntity = Observer.class)
+    @JoinColumn(name = "owner")
+    private T owner;
+
 
     @OneToMany(fetch = FetchType.LAZY,cascade =
             {CascadeType.MERGE,
@@ -52,8 +56,9 @@ public class Comment extends Subject implements Serializable{
     protected Comment() {
     }
 
-    public Comment(Observer owner, String value) {
-        super(owner);
+    public Comment(T owner, String value) {
+        super();
+        this.owner = owner;
         this.value = value;
     }
 
@@ -77,8 +82,8 @@ public class Comment extends Subject implements Serializable{
             notifyOwner(
                     new SignaledCommentNotification(
                             this,
-                            getSubjectOwner(),
-                            notifier));
+                            this.owner,
+                            (Observer)notifier));
         }
         this.reported = signaled;
     }
@@ -95,6 +100,14 @@ public class Comment extends Subject implements Serializable{
         return answers;
     }
 
+    public Observer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(T owner) {
+        this.owner = owner;
+    }
+
     public void setAnswers(Set<Comment> answers) {
         this.answers = answers;
     }
@@ -108,7 +121,7 @@ public class Comment extends Subject implements Serializable{
 
     @Override
     public void notifyOwner(Notification notification) {
-        Observer owner = getSubjectOwner();
+        Observer owner = this.owner;
         owner.notify(notification);
     }
 
@@ -120,20 +133,20 @@ public class Comment extends Subject implements Serializable{
     public void addLikeAppreciation(Notifier notifier){
         Like like = new Like((Observer)notifier);
         this.appreciations.add(like);
-        notifyOwner(new LikeNotification(this,getSubjectOwner(),notifier));
+        notifyOwner(new LikeNotification(this,this.owner,(Observer)notifier));
     }
 
     public void addDisLikeAppreciation(Notifier notifier){
         DisLike disLike = new DisLike((Observer)notifier);
         this.appreciations.add(disLike);
-        notifyOwner(new DisLikeNotification(this,getSubjectOwner(),notifier));
+        notifyOwner(new DisLikeNotification(this,this.owner,(Observer)notifier));
     }
 
     public Comment addAnswerToComment(Notifier notifier,String commentValue){
         Comment answer = new Comment((Observer)notifier,commentValue);
         answer.setAnswerToComment(this);
         this.answers.add(answer);
-        notifyOwner(new CommentNotification(this,getSubjectOwner(),notifier));
+        notifyOwner(new CommentNotification(this,this.owner,(Observer)notifier));
         return answer;
     }
 

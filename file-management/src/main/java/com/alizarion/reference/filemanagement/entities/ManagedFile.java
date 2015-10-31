@@ -1,11 +1,14 @@
 package com.alizarion.reference.filemanagement.entities;
 
 import org.apache.commons.io.FilenameUtils;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -19,9 +22,16 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @Table(name = "file_management_managed_file")
-public abstract class ManagedFile  implements Serializable {
+@NamedQueries({@NamedQuery(name = ManagedFile.FIND_BY_UUID,
+        query = "select file from ManagedFile file where file.UUID = :uuid")
+})
+
+public abstract class ManagedFile<T extends ManagedFileMetaData>  implements Serializable {
 
     private static final long serialVersionUID = -5029119787687345370L;
+
+    public static final String FIND_BY_UUID = "ManagedFile.FIND_BY_UUID";
+
     @Id
     @TableGenerator(name = "managed_file_SEQ",
             pkColumnName = "SEQ_NAME",
@@ -30,6 +40,8 @@ public abstract class ManagedFile  implements Serializable {
     @GeneratedValue(strategy = GenerationType.TABLE,
             generator = "managed_file_SEQ")
     private Long id;
+
+
 
     /**
      * used to manage directories structures
@@ -44,7 +56,8 @@ public abstract class ManagedFile  implements Serializable {
     @OneToOne(fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             optional = false)
-    private ManagedFileMetaData  metaData;
+    @Fetch(FetchMode.SELECT)
+    private T  metaData;
 
     /**
      * type of the downcast child
@@ -94,7 +107,7 @@ public abstract class ManagedFile  implements Serializable {
         return metaData;
     }
 
-    public void setMetaData(ManagedFileMetaData metaData) {
+    public void setMetaData(T metaData) {
         this.metaData = metaData;
     }
 

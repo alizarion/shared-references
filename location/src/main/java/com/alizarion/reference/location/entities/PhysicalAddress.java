@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "location_geographical_address")
-@DiscriminatorValue(value = "geographical")
+@DiscriminatorValue(value = PhysicalAddress.TYPE)
 @PrimaryKeyJoinColumn(name = "geographical_address_id")
 @NamedQueries({@NamedQuery(
         name = PhysicalAddress.FIND_BY_PART,
@@ -23,6 +23,8 @@ import javax.persistence.*;
                         " and pa.country.id like :countryId")})
 public class PhysicalAddress extends Address {
 
+    public static final String TYPE= "geographical";
+
     public static final String  FIND_BY_PART =
             "PhysicalAddress.FIND_BY_PART";
 
@@ -36,17 +38,34 @@ public class PhysicalAddress extends Address {
     private String name;
 
 
-    @Column(name = "street",nullable = false)
+    @Column(name = "street",nullable = true)
     private String street;
 
     @Column(name = "postal_code",
-            nullable = false,
+            nullable = true,
             length = 11)
     private String zipCode;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id",nullable = false)
+
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinColumn(name = "country_id",nullable = true)
     private Country country;
+
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinColumn(name = "state_id",nullable = true)
+    private State state;
+
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinColumn(name = "locality_id",nullable = true)
+    private Locality locality;
+
+    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    private GeoLocationAddress geoLocationAddress;
+
+    @Override
+       public String getType() {
+           return TYPE;
+       }
 
     public PhysicalAddress(){
 
@@ -58,6 +77,39 @@ public class PhysicalAddress extends Address {
         this.street = street;
         this.zipCode = zipCode;
         this.country = country;
+    }
+
+
+    public PhysicalAddress(State state,
+                           Locality locality,
+                           GeoLocationAddress geoLocationAddress) {
+        this.state = state;
+        this.locality = locality;
+        this.geoLocationAddress = geoLocationAddress;
+    }
+
+    public GeoLocationAddress getGeoLocationAddress() {
+        return geoLocationAddress;
+    }
+
+    public void setGeoLocationAddress(GeoLocationAddress geoLocationAddress) {
+        this.geoLocationAddress = geoLocationAddress;
+    }
+
+    public Locality getLocality() {
+        return locality;
+    }
+
+    public void setLocality(Locality locality) {
+        this.locality = locality;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     public String getName() {

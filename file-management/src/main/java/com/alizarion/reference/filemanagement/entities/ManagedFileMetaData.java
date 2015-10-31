@@ -1,5 +1,8 @@
 package com.alizarion.reference.filemanagement.entities;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -8,7 +11,7 @@ import java.io.Serializable;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class ManagedFileMetaData implements Serializable {
+public abstract class ManagedFileMetaData implements Serializable {
 
     private static final long serialVersionUID = 4425157392550967081L;
 
@@ -22,11 +25,24 @@ public class ManagedFileMetaData implements Serializable {
             generator = "file_management_meta_data_SEQ")
     private Long id;
 
+    @OneToOne
+    @Fetch(FetchMode.SELECT)
+    private ManagedFile managedFile;
+
     protected ManagedFileMetaData() {
     }
 
     public Long getId() {
         return id;
+    }
+
+    public ManagedFile getManagedFile() {
+        return managedFile;
+    }
+
+    public void setManagedFile(ManagedFile managedFile) {
+
+        this.managedFile = managedFile;
     }
 
     @Override

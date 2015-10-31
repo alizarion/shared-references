@@ -63,9 +63,6 @@ public class GenericResetPasswordEmail extends Email {
         this.params.put(MAIL_TEXT_BODY_TEMPLATE,bodyText);
     }
 
-    public Map<String, Map<String, Object>> getParams() {
-        return params;
-    }
 
     public void setParams(Map<String, Map<String, Object>> params) {
         this.params = params;
