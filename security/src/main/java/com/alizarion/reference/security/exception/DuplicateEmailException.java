@@ -1,11 +1,9 @@
 package com.alizarion.reference.security.exception;
 
-import com.alizarion.reference.exception.ApplicationException;
-
 /**
  * @author selim@openlinux.fr.
  */
-public class DuplicateEmailException extends ApplicationException{
+public class DuplicateEmailException extends SecurityException{
 
     private static final long serialVersionUID = -3217947553979522072L;
 

@@ -1,11 +1,9 @@
 package com.alizarion.reference.security.exception;
 
-import com.alizarion.reference.exception.ApplicationException;
-
 /**
  * @author selim@openlinux.fr.
  */
-public class InvalidUsernameException extends ApplicationException {
+public class InvalidUsernameException extends SecurityException {
 
     private static final long serialVersionUID = -9113873103531522943L;
 

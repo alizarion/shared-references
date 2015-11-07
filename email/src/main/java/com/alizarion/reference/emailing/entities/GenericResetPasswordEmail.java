@@ -31,9 +31,6 @@ public class GenericResetPasswordEmail extends Email {
     @Transient
     private PhysicalPerson person;
 
-    @Transient
-    public  Map<String,Map<String,Object>> params = new HashMap<>();
-
 
     public GenericResetPasswordEmail() {
     }
@@ -47,20 +44,19 @@ public class GenericResetPasswordEmail extends Email {
 
         this.person = builder.getPhysicalPerson();
         this.passwordToken = builder.getPasswordToken();
-
         Map<String,Object> subject = new HashMap<>();
         Map<String,Object> bodyHTML = new HashMap<>();
         Map<String,Object> bodyText = new HashMap<>();
-
         subject.put("person",builder.getPhysicalPerson());
         bodyHTML.put("passwordToken",builder.getPasswordToken());
         bodyHTML.put("person",builder.getPhysicalPerson());
         bodyText.put("passwordToken",builder.getPasswordToken());
         bodyText.put("person",builder.getPhysicalPerson());
 
-        this.params.put(MAIL_SUBJECT_TEMPLATE,subject);
-        this.params.put(MAIL_HTML_BODY_TEMPLATE,bodyHTML);
-        this.params.put(MAIL_TEXT_BODY_TEMPLATE,bodyText);
+        getParams().put(MAIL_SUBJECT_TEMPLATE,subject);
+        getParams().put(MAIL_HTML_BODY_TEMPLATE,bodyHTML);
+        getParams().put(MAIL_TEXT_BODY_TEMPLATE,bodyText);
+
     }
 
 

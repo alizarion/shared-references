@@ -1,11 +1,9 @@
 package com.alizarion.reference.security.exception;
 
-import com.alizarion.reference.exception.ApplicationException;
-
 /**
  * @author selim@openlinux.fr.
  */
-public class BadCredentialException extends ApplicationException {
+public class BadCredentialException extends SecurityException  {
 
     private static final long serialVersionUID = -3062083779485953072L;
 

@@ -32,23 +32,25 @@ public class GenericRegisterEmail extends Email {
 
     public GenericRegisterEmail(RegisterEmailBuilder builder) {
         super(builder.getFrom(),
-                       builder.getTo(),
-                       builder.getTemplateRoot(),
-                       builder.getLocale());
+                builder.getTo(),
+                builder.getTemplateRoot(),
+                builder.getLocale());
         this.emailToken = builder.getToken();
         super.setCc(builder.getCc());
         super.setCci(builder.getCci());
-
         Map<String,Object> subject = new HashMap<>();
         Map<String,Object> bodyHTML = new HashMap<>();
         Map<String,Object> bodyText = new HashMap<>();
-
         subject.put("emailToken",this.emailToken);
         bodyHTML.put("emailToken",this.emailToken);
+        bodyHTML.put("username",builder.getUsername());
+
         bodyText.put("emailToken",this.emailToken);
-        this.params.put(MAIL_SUBJECT_TEMPLATE,subject);
-        this.params.put(MAIL_HTML_BODY_TEMPLATE,bodyHTML);
-        this.params.put(MAIL_TEXT_BODY_TEMPLATE,bodyText);
+        bodyText.put("username",builder.getUsername());
+
+        getParams().put(MAIL_SUBJECT_TEMPLATE,subject);
+        getParams().put(MAIL_HTML_BODY_TEMPLATE,bodyHTML);
+        getParams().put(MAIL_TEXT_BODY_TEMPLATE,bodyText);
 
 
     }
@@ -85,6 +87,9 @@ public class GenericRegisterEmail extends Email {
 
         private ValidateEmailToken token;
 
+        private String username;
+
+
         public RegisterEmailBuilder(final String from,
                                     final ValidateEmailToken token,
                                     final URI templateRoot,
@@ -92,10 +97,20 @@ public class GenericRegisterEmail extends Email {
         ) {
             super(from,token.getElectronicAddress().getEmailAddress(),templateRoot,locale);
             this.token = token;
+            this.username=null;
         }
 
         public ValidateEmailToken getToken() {
             return token;
+        }
+
+        public RegisterEmailBuilder setUsername(String username){
+            this.username = username;
+            return this;
+        }
+
+        public String getUsername() {
+            return username;
         }
 
         @Override

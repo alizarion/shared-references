@@ -12,8 +12,15 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "security_token_validate_electronic_address")
+@NamedQueries({@NamedQuery(name = ValidateEmailToken.FIND_TOKEN_BY_VALUE,query =
+        "select vet from ValidateEmailToken " +
+                "vet where vet.validationToken.value = :tokenValue")
+})
 public class ValidateEmailToken implements Serializable {
 
+
+    public final static String FIND_TOKEN_BY_VALUE =
+            "ValidateEmailToken.FIND_TOKEN_BY_VALUE";
 
     @Id
     @TableGenerator(
@@ -25,12 +32,14 @@ public class ValidateEmailToken implements Serializable {
             generator = "security_token_validate_electronic_address_SEQ")
     private Long id;
 
-    public static final String TYPE="Validate-email-token";
+    public static final String TYPE="validate-email-token";
 
+
+    //TODO use Token instead SercurityTocken
     @Embedded
     private SecurityToken validationToken;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false,cascade = CascadeType.ALL)
     @JoinColumn(name = "email_id")
     private ElectronicAddress electronicAddress;
 
@@ -60,6 +69,15 @@ public class ValidateEmailToken implements Serializable {
     public void setElectronicAddress(
             final ElectronicAddress electronicAddress) {
         this.electronicAddress = electronicAddress;
+    }
+
+    public void doValidate(final String tokenValue){
+        if(tokenValue != null){
+            if(this.validationToken.getValue().equals(tokenValue)){
+                this.validationToken.revoke();
+                this.electronicAddress.setVerified(true);
+            }
+        }
     }
 
     public Long getId() {

@@ -41,7 +41,7 @@ public class Language implements Serializable {
     }
 
     public Language(String language) {
-        this.langCode = language.toUpperCase();
+        this.langCode = language!= null ? language.toUpperCase() : null;
         // this.managed = false;
     }
 
@@ -69,7 +69,7 @@ public class Language implements Serializable {
 
     public void setLangCode(String langCode) {
         if(langCode!=null){
-            langCode = langCode.toUpperCase();
+            this.langCode = langCode.toUpperCase();
 
         }
     }

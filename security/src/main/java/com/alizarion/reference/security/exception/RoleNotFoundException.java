@@ -1,11 +1,9 @@
 package com.alizarion.reference.security.exception;
 
-import com.alizarion.reference.exception.ApplicationException;
-
 /**
  * @author selim@openlinux.fr.
  */
-public class RoleNotFoundException extends ApplicationException {
+public class RoleNotFoundException extends SecurityException {
 
 
     private static final long serialVersionUID = 5943029514383805538L;

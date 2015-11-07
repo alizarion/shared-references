@@ -12,16 +12,33 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "security_token_reset_password")
+@NamedQueries({@NamedQuery(
+        name = ResetPasswordToken.FIND_TOKEN_BY_VALUE,
+        query = "select rpt from ResetPasswordToken rpt" +
+                " where rpt.token.value = :tokenValue")
+})
 public class ResetPasswordToken implements Serializable{
 
     public final static String TYPE = "reset-password-token";
 
+    public final static String FIND_TOKEN_BY_VALUE  = "ResetPasswordToken.FIND_TOKEN_BY_VALUE" ;
+
     private static final long serialVersionUID = -7429964200621113257L;
+
+    @Id
+      @TableGenerator(
+              name = "security_token_reset_password_SEQ",
+              pkColumnName = "SEQ_NAME",
+              valueColumnName = "SEQ_COUNT",
+              table = "sequence")
+      @GeneratedValue(strategy = GenerationType.TABLE,
+              generator = "security_token_reset_password_SEQ")
+      private Long id;
 
     @ManyToOne
     private Credential credential;
 
-    @EmbeddedId
+    @Embedded
     private Token token;
 
     protected ResetPasswordToken() {
@@ -36,6 +53,10 @@ public class ResetPasswordToken implements Serializable{
         this.token = new Token(duration,
                 SecurityHelper.getRandomAlphaNumericString(130));
         this.credential = credential;
+    }
+
+    public Token getToken() {
+        return token;
     }
 
     public Credential getCredential() {

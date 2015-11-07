@@ -11,6 +11,7 @@ import java.util.UUID;
  * @author selim@openlinux.fr.
  */
 @Embeddable
+@Deprecated
 public class SecurityToken implements Serializable {
 
 
@@ -39,9 +40,14 @@ public class SecurityToken implements Serializable {
      */
     public SecurityToken(final long duration,
                          final String generatedToken) {
+        if (duration>0){
+            this.expireDate = new Date(creationDate.getTime() +
+                 (duration * 1000));
+        }  else {
+            this.expireDate = new Date(0);
+        }
         this.creationDate =  new Date();
-        this.expireDate = new Date(creationDate.getTime() +
-                (duration * 1000));
+
         this.value = generatedToken;
 
     }
@@ -57,8 +63,9 @@ public class SecurityToken implements Serializable {
                 getTime()+(duration *1000));
     }
 
+
     public boolean isValidToken(){
-        return this.expireDate == null || (new Date()).after(this.expireDate);
+        return this.expireDate.getTime() == 0L || this.expireDate.after(new Date());
     }
 
     public Date getCreationDate() {
