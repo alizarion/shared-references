@@ -1,6 +1,13 @@
 package com.alizarion.reference.resource.entities;
 
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
+
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,6 +21,8 @@ import java.util.Date;
         @NamedQuery(name = PersistentResource.GET_PERSISTENT_RESOURCE_VALUE_BY_KEY,
                 query = "select pr from PersistentResource pr  where pr.category = :category "
                         + " and pr.key = :key")})
+@Cacheable(true)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class PersistentResource implements Serializable {
 
     public final static String GET_PERSISTENT_RESOURCE_VALUE_BY_KEY =

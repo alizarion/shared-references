@@ -33,9 +33,9 @@ public abstract class Subject<T extends Observer> implements Serializable {
 
 
     @ManyToMany(targetEntity = Observer.class, fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+            cascade = CascadeType.ALL,
             mappedBy = "subjects")
-    @LazyCollection(LazyCollectionOption.EXTRA)
+   // @LazyCollection(LazyCollectionOption.EXTRA)
     private Set<T> observers = new HashSet<>();
 
 
